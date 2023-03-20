@@ -32,6 +32,8 @@ jobs:
       run: if [ -f checkers/example/requirements.txt ]; then python -m pip install -r checkers/example/requirements.txt; fi
     - name: Test checker on service
       run: (cd ./checkers/example && ./example.checker.py TEST 127.0.0.1)
+    - name: Test sploit on service
+      run: (cd ./checkers/example && ./example.checker.py PUT 127.0.0.1 flag-id test-flag 0 && cd ../../sploits/example && ./example.sploit.py 127.0.0.1 flag-id test-flag)
   update_example:
     name: Deploy service using ansible to first teams
     needs: check_example
