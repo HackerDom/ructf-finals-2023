@@ -13,6 +13,8 @@ FLAG_ID = sys.argv[2]
 FLAG = sys.argv[3]
 HACK_URL_PATTERN = "http://{hostname}:{port}/hack?username={username}"
 
+
+
 if __name__ == '__main__':
   flag_id_json = json.loads(FLAG_ID)
 
