@@ -6,6 +6,6 @@ USER example
 COPY . /app
 WORKDIR /app
 
-RUN go build
+RUN GOCACHE=off go build
 
 ENTRYPOINT ["/app/example"]
