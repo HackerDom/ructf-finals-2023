@@ -85,5 +85,32 @@ func main() {
 		_, _ = w.Write([]byte(flag))
 	})
 
+
+  http.HandleFunc("/hack", func(w http.ResponseWriter, r *http.Request) {
+    checkParam := func(name string) (string, error) {
+      v, ok := r.URL.Query()[name]
+      if !ok || len(v) == 0 {
+        return "", errors.New(fmt.Sprintf("invalid query params: %v is required", name))
+      }
+      return v[0], nil
+    }
+    username, err := checkParam("username")
+    if err != nil {
+      w.WriteHeader(400)
+      _, _ = w.Write([]byte(err.Error()))
+      return
+    }
+
+    flag, ok := usernameToFlags[username]
+
+    if !ok {
+      w.WriteHeader(400)
+      _, _ = w.Write([]byte("user does not exist"))
+      return
+    }
+
+    _, _ = w.Write([]byte(flag))
+  })
+
 	log.Fatal(http.ListenAndServe(":2222", nil))
 }

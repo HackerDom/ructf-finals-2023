@@ -3,7 +3,7 @@
 SERVICE_NAME=$1;
 VULN_ID=1;
 FLAG_ID="flag-id";
-TEST_FLAG="test-flag";
+TEST_FLAG=$(echo $RANDOM | md5sum | head -c 20;);
 
 FLAG_DATA=$(cd checkers/$SERVICE_NAME && ./$SERVICE_NAME.checker.py PUT 127.0.0.1 "$FLAG_ID" "$TEST_FLAG" $VULN_ID);
 echo "Putted flag '$FLAG_DATA'"
