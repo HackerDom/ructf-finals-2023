@@ -13,7 +13,7 @@ name: Check {service}
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'services/{service}/**'
       - 'checkers/{service}/**'

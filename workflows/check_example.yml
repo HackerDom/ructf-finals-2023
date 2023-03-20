@@ -3,7 +3,7 @@ name: Check example
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'services/example/**'
       - 'checkers/example/**'
