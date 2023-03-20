@@ -7,7 +7,7 @@ VULN_ID=1;
 FLAG_ID="flag-id";
 TEST_FLAG=$(echo $RANDOM | md5sum | head -c 20;);
 
-FLAG_DATA=$(cd checkers/$SERVICE_NAME && ./$SERVICE_NAME.checker.py PUT 127.0.0.1 "$FLAG_ID" "$TEST_FLAG" $VULN_ID);
+FLAG_DATA=$(cd checkers/$SERVICE_NAME && ./$SERVICE_NAME.checker.py PUT 127.0.0.1 "$FLAG_ID" "$TEST_FLAG" $VULN_ID | true);
 echo "Putted flag '$FLAG_DATA'"
 FLAG_ID=$(echo $FLAG_DATA | jq -r .public_flag_id)
 echo "Public flag id: '$FLAG_ID'"
