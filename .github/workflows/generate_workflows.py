@@ -17,6 +17,7 @@ on:
     paths:
       - 'services/{service}/**'
       - 'checkers/{service}/**'
+      - 'sploits/{service}/**'
   workflow_dispatch:
     inputs:
       cleanup_before_deploy:
@@ -42,6 +43,10 @@ jobs:
       run: if [ -f checkers/{service}/requirements.txt ]; then python -m pip install -r checkers/{service}/requirements.txt; fi
     - name: Test checker on service
       run: (cd ./checkers/{service} && ./{service}.checker.py TEST 127.0.0.1)
+    - name: Setup sploit libraries
+      run: if [ -f sploits/{service}/requirements.txt ]; then python -m pip install -r sploits/{service}/requirements.txt; fi
+    - name: Test sploit on service
+      run: (./tools/check-sploit.sh {service})
   update_{service}:
     name: Deploy service using ansible to first teams
     needs: check_{service}
