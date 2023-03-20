@@ -15,7 +15,7 @@ FLAG_ACTUAL=$(echo FLAG_PRIAVTE | jq -r .flag)
 
 set -e
 
-FLAG_EXPECTED=$(cd sploits/$SERVICE_NAME/ && ./$SERVICE_NAME.sploit.py 127.0.0.1 "$FLAG_ID" "$TEST_FLAG");
+FLAG_EXPECTED=$(cd sploits/$SERVICE_NAME/ && ./$SERVICE_NAME.sploit.py 127.0.0.1 "$FLAG_ID");
 
 echo "Flag expected '$FLAG_EXPECTED' actual '$FLAG_ACTUAL'"
 
