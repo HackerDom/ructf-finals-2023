@@ -1,0 +1,16 @@
+name: Rebuild image
+on:
+  workflow_dispatch: {}
+
+jobs:
+  rebuild_image:
+    name: Rebuild and export image
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: init packer
+      run: cd vuln_image && packer init image.pkr.hcl
+    - name: rebuild and export image
+      run: cd vuln_image && packer build  -var "api_token=$(cat /root/do-token)" image.pkr.hcl

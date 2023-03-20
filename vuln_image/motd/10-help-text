@@ -1,0 +1,10 @@
+#!/bin/sh
+printf " * News and announcements: https://twitter.com/RuCTF or https://t.me/RuCTF\n"
+printf " * Site:                   https://ructf.org\n"
+printf " * Chat:                   https://ructfe.slack.com (register at https://ructfe.org/slack)\n"
+printf " * Monitor:                https://monitor.ructf.org (for oldfags: https://monitor.ructf.org/board)\n"
+printf " * Flags:                  read https://ructf.org/en/flags/, send to http://10.10.10.10/flags\n"
+printf " * Email:                  info@ructf.org\n"
+printf "\n"
+
+/bin/echo -ne "\x1b[0m"

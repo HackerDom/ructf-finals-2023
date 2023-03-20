@@ -1,0 +1,18 @@
+[Unit]
+Description=RuCTF '%I' service
+Requires=docker.service
+After=docker.service
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/%I
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
