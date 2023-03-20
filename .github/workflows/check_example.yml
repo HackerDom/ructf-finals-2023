@@ -34,7 +34,7 @@ jobs:
     - name: Test checker on service
       run: (cd ./checkers/example && ./example.checker.py TEST 127.0.0.1)
     - name: Test sploit on service
-      run: (cd sploits/example/ && ./example.sploit.py 127.0.0.1 $(cd ../../checkers/examples && ./example.checker.py PUT 127.0.0.1 flag-id test-flag 1) test-flag)
+      run: (cd sploits/example/ && ./example.sploit.py 127.0.0.1 $(cd checkers/examples && ./example.checker.py PUT 127.0.0.1 flag-id test-flag 1) test-flag)
   update_example:
     name: Deploy service using ansible to first teams
     needs: check_example
