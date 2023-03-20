@@ -16,10 +16,7 @@ HACK_URL_PATTERN = "http://{hostname}:{port}/hack?username={username}"
 
 
 if __name__ == '__main__':
-  flag_id_json = json.loads(FLAG_ID)
-
-  username = flag_id_json['username']
-
+  username = FLAG_ID
   hack_url = HACK_URL_PATTERN.format(hostname=HOSTNAME, port=PORT, username=username)
   r = requests.get(hack_url, timeout=10)
   r.raise_for_status()
