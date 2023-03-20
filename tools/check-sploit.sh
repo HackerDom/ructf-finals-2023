@@ -10,8 +10,7 @@ FLAG_DATA=$(cd checkers/$SERVICE_NAME && ./$SERVICE_NAME.checker.py PUT 127.0.0.
 echo "Putted flag '$FLAG_DATA'"
 FLAG_ID=$(echo $FLAG_DATA | jq -r .public_flag_id)
 echo "Public flag id: '$FLAG_ID'"
-FLAG_PRIAVTE=$(echo $FLAG_DATA | jq -r .private_content)
-FLAG_ACTUAL=$(echo FLAG_PRIAVTE | jq -r .flag)
+FLAG_ACTUAL=$(echo $FLAG_DATA | jq -r .private_content | jq -r .flag)
 
 set -e
 
