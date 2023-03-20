@@ -7,7 +7,7 @@ import traceback
 import requests
 from gornilo import CheckRequest, Verdict, PutRequest, GetRequest, VulnChecker, NewChecker
 
-checker = NewChecker()
+./example.checker.pychecker = NewChecker()
 PORT = 2222
 CHECK_URL_PATTERN = "http://{hostname}:{port}/check"
 PUT_URL_PATTERN = "http://{hostname}:{port}/put"
