@@ -9,4 +9,14 @@ FLAG_DATA=$(cd checkers/$SERVICE_NAME && ./$SERVICE_NAME.checker.py PUT 127.0.0.
 echo "Putted flag '$FLAG_DATA'"
 FLAG_ID=$(echo $FLAG_DATA | jq -r .public_flag_id)
 echo "Public flag id: '$FLAG_ID'"
-(cd sploits/$SERVICE_NAME/ && ./$SERVICE_NAME.sploit.py 127.0.0.1 "$FLAG_ID" "$TEST_FLAG");
+FLAG_PRIAVTE=$(echo $FLAG_DATA | jq -r .private_content)
+FLAG_ACTUAL=$(echo FLAG_PRIAVTE | jq -r .flag)
+
+FLAG_EXPECTED=(cd sploits/$SERVICE_NAME/ && ./$SERVICE_NAME.sploit.py 127.0.0.1 "$FLAG_ID" "$TEST_FLAG");
+
+echo "Flag expected '$FLAG_EXPECTED' actual '$FLAG_ACTUAL'"
+
+if [ "$FLAG_EXPECTED" != "$FLAG_ACTUAL" ]; then
+  echo "Invalid flag"
+  exit 1
+fi
