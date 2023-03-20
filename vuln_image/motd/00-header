@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# output in yellow
+TERM=xterm-256color tput setaf 1
+
+cat /ructf-banner.txt

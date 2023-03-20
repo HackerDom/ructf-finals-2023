@@ -1,0 +1,14 @@
+name: Deploy checkers
+on:
+  workflow_dispatch: {}
+
+jobs:
+  rebuild_image:
+    name: Deploy checkers
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: deploy checkers
+      run: cd ansible && ansible-playbook checkers.yaml -i ci.inventory.cfg --extra-vars "cs_user=cs cs_dir=/home/cs/checksystem"
