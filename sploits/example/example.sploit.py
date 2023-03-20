@@ -7,7 +7,6 @@ import traceback
 import requests
 
 
-checker = NewChecker()
 PORT = 2222
 HOSTNAME = sys.argv[1]
 FLAG_ID = sys.argv[2]
