@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SERVICE_NAME=$1;
 VULN_ID=1;
 FLAG_ID="flag-id";
