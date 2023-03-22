@@ -1,0 +1,3 @@
+[submodule "services/dcs/back/googletest"]
+	path = services/dcs/back/googletest
+	url = https://github.com/google/googletest.git

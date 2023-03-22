@@ -1,0 +1,15 @@
+**/cmake-build-*/
+**/.idea/
+**/.vscode/
+**/CMakeCache.txt
+**/CMakeFiles/
+**/*.cmake
+*.o
+*.a
+*.so
+**/lib/
+**/bin/
+Makefile
+back/build/
+.gdb_history
+
