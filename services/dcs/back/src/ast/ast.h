@@ -51,9 +51,7 @@ public:
     }
     ~ConstantDefinitionNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Id, Value};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
     std::shared_ptr<ConstantValueNode> Value;
@@ -66,9 +64,7 @@ public:
     }
     ~AssignStatementNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Id, Expression};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
     std::shared_ptr<ExpressionNode> Expression;
@@ -80,9 +76,7 @@ public:
     }
     ~ParenthesisExpressionNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Expression};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<ExpressionNode> Expression;
 };
@@ -112,9 +106,7 @@ public:
     }
     ~UnaryExpressionNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Id, Constant, FunctionCall, ParenthesisExpression};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
     std::shared_ptr<ConstantValueNode> Constant;
@@ -155,9 +147,7 @@ public:
     }
     ~ExpressionNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {AdditiveExpression};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<AdditiveExpressionNode> AdditiveExpression;
 };
@@ -168,9 +158,7 @@ public:
     }
     ~ReturnStatementNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Expression};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<ExpressionNode> Expression;
 };
@@ -213,9 +201,7 @@ public:
     }
     ~ConditionalStatementNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {LeftExpression, RightExpression, ThenStatements, ElseStatements};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<ExpressionNode> LeftExpression;
     std::shared_ptr<ExpressionNode> RightExpression;
@@ -234,9 +220,7 @@ public:
     }
     ~StatementNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Conditional, Return, Assign};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<ConditionalStatementNode> Conditional;
     std::shared_ptr<ReturnStatementNode> Return;
@@ -267,9 +251,7 @@ public:
     }
     ~FunctionDefinitionNode() override = default;
     void Print(std::ostream &stream, int depth) const override;
-    NodesList GetChildNodes() const override {
-        return {Arguments, Body};
-    }
+    NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
     std::shared_ptr<ArgumentsDefinitionListNode> Arguments;

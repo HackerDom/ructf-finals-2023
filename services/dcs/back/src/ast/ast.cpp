@@ -1,5 +1,110 @@
 #include "ast.h"
 
+NodesList ConstantDefinitionNode::GetChildNodes() const {
+    NodesList result;
+    result.reserve(2);
+
+    result.push_back(Id);
+    result.push_back(Value);
+
+    return result;
+}
+
+NodesList AssignStatementNode::GetChildNodes() const {
+    NodesList result;
+    result.reserve(2);
+
+    result.push_back(Id);
+    result.push_back(Expression);
+
+    return result;
+}
+
+NodesList ParenthesisExpressionNode::GetChildNodes() const {
+    NodesList result;
+    result.push_back(Expression);
+
+    return result;
+}
+
+NodesList UnaryExpressionNode::GetChildNodes() const {
+    NodesList result;
+
+    if (Id != nullptr) {
+        result.push_back(Id);
+    }
+
+    if (Constant != nullptr) {
+        result.push_back(Constant);
+    }
+
+    if (FunctionCall != nullptr) {
+        result.push_back(FunctionCall);
+    }
+
+    if (ParenthesisExpression != nullptr) {
+        result.push_back(ParenthesisExpression);
+    }
+
+    return result;
+}
+
+NodesList ExpressionNode::GetChildNodes() const {
+    NodesList result;
+    result.push_back(AdditiveExpression);
+
+    return result;
+}
+
+NodesList ReturnStatementNode::GetChildNodes() const {
+    NodesList result;
+    result.push_back(Expression);
+
+    return result;
+}
+
+NodesList ConditionalStatementNode::GetChildNodes() const {
+    NodesList result;
+
+    result.push_back(LeftExpression);
+    result.push_back(RightExpression);
+    result.push_back(ThenStatements);
+
+    if (ElseStatements != nullptr) {
+        result.push_back(ElseStatements);
+    }
+
+    return result;
+}
+
+NodesList StatementNode::GetChildNodes() const {
+    NodesList result;
+
+    if (Conditional != nullptr) {
+        result.push_back(Conditional);
+    }
+
+    if (Return != nullptr) {
+        result.push_back(Return);
+    }
+
+    if (Assign != nullptr) {
+        result.push_back(Assign);
+    }
+
+    return result;
+}
+
+NodesList FunctionDefinitionNode::GetChildNodes() const {
+    NodesList result;
+
+    result.push_back(Id);
+    result.push_back(Arguments);
+    result.push_back(Body);
+
+    return result;
+}
+
 NodesList FunctionCallNode::GetChildNodes() const {
     NodesList result;
 
