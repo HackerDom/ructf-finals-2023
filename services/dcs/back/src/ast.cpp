@@ -20,13 +20,6 @@ NodesList AssignStatementNode::GetChildNodes() const {
     return result;
 }
 
-NodesList ParenthesisExpressionNode::GetChildNodes() const {
-    NodesList result;
-    result.push_back(Expression);
-
-    return result;
-}
-
 NodesList UnaryExpressionNode::GetChildNodes() const {
     NodesList result;
 
