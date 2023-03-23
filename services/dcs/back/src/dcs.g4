@@ -10,13 +10,13 @@ argumentsDefinition: LEFT_PAREN (id (COMMA id)*)? RIGHT_PAREN;
 
 statementsList: LEFT_BRACE statement+ RIGHT_BRACE;
 
-statement: conditionalStatement | ((returnStatement | assignStatement) SEMICOLON);
+statement: conditionalStatement | returnStatement | assignStatement;
 
-returnStatement: RETURN expression;
+returnStatement: RETURN expression SEMICOLON;
 
 conditionalStatement: IF LEFT_PAREN expression (LESS | GREAT | LE | GE | EQ | NEQ) expression RIGHT_PAREN statementsList (ELSE statementsList)?;
 
-assignStatement: id ASSIGN expression;
+assignStatement: id ASSIGN expression SEMICOLON;
 
 expression: additiveExpression; 
 
@@ -24,9 +24,7 @@ additiveExpression: multiplicativeExpression ((PLUS | MINUS) multiplicativeExpre
 
 multiplicativeExpression: unaryExpression ((MUL | DIV) unaryExpression)*;
 
-unaryExpression: id | constantValue | functionCall | parenthesisExpression;
-
-parenthesisExpression: (LEFT_PAREN expression RIGHT_PAREN);
+unaryExpression: id | constantValue | functionCall | (LEFT_PAREN expression RIGHT_PAREN);
 
 functionCall: id LEFT_PAREN (expression (COMMA expression)*)? RIGHT_PAREN;
 

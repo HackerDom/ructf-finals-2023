@@ -91,6 +91,14 @@ static std::shared_ptr<StatementListNode> StatementsList(std::initializer_list<s
     return std::make_shared<StatementListNode>(statements);
 }
 
+static std::shared_ptr<AssignStatementNode> AssignStatement(const std::shared_ptr<IdNode> &id, const std::shared_ptr<ExpressionNode> &expression) {
+    return std::make_shared<AssignStatementNode>(id, expression);
+}
+
+static std::shared_ptr<StatementNode> StatementNodeAssign(const std::shared_ptr<AssignStatementNode> &assign) {
+    return std::make_shared<StatementNode>(nullptr, nullptr, assign);
+}
+
 static std::shared_ptr<ArgumentsDefinitionListNode> ArgumentsDefinitionList(std::initializer_list<std::shared_ptr<IdNode>> ids) {
     return std::make_shared<ArgumentsDefinitionListNode>(ids);
 }
@@ -145,7 +153,7 @@ x = +42.43;
 )",
         Program(
             {
-                    ConstantDefinition(Id("x"), Constant(Double("+42.43")))
+                ConstantDefinition(Id("x"), Constant(Double("+42.43")))
             },
             {
             }
@@ -159,7 +167,7 @@ x = 42.43;
 )",
         Program(
             {
-                    ConstantDefinition(Id("x"), Constant(Double("42.43")))
+                ConstantDefinition(Id("x"), Constant(Double("42.43")))
             },
             {
             }
@@ -326,5 +334,46 @@ fun main(x)
 )",
         nullptr,
         "expected LEFT_BRACE, but got Token(TokenType::Eof, \"\")"
+    );
+}
+
+TEST(Parser, ConstantWithEmptyFunction) {
+    assertTextParsing(
+        R"(
+x = +42.43;
+
+fun main(_some_arg) {}
+)",
+        Program(
+            {
+                ConstantDefinition(Id("x"), Constant(Double("+42.43")))
+            },
+            {
+                FunctionDefinition(Id("main"), ArgumentsDefinitionList({Id("_some_arg")}), StatementsList({}))
+            }
+        ),
+        ""
+    );
+}
+
+TEST(Parser, AssignExpression) {
+    assertTextParsing(
+        R"(
+fun main() {
+    x = 42;
+}
+)",
+        Program(
+            {
+            },
+            {
+                FunctionDefinition(
+                    Id("main"),
+                    ArgumentsDefinitionList({}),
+                    StatementsList({})
+                )
+            }
+        ),
+        ""
     );
 }

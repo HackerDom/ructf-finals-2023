@@ -17,7 +17,6 @@ public:
         Id,
         ConstantDefinition,
         AssignStatement,
-        ParenthesisExpression,
         FunctionCall,
         UnaryExpression,
         AdditiveExpression,
@@ -96,18 +95,6 @@ public:
     std::shared_ptr<ExpressionNode> Expression;
 };
 
-class ParenthesisExpressionNode : public AstNode {
-public:
-    explicit ParenthesisExpressionNode(std::shared_ptr<ExpressionNode> expression)
-        : AstNode(Type::ParenthesisExpression), Expression(std::move(expression)) {
-    }
-    ~ParenthesisExpressionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
-    [[nodiscard]] NodesList GetChildNodes() const override;
-
-    std::shared_ptr<ExpressionNode> Expression;
-};
-
 class FunctionCallNode : public AstNode {
 public:
     typedef std::vector<std::shared_ptr<ExpressionNode>> ExpressionList;
@@ -129,8 +116,12 @@ public:
         std::shared_ptr<IdNode> id,
         std::shared_ptr<ConstantValueNode> constant,
         std::shared_ptr<FunctionCallNode> functionCall,
-        std::shared_ptr<ParenthesisExpressionNode> parenthesisExpression
-    ) : AstNode(Type::UnaryExpression), Id(std::move(id)), Constant(std::move(constant)), FunctionCall(std::move(functionCall)), ParenthesisExpression(std::move(parenthesisExpression)) {
+        std::shared_ptr<ExpressionNode> parenthesisExpression
+    ) : AstNode(Type::UnaryExpression),
+        Id(std::move(id)),
+        Constant(std::move(constant)),
+        FunctionCall(std::move(functionCall)),
+        ParenthesisExpression(std::move(parenthesisExpression)) {
     }
     ~UnaryExpressionNode() override = default;
     // void Print(std::ostream &stream, int depth) const override;
@@ -139,35 +130,49 @@ public:
     std::shared_ptr<IdNode> Id;
     std::shared_ptr<ConstantValueNode> Constant;
     std::shared_ptr<FunctionCallNode> FunctionCall;
-    std::shared_ptr<ParenthesisExpressionNode> ParenthesisExpression;
+    std::shared_ptr<ExpressionNode> ParenthesisExpression;
 };
 
 class MultiplicativeExpressionNode : public AstNode {
 public:
-    typedef std::vector<std::shared_ptr<UnaryExpressionNode>> UnaryExpressionList;
+    enum OperationType {
+        Mul,
+        Div
+    };
 
-    explicit MultiplicativeExpressionNode(UnaryExpressionList unaryExpressions)
-        : AstNode(Type::MultiplicativeExpression), UnaryExpressions(std::move(unaryExpressions)) {
+    typedef std::vector<std::shared_ptr<UnaryExpressionNode>> UnaryExpressionList;
+    typedef std::vector<OperationType> OperationListT;
+
+    explicit MultiplicativeExpressionNode(UnaryExpressionList unaryExpressions, OperationListT operations)
+        : AstNode(Type::MultiplicativeExpression), UnaryExpressions(std::move(unaryExpressions)), Operations(std::move(operations)) {
     }
     ~MultiplicativeExpressionNode() override = default;
     // void Print(std::ostream &stream, int depth) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     UnaryExpressionList UnaryExpressions;
+    OperationListT Operations;
 };
 
 class AdditiveExpressionNode : public AstNode {
 public:
-    typedef std::vector<std::shared_ptr<MultiplicativeExpressionNode>> MultiplicativeExpressionList;
+    enum OperationType {
+        Sum,
+        Sub
+    };
 
-    explicit AdditiveExpressionNode(MultiplicativeExpressionList multiplicativeExpressions)
-        : AstNode(Type::AdditiveExpression), MultiplicativeExpressions(std::move(multiplicativeExpressions)) {
+    typedef std::vector<std::shared_ptr<MultiplicativeExpressionNode>> MultiplicativeExpressionList;
+    typedef std::vector<OperationType> OperationsListT;
+
+    explicit AdditiveExpressionNode(MultiplicativeExpressionList multiplicativeExpressions, OperationsListT operations)
+        : AstNode(Type::AdditiveExpression), MultiplicativeExpressions(std::move(multiplicativeExpressions)), Operations(std::move(operations)) {
     }
     ~AdditiveExpressionNode() override = default;
     // void Print(std::ostream &stream, int depth) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     MultiplicativeExpressionList MultiplicativeExpressions;
+    OperationsListT Operations;
 };
 
 class ExpressionNode : public AstNode {
