@@ -143,7 +143,7 @@ NodesList AdditiveExpressionNode::GetChildNodes() const {
     return result;
 }
 
-NodesList MultiplicativeExpression::GetChildNodes() const {
+NodesList MultiplicativeExpressionNode::GetChildNodes() const {
     NodesList result;
 
     result.reserve(UnaryExpressions.size());
