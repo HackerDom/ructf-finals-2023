@@ -5,11 +5,11 @@
 
 #include <gtest/gtest.h>
 
-#include "parser/lexer.h"
+#include "lexer.h"
 
 using namespace std::literals;
 
-static std::string tokensToString(std::vector<Token> tokens) {
+static std::string tokensToString(const std::vector<Token>& tokens) {
     std::stringstream ss;
 
     for (auto t : tokens) {
@@ -19,7 +19,7 @@ static std::string tokensToString(std::vector<Token> tokens) {
     return ss.str();
 }
 
-static void assertTokenizeResult(std::string_view text, std::initializer_list<Token> expectedTokens, std::string expectedError) {
+static void assertTokenizeResult(std::string_view text, std::initializer_list<Token> expectedTokens, const std::string &expectedError) {
     auto result = TokenizeString(text);
 
     EXPECT_EQ(tokensToString(result.tokens), tokensToString(expectedTokens));

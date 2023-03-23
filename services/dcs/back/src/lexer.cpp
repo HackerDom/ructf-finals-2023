@@ -129,7 +129,7 @@ TokenizeResult TokenizeString(std::string_view input) {
                 return {false, r.errorMessage, std::move(tokens)};
             }
 
-            tokens.emplace_back(std::move(r.token));
+            tokens.emplace_back(r.token);
         } else if (std::isdigit(c)) {
             auto r = readNumber(input, i);
 
@@ -137,7 +137,7 @@ TokenizeResult TokenizeString(std::string_view input) {
                 return {false, r.errorMessage, std::move(tokens)};
             }
 
-            tokens.emplace_back(std::move(r.token));
+            tokens.emplace_back(r.token);
         } else if (c == '(') {
             tokens.emplace_back(TokenType::LeftParen, input.substr(i, 1));
         } else if (c == ')') {
@@ -182,7 +182,7 @@ TokenizeResult TokenizeString(std::string_view input) {
                     return {false, r.errorMessage, std::move(tokens)};
                 }
 
-                tokens.emplace_back(std::move(r.token));
+                tokens.emplace_back(r.token);
             } else {
                 tokens.emplace_back(TokenType::Plus, input.substr(i, 1));
             }
@@ -194,7 +194,7 @@ TokenizeResult TokenizeString(std::string_view input) {
                     return {false, r.errorMessage, std::move(tokens)};
                 }
 
-                tokens.emplace_back(std::move(r.token));
+                tokens.emplace_back(r.token);
             } else {
                 tokens.emplace_back(TokenType::Minus, input.substr(i, 1));
             }
