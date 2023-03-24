@@ -34,7 +34,7 @@ public:
     explicit AstNode(Type nodeType) : NodeType(nodeType) {
     }
     virtual ~AstNode() = default;
-//    virtual void Print(std::ostream &stream, int depth) const = 0;
+    virtual void Print(std::ostream &stream, const std::string &tab, bool last) const = 0;
     [[nodiscard]] virtual NodesList GetChildNodes() const = 0;
 
     const Type NodeType;
@@ -54,7 +54,7 @@ public:
     explicit ConstantValueNode(double value) : LeafAstNode(Type::ConstantValue), Value(value) {
     }
     ~ConstantValueNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
 
     double Value;
 };
@@ -64,7 +64,7 @@ public:
     explicit IdNode(std::string name) : LeafAstNode(Type::Id), Name(std::move(name)) {
     }
     ~IdNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+     void Print(std::ostream &stream, const std::string &tab, bool last) const override;
 
     std::string Name;
 };
@@ -75,7 +75,7 @@ public:
         : AstNode(Type::ConstantDefinition), Id(std::move(id)), Value(std::move(value)) {
     }
     ~ConstantDefinitionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
@@ -88,7 +88,7 @@ public:
         : AstNode(Type::AssignStatement), Id(std::move(id)), Expression(std::move(expression)) {
     }
     ~AssignStatementNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
@@ -103,7 +103,7 @@ public:
         : AstNode(Type::FunctionCall), Id(std::move(id)), Expressions(std::move(expressions)) {
     }
     ~FunctionCallNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
@@ -124,7 +124,7 @@ public:
         ParenthesisExpression(std::move(parenthesisExpression)) {
     }
     ~UnaryExpressionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
@@ -147,7 +147,7 @@ public:
         : AstNode(Type::MultiplicativeExpression), UnaryExpressions(std::move(unaryExpressions)), Operations(std::move(operations)) {
     }
     ~MultiplicativeExpressionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     UnaryExpressionList UnaryExpressions;
@@ -168,7 +168,7 @@ public:
         : AstNode(Type::AdditiveExpression), MultiplicativeExpressions(std::move(multiplicativeExpressions)), Operations(std::move(operations)) {
     }
     ~AdditiveExpressionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     MultiplicativeExpressionList MultiplicativeExpressions;
@@ -181,7 +181,7 @@ public:
         : AstNode(Type::Expression), AdditiveExpression(std::move(additive)) {
     }
     ~ExpressionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<AdditiveExpressionNode> AdditiveExpression;
@@ -193,7 +193,7 @@ public:
         : AstNode(Type::ReturnStatement), Expression(std::move(expression)) {
     }
     ~ReturnStatementNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<ExpressionNode> Expression;
@@ -207,7 +207,7 @@ public:
         : AstNode(Type::StatementList), Statements(std::move(statements)) {
     }
     ~StatementListNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     StatementNodeList Statements;
@@ -238,7 +238,7 @@ public:
         ElseStatements(std::move(elseStatements)) {
     }
     ~ConditionalStatementNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<ExpressionNode> LeftExpression;
@@ -257,7 +257,7 @@ public:
     ) : AstNode(Type::Statement), Conditional(std::move(conditional)), Return(std::move(return_)), Assign(std::move(assign)) {
     }
     ~StatementNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<ConditionalStatementNode> Conditional;
@@ -272,7 +272,7 @@ public:
     explicit ArgumentsDefinitionListNode(IdList ids) : AstNode(Type::ArgumentsDefinitionList), Ids(std::move(ids)) {
     }
     ~ArgumentsDefinitionListNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     IdList Ids;
@@ -287,7 +287,7 @@ public:
     ) : AstNode(Type::FunctionDefinition), Id(std::move(id)), Arguments(std::move(arguments)), Body(std::move(body)) {
     }
     ~FunctionDefinitionNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     std::shared_ptr<IdNode> Id;
@@ -304,7 +304,7 @@ public:
         : AstNode(Type::DcsProgram), Constants(std::move(constants)), Functions(std::move(functions)) {
     }
     ~DcsProgramNode() override = default;
-    // void Print(std::ostream &stream, int depth) const override;
+    void Print(std::ostream &stream, const std::string &tab, bool last) const override;
     [[nodiscard]] NodesList GetChildNodes() const override;
 
     ConstantsListT Constants;

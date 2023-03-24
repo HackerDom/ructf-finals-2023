@@ -3,7 +3,7 @@
 #include <cctype>
 #include <sstream>
 
-static const char* tokenTypeNames[] = {
+static const char* TokenTypeNames[] = {
     "Assign",
     "Semicolon",
     "LeftParen",
@@ -30,14 +30,14 @@ static const char* tokenTypeNames[] = {
     "Eof"
 };
 
-static const char *GetTokenTypeName(TokenType t) {
-    return tokenTypeNames[static_cast<int>(t)];
+static const char *GetTokenTypeName(Token::Type t) {
+    return TokenTypeNames[static_cast<int>(t)];
 }
 
 std::string Token::String() const {
     std::stringstream ss;
 
-    ss << "Token(TokenType::" << GetTokenTypeName(type) << ", \"" << value << "\")";
+    ss << "Token(Type::" << GetTokenTypeName(type) << ", \"" << value << "\")";
 
     return ss.str();
 }
@@ -64,16 +64,16 @@ static TokenReadResult readNameOrKeyword(std::string_view input, int &i) {
     --i; // for reading cycle
 
     if (s == "fun") {
-        return {Token(TokenType::Fun, s), ""};
+        return {Token(Token::Type::Fun, s), ""};
     } else if (s == "return") {
-        return {Token(TokenType::Return, s), ""};
+        return {Token(Token::Type::Return, s), ""};
     } else if (s == "if") {
-        return {Token(TokenType::If, s), ""};
+        return {Token(Token::Type::If, s), ""};
     } else if (s == "else") {
-        return {Token(TokenType::Else, s), ""};
+        return {Token(Token::Type::Else, s), ""};
     }
 
-    return {Token(TokenType::Name, s), ""};
+    return {Token(Token::Type::Name, s), ""};
 }
 
 static inline bool isNumberSymbol(char c) {
@@ -101,14 +101,14 @@ static TokenReadResult readNumber(std::string_view input, int &i) {
     if (dotCounter > 1) {
         std::stringstream ss;
         ss << "too many dots for '" << input.substr(start, i - start) << "'";
-        return {Token(TokenType::Eof, ""), ss.str()};
+        return {Token(Token::Type::Eof, ""), ss.str()};
     }
 
     auto s = input.substr(start, i - start);
 
     --i; // for reading cycle
 
-    return {Token(TokenType::Number, s), ""};
+    return {Token(Token::Type::Number, s), ""};
 }
 
 TokenizeResult TokenizeString(std::string_view input) {
@@ -139,37 +139,37 @@ TokenizeResult TokenizeString(std::string_view input) {
 
             tokens.emplace_back(r.token);
         } else if (c == '(') {
-            tokens.emplace_back(TokenType::LeftParen, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::LeftParen, input.substr(i, 1));
         } else if (c == ')') {
-            tokens.emplace_back(TokenType::RightParen, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::RightParen, input.substr(i, 1));
         } else if (c == '{') {
-            tokens.emplace_back(TokenType::LeftBrace, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::LeftBrace, input.substr(i, 1));
         } else if (c == '}') {
-            tokens.emplace_back(TokenType::RightBrace, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::RightBrace, input.substr(i, 1));
         } else if (c == '=') {
             if (i != len - 1 && input[i + 1] == '=') {
-                tokens.emplace_back(TokenType::Eq, input.substr(i, 2));
+                tokens.emplace_back(Token::Type::Eq, input.substr(i, 2));
                 ++i;
             } else {
-                tokens.emplace_back(TokenType::Assign, input.substr(i, 1));
+                tokens.emplace_back(Token::Type::Assign, input.substr(i, 1));
             }
         } else if (c == '<') {
             if (i != len - 1 && input[i + 1] == '=') {
-                tokens.emplace_back(TokenType::Le, input.substr(i, 2));
+                tokens.emplace_back(Token::Type::Le, input.substr(i, 2));
                 ++i;
             } else {
-                tokens.emplace_back(TokenType::Less, input.substr(i, 1));
+                tokens.emplace_back(Token::Type::Less, input.substr(i, 1));
             }
         } else if (c == '>') {
             if (i != len - 1 && input[i + 1] == '=') {
-                tokens.emplace_back(TokenType::Ge, input.substr(i, 2));
+                tokens.emplace_back(Token::Type::Ge, input.substr(i, 2));
                 ++i;
             } else {
-                tokens.emplace_back(TokenType::Great, input.substr(i, 1));
+                tokens.emplace_back(Token::Type::Great, input.substr(i, 1));
             }
         } else if (c == '!') {
             if (i != len - 1 && input[i + 1] == '=') {
-                tokens.emplace_back(TokenType::Neq, input.substr(i, 2));
+                tokens.emplace_back(Token::Type::Neq, input.substr(i, 2));
                 ++i;
             } else {
                 return {false, "expected '=' after '!'", std::move(tokens)};
@@ -184,7 +184,7 @@ TokenizeResult TokenizeString(std::string_view input) {
 
                 tokens.emplace_back(r.token);
             } else {
-                tokens.emplace_back(TokenType::Plus, input.substr(i, 1));
+                tokens.emplace_back(Token::Type::Plus, input.substr(i, 1));
             }
         } else if (c == '-') {
             if (i != len - 1 && std::isdigit(input[i + 1])) {
@@ -196,23 +196,23 @@ TokenizeResult TokenizeString(std::string_view input) {
 
                 tokens.emplace_back(r.token);
             } else {
-                tokens.emplace_back(TokenType::Minus, input.substr(i, 1));
+                tokens.emplace_back(Token::Type::Minus, input.substr(i, 1));
             }
         } else if (c == '*') {
-            tokens.emplace_back(TokenType::Mul, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::Mul, input.substr(i, 1));
         } else if (c == '/') {
-            tokens.emplace_back(TokenType::Div, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::Div, input.substr(i, 1));
         } else if (c == ';') {
-            tokens.emplace_back(TokenType::Semicolon, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::Semicolon, input.substr(i, 1));
         } else if (c == ',') {
-            tokens.emplace_back(TokenType::Comma, input.substr(i, 1));
+            tokens.emplace_back(Token::Type::Comma, input.substr(i, 1));
         } else {
             using namespace std::literals;
             return {false, "unexpected symbol "s + c + " at "s + std::to_string(i)};
         }
     }
 
-    tokens.emplace_back(TokenType::Eof, "");
+    tokens.emplace_back(Token::Type::Eof, "");
 
     return {true, "", std::move(tokens)};
 }
