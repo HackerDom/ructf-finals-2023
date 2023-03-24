@@ -1,6 +1,9 @@
+#include <sstream>
+
 #include <gtest/gtest.h>
 
 #include "parser.h"
+#include "utils.h"
 
 void assertNodeValues(const std::shared_ptr<AstNode> &expected, const std::shared_ptr<AstNode> &actual) {
     ASSERT_EQ(expected->NodeType, actual->NodeType);
@@ -24,6 +27,20 @@ void assertNodeValues(const std::shared_ptr<AstNode> &expected, const std::share
         auto a = dynamic_cast<ConditionalStatementNode*>(actual.get());
 
         ASSERT_EQ(e->Condition, a->Condition);
+    }
+
+    if (expected->NodeType == AstNode::Type::AdditiveExpression) {
+        auto e = dynamic_cast<AdditiveExpressionNode*>(expected.get());
+        auto a = dynamic_cast<AdditiveExpressionNode*>(actual.get());
+
+        ASSERT_EQ(e->Operations, a->Operations);
+    }
+
+    if (expected->NodeType == AstNode::Type::MultiplicativeExpression) {
+        auto e = dynamic_cast<MultiplicativeExpressionNode*>(expected.get());
+        auto a = dynamic_cast<MultiplicativeExpressionNode*>(actual.get());
+
+        ASSERT_EQ(e->Operations, a->Operations);
     }
 }
 
@@ -83,6 +100,10 @@ static std::shared_ptr<ConstantValueNode> Constant(double value) {
     return std::make_shared<ConstantValueNode>(value);
 }
 
+static std::shared_ptr<FunctionCallNode> FunctionCall(const std::shared_ptr<IdNode> &id, std::initializer_list<std::shared_ptr<ExpressionNode>> args) {
+    return std::make_shared<FunctionCallNode>(id, args);
+}
+
 static std::shared_ptr<ConstantDefinitionNode> ConstantDefinition(const std::shared_ptr<IdNode> &id, const std::shared_ptr<ConstantValueNode> &value) {
     return std::make_shared<ConstantDefinitionNode>(id, value);
 }
@@ -91,12 +112,48 @@ static std::shared_ptr<StatementListNode> StatementsList(std::initializer_list<s
     return std::make_shared<StatementListNode>(statements);
 }
 
+static std::shared_ptr<ExpressionNode> Expression(const std::shared_ptr<AdditiveExpressionNode> &additive) {
+    return std::make_shared<ExpressionNode>(additive);
+}
+
+static std::shared_ptr<AdditiveExpressionNode> Additive(std::initializer_list<std::shared_ptr<MultiplicativeExpressionNode>> mul, std::initializer_list<AdditiveExpressionNode::OperationType> ops) {
+    return std::make_shared<AdditiveExpressionNode>(mul, ops);
+}
+
+static std::shared_ptr<MultiplicativeExpressionNode> Multiplicative(std::initializer_list<std::shared_ptr<UnaryExpressionNode>> s, std::initializer_list<MultiplicativeExpressionNode::OperationType> ops) {
+    return std::make_shared<MultiplicativeExpressionNode>(s, ops);
+}
+
+static std::shared_ptr<UnaryExpressionNode> UnaryId(const std::shared_ptr<IdNode> &id) {
+    return std::make_shared<UnaryExpressionNode>(id, nullptr, nullptr, nullptr);
+}
+
+static std::shared_ptr<UnaryExpressionNode> UnaryConst(const std::shared_ptr<ConstantValueNode> &c) {
+    return std::make_shared<UnaryExpressionNode>(nullptr, c, nullptr, nullptr);
+}
+
+static std::shared_ptr<UnaryExpressionNode> UnaryCall(const std::shared_ptr<FunctionCallNode> &fc) {
+    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, fc, nullptr);
+}
+
+static std::shared_ptr<UnaryExpressionNode> UnaryParenthesis(const std::shared_ptr<ExpressionNode> &e) {
+    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e);
+}
+
+static std::shared_ptr<ReturnStatementNode> Return(const std::shared_ptr<ExpressionNode> &e) {
+    return std::make_shared<ReturnStatementNode>(e);
+}
+
 static std::shared_ptr<AssignStatementNode> AssignStatement(const std::shared_ptr<IdNode> &id, const std::shared_ptr<ExpressionNode> &expression) {
     return std::make_shared<AssignStatementNode>(id, expression);
 }
 
-static std::shared_ptr<StatementNode> StatementNodeAssign(const std::shared_ptr<AssignStatementNode> &assign) {
+static std::shared_ptr<StatementNode> StatementAssign(const std::shared_ptr<AssignStatementNode> &assign) {
     return std::make_shared<StatementNode>(nullptr, nullptr, assign);
+}
+
+static std::shared_ptr<StatementNode> StatementReturn(const std::shared_ptr<ReturnStatementNode> &e) {
+    return std::make_shared<StatementNode>(nullptr, e, nullptr);
 }
 
 static std::shared_ptr<ArgumentsDefinitionListNode> ArgumentsDefinitionList(std::initializer_list<std::shared_ptr<IdNode>> ids) {
@@ -124,7 +181,7 @@ TEST(Parser, EmptyTokens) {
 
 TEST(Parser, OnlyEof) {
     assertTokenParsing(
-        {Token(TokenType::Eof, "")},
+        {Token(Token::Type::Eof, "")},
         Program({}, {}),
         ""
     );
@@ -182,7 +239,7 @@ TEST(Parser, ConstantDefinitionNameDuplicated) {
 x x = 42.43;
 )",
         nullptr,
-        "expected ASSIGN, but got Token(TokenType::Name, \"x\")"
+        "expected ASSIGN, but got Token(Type::Name, \"x\")"
     );
 }
 
@@ -192,7 +249,7 @@ TEST(Parser, ConstantDefinitionNoAssign) {
 x 42.43;
 )",
         nullptr,
-        "expected ASSIGN, but got Token(TokenType::Number, \"42.43\")"
+        "expected ASSIGN, but got Token(Type::Number, \"42.43\")"
     );
 }
 
@@ -202,7 +259,7 @@ TEST(Parser, ConstantDefinitionNoSemicolon) {
 x = 42.43
 )",
         nullptr,
-        "expected SEMICOLON, but got Token(TokenType::Eof, \"\")"
+        "expected SEMICOLON, but got Token(Type::Eof, \"\")"
     );
 }
 
@@ -212,7 +269,7 @@ TEST(Parser, ConstantDefinitionNoNumber) {
 x = x;
 )",
         nullptr,
-        "expected NUMBER, but got Token(TokenType::Name, \"x\")"
+        "expected NUMBER, but got Token(Type::Name, \"x\")"
     );
 }
 
@@ -312,7 +369,7 @@ TEST(Parser, FunctionWithNoArgumentsList) {
 fun main {}
 )",
         nullptr,
-        "expected LEFT_PAREN, but got Token(TokenType::LeftBrace, \"{\")"
+        "expected LEFT_PAREN, but got Token(Type::LeftBrace, \"{\")"
     );
 }
 
@@ -323,7 +380,7 @@ TEST(Parser, FunctionWithNoRightBraceAtArgumentsList) {
 fun main(x {}
 )",
         nullptr,
-        "expected RIGHT_PAREN, but got Token(TokenType::LeftBrace, \"{\")"
+        "expected RIGHT_PAREN, but got Token(Type::LeftBrace, \"{\")"
     );
 }
 
@@ -333,7 +390,7 @@ TEST(Parser, FunctionNoBody) {
 fun main(x)
 )",
         nullptr,
-        "expected LEFT_BRACE, but got Token(TokenType::Eof, \"\")"
+        "expected LEFT_BRACE, but got Token(Type::Eof, \"\")"
     );
 }
 
@@ -370,10 +427,728 @@ fun main() {
                 FunctionDefinition(
                     Id("main"),
                     ArgumentsDefinitionList({}),
-                    StatementsList({})
+                    StatementsList({
+                                           StatementAssign(AssignStatement(Id("x"), Expression(
+                                                   Additive({Multiplicative({UnaryConst(Constant(Double("42")))},
+                                                                            {})}, {})))
+                                           )
+                    })
                 )
             }
         ),
         ""
     );
+}
+
+TEST(Parser, ReturnStatement) {
+    assertTextParsing(
+        R"(
+fun main() {
+return 42;
+}
+)",
+        Program(
+            {
+            },
+            {
+                FunctionDefinition(
+                    Id("main"),
+                    ArgumentsDefinitionList({}),
+                    StatementsList({
+                               StatementReturn(Return(Expression(
+                                       Additive({Multiplicative({UnaryConst(Constant(Double("42")))}, {})}, {}))
+                               ))
+                    })
+                )
+            }
+        ),
+        ""
+    );
+}
+
+TEST(Parser, FunctionCall) {
+    auto expression = Expression(
+            Additive({Multiplicative({UnaryCall(FunctionCall(Id("func"), {}))}, {})}, {})
+    );
+
+    assertTextParsing(
+        R"(
+fun main() {
+    return func();
+}
+)",
+        Program(
+            {
+            },
+            {
+                FunctionDefinition(
+                    Id("main"),
+                    ArgumentsDefinitionList({}),
+                    StatementsList({
+                           StatementReturn(Return(expression))
+                   })
+                )
+            }
+        ),
+        ""
+    );
+}
+
+TEST(Parser, FunctionCallWithArguments) {
+    auto arg1 = Expression(Additive({Multiplicative({UnaryId(Id("x1"))}, {})}, {}));
+    auto arg2 = Expression(Additive({
+        Multiplicative({UnaryConst(Constant(Double("4")))}, {}),
+        Multiplicative({UnaryConst(Constant(Double("3")))}, {})}, {AdditiveExpressionNode::Sum}));
+    auto arg3 = Expression(Additive({
+        Multiplicative({UnaryId(Id("x3")), UnaryConst(Constant(Double("7.43")))}, {MultiplicativeExpressionNode::Mul})}, {}));
+
+    auto expression = Expression(
+        Additive({Multiplicative({UnaryCall(FunctionCall(Id("func"), {arg1, arg2, arg3}))}, {})}, {})
+    );
+
+    assertTextParsing(
+        R"(
+fun main() {
+    return func(x1, 4 + 3, x3 * 7.43);
+}
+)",
+        Program(
+            {
+            },
+            {
+                FunctionDefinition(
+                    Id("main"),
+                    ArgumentsDefinitionList({}),
+                    StatementsList({
+                                           StatementReturn(Return(expression))
+                                   })
+                )
+            }
+        ),
+        ""
+    );
+}
+
+TEST(Parser, ParenthesisExpressions) {
+    auto par = Expression(Additive({Multiplicative({UnaryConst(Constant(Double("4")))}, {}), Multiplicative({UnaryConst(Constant(Double("3")))}, {})}, {AdditiveExpressionNode::Sub}));
+    auto expression = Expression(
+            Additive({
+                Multiplicative({UnaryParenthesis(par), UnaryId(Id("x"))}, {MultiplicativeExpressionNode::Div})}, {})
+    );
+
+    assertTextParsing(
+        R"(
+fun main() {
+    return (4 - 3) / x;
+}
+)",
+        Program(
+            {
+            },
+            {
+                FunctionDefinition(
+                    Id("main"),
+                    ArgumentsDefinitionList({}),
+                    StatementsList({
+                                           StatementReturn(Return(expression))
+                                   })
+                )
+            }
+        ),
+        ""
+    );
+}
+
+static void assertParsingByPrint(const std::string &text, const std::string &expectedTree, const std::string &errorMessage) {
+    auto tokensResult = TokenizeString(text);
+    ASSERT_TRUE(tokensResult.success);
+    auto sut = ParseTokens(tokensResult.tokens);
+
+    ASSERT_EQ(errorMessage, sut.errorMessage);
+
+    if (errorMessage.empty()) {
+        ASSERT_TRUE(sut.success);
+
+        std::stringstream dumpStream;
+        sut.programNode->Print(dumpStream, "", true);
+        auto sutS = dumpStream.str();
+
+        Trim(sutS);
+        auto trimmedExpected = TrimCopy(expectedTree);
+
+        ASSERT_EQ(sutS, trimmedExpected);
+    } else {
+        EXPECT_FALSE(sut.success);
+    }
+}
+
+TEST(Parser, SeveralConstants) {
+    assertParsingByPrint(R"(
+x = 1;
+x = 2;
+e=+3.1415927;
+pi=-12323423.23452345245;
+)",
+R"(
+DcsProgramNode
+ ├ConstantDefinitionNode
+ │├IdNode 'x'
+ │└ConstantValueNode 1.000000
+ ├ConstantDefinitionNode
+ │├IdNode 'x'
+ │└ConstantValueNode 2.000000
+ ├ConstantDefinitionNode
+ │├IdNode 'e'
+ │└ConstantValueNode 3.141593
+ └ConstantDefinitionNode
+  ├IdNode 'pi'
+  └ConstantValueNode -12323423.234523
+)",
+"");
+}
+
+TEST(Parser, SeveralFunctions) {
+    assertParsingByPrint(R"(
+fun main() {}
+fun lol(yyyyy) {}
+fun ses(x, y, z) {}
+fun _dsfdsf(_, _, _323) {}
+)",
+R"(
+DcsProgramNode
+ ├FunctionDefinitionNode
+ │├IdNode 'main'
+ │├ArgumentsDefinitionListNode
+ │└StatementListNode
+ ├FunctionDefinitionNode
+ │├IdNode 'lol'
+ │├ArgumentsDefinitionListNode
+ ││└IdNode 'yyyyy'
+ │└StatementListNode
+ ├FunctionDefinitionNode
+ │├IdNode 'ses'
+ │├ArgumentsDefinitionListNode
+ ││├IdNode 'x'
+ ││├IdNode 'y'
+ ││└IdNode 'z'
+ │└StatementListNode
+ └FunctionDefinitionNode
+  ├IdNode '_dsfdsf'
+  ├ArgumentsDefinitionListNode
+  │├IdNode '_'
+  │├IdNode '_'
+  │└IdNode '_323'
+  └StatementListNode
+)",
+"");
+}
+
+TEST(Parser, MainFunctionWithAssignAndReturnStatement) {
+        assertParsingByPrint(R"(
+pi = 3.141592;
+e = 2.7;
+
+fun main() {
+    l = (3 + 4) * pi / e;
+    return l * l * pi * e - 228 / 1337;
+}
+)", R"(
+DcsProgramNode
+ ├ConstantDefinitionNode
+ │├IdNode 'pi'
+ │└ConstantValueNode 3.141592
+ ├ConstantDefinitionNode
+ │├IdNode 'e'
+ │└ConstantValueNode 2.700000
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   └MultiplicativeExpressionNode
+   │    ├UnaryExpressionNode
+   │    │└ExpressionNode
+   │    │ └AdditiveExpressionNode
+   │    │  ├MultiplicativeExpressionNode
+   │    │  │└UnaryExpressionNode
+   │    │  │ └ConstantValueNode 3.000000
+   │    │  ├SUM
+   │    │  └MultiplicativeExpressionNode
+   │    │   └UnaryExpressionNode
+   │    │    └ConstantValueNode 4.000000
+   │    ├MUL
+   │    ├UnaryExpressionNode
+   │    │└IdNode 'pi'
+   │    ├DIV
+   │    └UnaryExpressionNode
+   │     └IdNode 'e'
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       ├MultiplicativeExpressionNode
+       │├UnaryExpressionNode
+       ││└IdNode 'l'
+       │├MUL
+       │├UnaryExpressionNode
+       ││└IdNode 'l'
+       │├MUL
+       │├UnaryExpressionNode
+       ││└IdNode 'pi'
+       │├MUL
+       │└UnaryExpressionNode
+       │ └IdNode 'e'
+       ├SUB
+       └MultiplicativeExpressionNode
+        ├UnaryExpressionNode
+        │└ConstantValueNode 228.000000
+        ├DIV
+        └UnaryExpressionNode
+         └ConstantValueNode 1337.000000
+)",
+"");
+}
+
+TEST(Parser, AnotherFunctionTest) {
+    assertParsingByPrint(R"(
+pi = 3.141592;
+e = 2.7;
+
+fun another(x, y) {
+    return pi * x * y / e;
+}
+
+fun main() {
+    l = 1;
+    l = 1 + 1;
+    l = 1 + another(l, l);
+    return l;
+}
+)", R"(
+DcsProgramNode
+ ├ConstantDefinitionNode
+ │├IdNode 'pi'
+ │└ConstantValueNode 3.141592
+ ├ConstantDefinitionNode
+ │├IdNode 'e'
+ │└ConstantValueNode 2.700000
+ ├FunctionDefinitionNode
+ │├IdNode 'another'
+ │├ArgumentsDefinitionListNode
+ ││├IdNode 'x'
+ ││└IdNode 'y'
+ │└StatementListNode
+ │ └StatementNode
+ │  └ReturnStatementNode
+ │   └ExpressionNode
+ │    └AdditiveExpressionNode
+ │     └MultiplicativeExpressionNode
+ │      ├UnaryExpressionNode
+ │      │└IdNode 'pi'
+ │      ├MUL
+ │      ├UnaryExpressionNode
+ │      │└IdNode 'x'
+ │      ├MUL
+ │      ├UnaryExpressionNode
+ │      │└IdNode 'y'
+ │      ├DIV
+ │      └UnaryExpressionNode
+ │       └IdNode 'e'
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └ConstantValueNode 1.000000
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   ├MultiplicativeExpressionNode
+   │   │└UnaryExpressionNode
+   │   │ └ConstantValueNode 1.000000
+   │   ├SUM
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └ConstantValueNode 1.000000
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   ├MultiplicativeExpressionNode
+   │   │└UnaryExpressionNode
+   │   │ └ConstantValueNode 1.000000
+   │   ├SUM
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └FunctionCallNode
+   │      ├IdNode 'another'
+   │      ├ExpressionNode
+   │      │└AdditiveExpressionNode
+   │      │ └MultiplicativeExpressionNode
+   │      │  └UnaryExpressionNode
+   │      │   └IdNode 'l'
+   │      └ExpressionNode
+   │       └AdditiveExpressionNode
+   │        └MultiplicativeExpressionNode
+   │         └UnaryExpressionNode
+   │          └IdNode 'l'
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └IdNode 'l'
+)",
+"");
+}
+
+TEST(Parser, ConditionalNoElse) {
+    assertParsingByPrint(R"(
+pi = 3.141592;
+e = 2.7;
+
+fun main() {
+    l = -1;
+    if (pi == e) { l = 1; }
+    if (pi != e) { l = 2; }
+    if (pi < e) { l = 3; }
+    if (pi <= e) { l = 4; }
+    if (pi > e) { l = 5; }
+    if (pi >= e) { l = 6; }
+
+    return l;
+}
+)", R"(
+DcsProgramNode
+ ├ConstantDefinitionNode
+ │├IdNode 'pi'
+ │└ConstantValueNode 3.141592
+ ├ConstantDefinitionNode
+ │├IdNode 'e'
+ │└ConstantValueNode 2.700000
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └ConstantValueNode -1.000000
+   ├StatementNode
+   │└ConstantDefinitionNode EQ
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 1.000000
+   ├StatementNode
+   │└ConstantDefinitionNode NEQ
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 2.000000
+   ├StatementNode
+   │└ConstantDefinitionNode LESS
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 3.000000
+   ├StatementNode
+   │└ConstantDefinitionNode LE
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 4.000000
+   ├StatementNode
+   │└ConstantDefinitionNode GREAT
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 5.000000
+   ├StatementNode
+   │└ConstantDefinitionNode GE
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'pi'
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └IdNode 'e'
+   │ └StatementListNode
+   │  └StatementNode
+   │   └AssignStatementNode
+   │    ├IdNode 'l'
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 6.000000
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └IdNode 'l'
+)",
+"");
+}
+
+TEST(Parser, ConditionalWithElse) {
+    assertParsingByPrint(R"(
+pi = 3.141592;
+e = 2.7;
+
+fun main() {
+    if (pi > e) {
+        return 1;
+    } else {
+        if (pi == e) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+}
+)", R"(
+DcsProgramNode
+ ├ConstantDefinitionNode
+ │├IdNode 'pi'
+ │└ConstantValueNode 3.141592
+ ├ConstantDefinitionNode
+ │├IdNode 'e'
+ │└ConstantValueNode 2.700000
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ConstantDefinitionNode GREAT
+     ├ExpressionNode
+     │└AdditiveExpressionNode
+     │ └MultiplicativeExpressionNode
+     │  └UnaryExpressionNode
+     │   └IdNode 'pi'
+     ├ExpressionNode
+     │└AdditiveExpressionNode
+     │ └MultiplicativeExpressionNode
+     │  └UnaryExpressionNode
+     │   └IdNode 'e'
+     ├StatementListNode
+     │└StatementNode
+     │ └ReturnStatementNode
+     │  └ExpressionNode
+     │   └AdditiveExpressionNode
+     │    └MultiplicativeExpressionNode
+     │     └UnaryExpressionNode
+     │      └ConstantValueNode 1.000000
+     └StatementListNode
+      └StatementNode
+       └ConstantDefinitionNode EQ
+        ├ExpressionNode
+        │└AdditiveExpressionNode
+        │ └MultiplicativeExpressionNode
+        │  └UnaryExpressionNode
+        │   └IdNode 'pi'
+        ├ExpressionNode
+        │└AdditiveExpressionNode
+        │ └MultiplicativeExpressionNode
+        │  └UnaryExpressionNode
+        │   └IdNode 'e'
+        ├StatementListNode
+        │└StatementNode
+        │ └ReturnStatementNode
+        │  └ExpressionNode
+        │   └AdditiveExpressionNode
+        │    └MultiplicativeExpressionNode
+        │     └UnaryExpressionNode
+        │      └ConstantValueNode 0.000000
+        └StatementListNode
+         └StatementNode
+          └ReturnStatementNode
+           └ExpressionNode
+            └AdditiveExpressionNode
+             └MultiplicativeExpressionNode
+              └UnaryExpressionNode
+               └ConstantValueNode -1.000000
+)",
+"");
+}
+
+TEST(Parser, AnotherExample) {
+    assertParsingByPrint(R"(
+fun main() {
+    l = 1;
+    t = 2;
+    if ((l + 1) / (t + 2) == 1) {
+        return 1;
+    }
+    return 0;
+}
+)", R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 'l'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └ConstantValueNode 1.000000
+   ├StatementNode
+   │└AssignStatementNode
+   │ ├IdNode 't'
+   │ └ExpressionNode
+   │  └AdditiveExpressionNode
+   │   └MultiplicativeExpressionNode
+   │    └UnaryExpressionNode
+   │     └ConstantValueNode 2.000000
+   ├StatementNode
+   │└ConstantDefinitionNode EQ
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  ├UnaryExpressionNode
+   │ │  │└ExpressionNode
+   │ │  │ └AdditiveExpressionNode
+   │ │  │  ├MultiplicativeExpressionNode
+   │ │  │  │└UnaryExpressionNode
+   │ │  │  │ └IdNode 'l'
+   │ │  │  ├SUM
+   │ │  │  └MultiplicativeExpressionNode
+   │ │  │   └UnaryExpressionNode
+   │ │  │    └ConstantValueNode 1.000000
+   │ │  ├DIV
+   │ │  └UnaryExpressionNode
+   │ │   └ExpressionNode
+   │ │    └AdditiveExpressionNode
+   │ │     ├MultiplicativeExpressionNode
+   │ │     │└UnaryExpressionNode
+   │ │     │ └IdNode 't'
+   │ │     ├SUM
+   │ │     └MultiplicativeExpressionNode
+   │ │      └UnaryExpressionNode
+   │ │       └ConstantValueNode 2.000000
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └ConstantValueNode 1.000000
+   │ └StatementListNode
+   │  └StatementNode
+   │   └ReturnStatementNode
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 1.000000
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ConstantValueNode 0.000000
+)",
+"");
 }

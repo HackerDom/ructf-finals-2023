@@ -31,11 +31,11 @@ private:
         return tokenIndex < tokensCount ? currentToken().String() : "<nothing>";
     }
 
-    [[nodiscard]] bool currentTokenIs(TokenType t) {
+    [[nodiscard]] bool currentTokenIs(Token::Type t) {
         return tokenIndex < tokensCount && currentToken().type == t;
     }
 
-    [[nodiscard]] bool nextTokenIs(TokenType t) {
+    [[nodiscard]] bool nextTokenIs(Token::Type t) {
         return (tokenIndex + 1) < tokensCount && tokens[tokenIndex + 1].type == t;
     }
 
@@ -58,7 +58,85 @@ private:
     Parsed<UnaryExpressionNode> readUnaryExpressionNode();
     Parsed<FunctionCallNode> readFunctionCallNode();
     Parsed<AssignStatementNode> readAssigmentStatementNode();
+    Parsed<ConditionalStatementNode> readConditionalStatementNode();
 };
+
+Parsed<ConditionalStatementNode> ParserWithContext::readConditionalStatementNode() {
+    if (!currentTokenIs(Token::Type::If)) {
+        return {nullptr, Format("expected IF, but got %s", currentTokenAbout().c_str())};
+    }
+    acceptToken();
+
+    if (!currentTokenIs(Token::Type::LeftParen)) {
+        return {nullptr, Format("expected LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
+    }
+    acceptToken();
+
+    auto leftExpression = readExpressionNode();
+    if (!leftExpression.errorMessage.empty()) {
+        return {nullptr, leftExpression.errorMessage};
+    }
+
+    if (tokenIndex >= tokensCount) {
+        return {nullptr, "expected conditional operator, but got <nothing>"};
+    }
+
+    auto cond = ConditionalStatementNode::ConditionType();
+
+    switch (currentToken().type) {
+        case Token::Less:
+            cond = ConditionalStatementNode::Less;
+            break;
+        case Token::Great:
+            cond = ConditionalStatementNode::Great;
+            break;
+        case Token::Eq:
+            cond = ConditionalStatementNode::Eq;
+            break;
+        case Token::Neq:
+            cond = ConditionalStatementNode::Neq;
+            break;
+        case Token::Le:
+            cond = ConditionalStatementNode::Le;
+            break;
+        case Token::Ge:
+            cond = ConditionalStatementNode::Ge;
+            break;
+        default:
+            return {nullptr, Format("expected LESS | GREAT| EQ | NEQ | LE | GE, but got %s", currentTokenAbout().c_str())};
+    }
+    acceptToken();
+
+    auto rightExpression = readExpressionNode();
+    if (!rightExpression.errorMessage.empty()) {
+        return {nullptr, rightExpression.errorMessage};
+    }
+
+    if (!currentTokenIs(Token::Type::RightParen)) {
+        return {nullptr, Format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
+    }
+    acceptToken();
+
+    auto thenBlock = readStatementsListNode();
+    if (!thenBlock.errorMessage.empty()) {
+        return {nullptr, thenBlock.errorMessage};
+    }
+
+    auto elseBlock = std::shared_ptr<StatementListNode>(nullptr);
+
+    if (currentTokenIs(Token::Type::Else)) {
+        acceptToken();
+
+        auto e = readStatementsListNode();
+        if (!e.errorMessage.empty()) {
+            return {nullptr, e.errorMessage};
+        }
+
+        elseBlock = e.node;
+    }
+
+    return {std::make_shared<ConditionalStatementNode>(leftExpression.node, rightExpression.node, cond, thenBlock.node, elseBlock)};
+}
 
 Parsed<AssignStatementNode> ParserWithContext::readAssigmentStatementNode() {
     auto id = readIdNode();
@@ -66,8 +144,8 @@ Parsed<AssignStatementNode> ParserWithContext::readAssigmentStatementNode() {
         return {nullptr, id.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::Assign)) {
-        return {nullptr, format("expected ASSIGN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Assign)) {
+        return {nullptr, Format("expected ASSIGN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -76,8 +154,8 @@ Parsed<AssignStatementNode> ParserWithContext::readAssigmentStatementNode() {
         return {nullptr, expression.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::Semicolon)) {
-        return {nullptr, format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Semicolon)) {
+        return {nullptr, Format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -90,23 +168,23 @@ Parsed<FunctionCallNode> ParserWithContext::readFunctionCallNode() {
         return {nullptr, id.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::LeftParen)) {
-        return {nullptr, format("expected LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::LeftParen)) {
+        return {nullptr, Format("expected LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
     auto expressions = FunctionCallNode::ExpressionList();
 
-    if (currentTokenIs(TokenType::Name) ||
-        currentTokenIs(TokenType::Number) ||
-        currentTokenIs(TokenType::LeftParen)) {
+    if (currentTokenIs(Token::Type::Name) ||
+        currentTokenIs(Token::Type::Number) ||
+        currentTokenIs(Token::Type::LeftParen)) {
         auto expression = readExpressionNode();
         if (!expression.errorMessage.empty()) {
             return {nullptr, expression.errorMessage};
         }
         expressions.push_back(expression.node);
 
-        while (tokenIndex < tokensCount && currentTokenIs(TokenType::Comma)) {
+        while (tokenIndex < tokensCount && currentTokenIs(Token::Type::Comma)) {
             acceptToken();
 
             expression = readExpressionNode();
@@ -117,8 +195,8 @@ Parsed<FunctionCallNode> ParserWithContext::readFunctionCallNode() {
         }
     }
 
-    if (!currentTokenIs(TokenType::RightParen)) {
-        return {nullptr, format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::RightParen)) {
+        return {nullptr, Format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -126,8 +204,8 @@ Parsed<FunctionCallNode> ParserWithContext::readFunctionCallNode() {
 }
 
 Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
-    if (currentTokenIs(TokenType::Name)) {
-        if (nextTokenIs(TokenType::LeftParen)) {
+    if (currentTokenIs(Token::Type::Name)) {
+        if (nextTokenIs(Token::Type::LeftParen)) {
             auto fc = readFunctionCallNode();
             if (!fc.errorMessage.empty()) {
                 return {nullptr, fc.errorMessage};
@@ -144,7 +222,7 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
         return {std::make_shared<UnaryExpressionNode>(id.node, nullptr, nullptr, nullptr)};
     }
 
-    if (currentTokenIs(TokenType::Number)) {
+    if (currentTokenIs(Token::Type::Number)) {
         auto c = readConstantValueNode();
         if (!c.errorMessage.empty()) {
             return {nullptr, c.errorMessage};
@@ -153,13 +231,15 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
         return {std::make_shared<UnaryExpressionNode>(nullptr, c.node, nullptr, nullptr)};
     }
 
-    if (currentTokenIs(TokenType::LeftParen)) {
+    if (currentTokenIs(Token::Type::LeftParen)) {
+        acceptToken();
+
         auto e = readExpressionNode();
         if (!e.errorMessage.empty()) {
             return {nullptr, e.errorMessage};
         }
 
-        if (currentTokenIs(TokenType::RightParen)) {
+        if (currentTokenIs(Token::Type::RightParen)) {
             acceptToken();
 
             return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e.node)};
@@ -167,7 +247,7 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
 
     }
 
-    return {nullptr, format("expected NAME | NUMBER | LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
+    return {nullptr, Format("expected NAME | NUMBER | LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
 }
 
 Parsed<MultiplicativeExpressionNode> ParserWithContext::readMultiplicativeExpressionNode() {
@@ -181,7 +261,7 @@ Parsed<MultiplicativeExpressionNode> ParserWithContext::readMultiplicativeExpres
     unaryExpressions.push_back(unary.node);
 
     while (tokenIndex < tokensCount) {
-        if (currentTokenIs(TokenType::Mul)) {
+        if (currentTokenIs(Token::Type::Mul)) {
             acceptToken();
 
             unary = readUnaryExpressionNode();
@@ -191,7 +271,7 @@ Parsed<MultiplicativeExpressionNode> ParserWithContext::readMultiplicativeExpres
 
             operations.push_back(MultiplicativeExpressionNode::OperationType::Mul);
             unaryExpressions.push_back(unary.node);
-        } else if (currentTokenIs(TokenType::Div)) {
+        } else if (currentTokenIs(Token::Type::Div)) {
             acceptToken();
 
             unary = readUnaryExpressionNode();
@@ -220,7 +300,7 @@ Parsed<AdditiveExpressionNode> ParserWithContext::readAdditiveExpressionNode() {
     mulExpressions.push_back(mul.node);
 
     while (tokenIndex < tokensCount) {
-        if (currentTokenIs(TokenType::Plus)) {
+        if (currentTokenIs(Token::Type::Plus)) {
             acceptToken();
 
             mul = readMultiplicativeExpressionNode();
@@ -230,7 +310,7 @@ Parsed<AdditiveExpressionNode> ParserWithContext::readAdditiveExpressionNode() {
 
             operations.push_back(AdditiveExpressionNode::OperationType::Sum);
             mulExpressions.push_back(mul.node);
-        } else if (currentTokenIs(TokenType::Minus)) {
+        } else if (currentTokenIs(Token::Type::Minus)) {
             acceptToken();
 
             mul = readMultiplicativeExpressionNode();
@@ -249,11 +329,16 @@ Parsed<AdditiveExpressionNode> ParserWithContext::readAdditiveExpressionNode() {
 }
 
 Parsed<StatementNode> ParserWithContext::readStatementNode() {
-    if (currentTokenIs(TokenType::If)) {
-        return {nullptr, "if node read not implemented"};
+    if (currentTokenIs(Token::Type::If)) {
+        auto conditional = readConditionalStatementNode();
+        if (!conditional.errorMessage.empty()) {
+            return {nullptr, conditional.errorMessage};
+        }
+
+        return {std::make_shared<StatementNode>(conditional.node, nullptr, nullptr)};
     }
 
-    if (currentTokenIs(TokenType::Name)) {
+    if (currentTokenIs(Token::Type::Name)) {
         auto assigment = readAssigmentStatementNode();
         if (!assigment.errorMessage.empty()) {
             return {nullptr, assigment.errorMessage};
@@ -262,7 +347,7 @@ Parsed<StatementNode> ParserWithContext::readStatementNode() {
         return {std::make_shared<StatementNode>(nullptr, nullptr, assigment.node)};
     }
 
-    if (currentTokenIs(TokenType::Return)) {
+    if (currentTokenIs(Token::Type::Return)) {
         auto r = readReturnNode();
         if (!r.errorMessage.empty()) {
             return {nullptr, r.errorMessage};
@@ -271,7 +356,7 @@ Parsed<StatementNode> ParserWithContext::readStatementNode() {
         return {std::make_shared<StatementNode>(nullptr, r.node, nullptr)};
     }
 
-    return {nullptr, format("expected IF | NAME | RETURN, but got %s", currentTokenAbout().c_str())};
+    return {nullptr, Format("expected IF | NAME | RETURN, but got %s", currentTokenAbout().c_str())};
 }
 
 Parsed<ExpressionNode> ParserWithContext::readExpressionNode() {
@@ -284,8 +369,8 @@ Parsed<ExpressionNode> ParserWithContext::readExpressionNode() {
 }
 
 Parsed<ReturnStatementNode> ParserWithContext::readReturnNode() {
-    if (!currentTokenIs(TokenType::Return)) {
-        return {nullptr, format("expected RETURN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Return)) {
+        return {nullptr, Format("expected RETURN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -294,8 +379,8 @@ Parsed<ReturnStatementNode> ParserWithContext::readReturnNode() {
         return {nullptr, expression.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::Semicolon)) {
-        return {nullptr, format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Semicolon)) {
+        return {nullptr, Format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -303,14 +388,14 @@ Parsed<ReturnStatementNode> ParserWithContext::readReturnNode() {
 }
 
 Parsed<ArgumentsDefinitionListNode> ParserWithContext::readArgumentsDefinitionListNode() {
-    if (!currentTokenIs(TokenType::LeftParen)) {
-        return {nullptr, format("expected LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::LeftParen)) {
+        return {nullptr, Format("expected LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
     auto ids = ArgumentsDefinitionListNode::IdList();
 
-    if (currentTokenIs(TokenType::Name)) {
+    if (currentTokenIs(Token::Type::Name)) {
         auto r = readIdNode();
         if (!r.errorMessage.empty()) {
             return {nullptr, r.errorMessage};
@@ -318,7 +403,7 @@ Parsed<ArgumentsDefinitionListNode> ParserWithContext::readArgumentsDefinitionLi
 
         ids.push_back(r.node);
 
-        while (tokenIndex < tokensCount && currentTokenIs(TokenType::Comma)) {
+        while (tokenIndex < tokensCount && currentTokenIs(Token::Type::Comma)) {
             acceptToken();
 
             r = readIdNode();
@@ -330,8 +415,8 @@ Parsed<ArgumentsDefinitionListNode> ParserWithContext::readArgumentsDefinitionLi
         }
     }
 
-    if (!currentTokenIs(TokenType::RightParen)) {
-        return {nullptr, format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::RightParen)) {
+        return {nullptr, Format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -339,14 +424,14 @@ Parsed<ArgumentsDefinitionListNode> ParserWithContext::readArgumentsDefinitionLi
 }
 
 Parsed<StatementListNode> ParserWithContext::readStatementsListNode() {
-    if (!currentTokenIs(TokenType::LeftBrace)) {
-        return {nullptr, format("expected LEFT_BRACE, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::LeftBrace)) {
+        return {nullptr, Format("expected LEFT_BRACE, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
     auto statements = StatementListNode::StatementNodeList();
 
-    while (tokenIndex < tokensCount && !currentTokenIs(TokenType::RightBrace)) {
+    while (tokenIndex < tokensCount && !currentTokenIs(Token::Type::RightBrace)) {
         auto st = readStatementNode();
         if (!st.errorMessage.empty()) {
             return {nullptr, st.errorMessage};
@@ -355,8 +440,8 @@ Parsed<StatementListNode> ParserWithContext::readStatementsListNode() {
         statements.push_back(st.node);
     }
 
-    if (!currentTokenIs(TokenType::RightBrace)) {
-        return {nullptr, format("expected LEFT_BRACE, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::RightBrace)) {
+        return {nullptr, Format("expected LEFT_BRACE, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -364,8 +449,8 @@ Parsed<StatementListNode> ParserWithContext::readStatementsListNode() {
 }
 
 Parsed<FunctionDefinitionNode> ParserWithContext::readFunctionDefinitionNode() {
-    if (!currentTokenIs(TokenType::Fun)) {
-        return {nullptr, format("expected FUN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Fun)) {
+        return {nullptr, Format("expected FUN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -387,7 +472,7 @@ Parsed<FunctionDefinitionNode> ParserWithContext::readFunctionDefinitionNode() {
     const auto maxArguments = 3;
 
     if (arguments.node->Ids.size() > maxArguments) {
-        return {nullptr, format("too many arguments for function '%s', max is %d", id.node->Name.c_str(), maxArguments)};
+        return {nullptr, Format("too many arguments for function '%s', max is %d", id.node->Name.c_str(), maxArguments)};
     }
 
     return {std::make_shared<FunctionDefinitionNode>(id.node, arguments.node, statementsList.node)};
@@ -396,19 +481,19 @@ Parsed<FunctionDefinitionNode> ParserWithContext::readFunctionDefinitionNode() {
 Parsed<IdNode> ParserWithContext::readIdNode() {
     const auto& t = currentToken();
 
-    if (currentTokenIs(TokenType::Name)) {
+    if (currentTokenIs(Token::Type::Name)) {
         acceptToken();
         return {std::make_shared<IdNode>(std::string{t.value})};
     }
 
-    return {nullptr, format("expected NAME, but got %s", currentTokenAbout().c_str())};
+    return {nullptr, Format("expected NAME, but got %s", currentTokenAbout().c_str())};
 }
 
 Parsed<ConstantValueNode> ParserWithContext::readConstantValueNode() {
     const auto &t = currentToken();
 
-    if (!currentTokenIs(TokenType::Number)) {
-        return {nullptr, format("expected NUMBER, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Number)) {
+        return {nullptr, Format("expected NUMBER, but got %s", currentTokenAbout().c_str())};
     }
 
     std::string s{t.value};
@@ -416,7 +501,7 @@ Parsed<ConstantValueNode> ParserWithContext::readConstantValueNode() {
     auto d = std::stod(s, &p);
 
     if (p != s.size()) {
-        return {nullptr, format("can't read double from '%s'", s.c_str())};
+        return {nullptr, Format("can't read double from '%s'", s.c_str())};
     }
 
     acceptToken();
@@ -430,8 +515,8 @@ Parsed<ConstantDefinitionNode> ParserWithContext::readConstantDefinition() {
         return {nullptr, id.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::Assign)) {
-        return {nullptr, format("expected ASSIGN, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Assign)) {
+        return {nullptr, Format("expected ASSIGN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -440,8 +525,8 @@ Parsed<ConstantDefinitionNode> ParserWithContext::readConstantDefinition() {
         return {nullptr, v.errorMessage};
     }
 
-    if (!currentTokenIs(TokenType::Semicolon)) {
-        return {nullptr, format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
+    if (!currentTokenIs(Token::Type::Semicolon)) {
+        return {nullptr, Format("expected SEMICOLON, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
 
@@ -453,16 +538,14 @@ Parsed<DcsProgramNode> ParserWithContext::readProgramNode() {
     auto functions = DcsProgramNode::FunctionsListT();
 
     while (tokenIndex < tokensCount) {
-        const auto &next = currentToken();
-
-        if (next.isName()) {
+        if (currentTokenIs(Token::Type::Name)) {
             auto constant = readConstantDefinition();
             if (!constant.errorMessage.empty()) {
                 return {nullptr, constant.errorMessage};
             }
 
             constants.push_back(constant.node);
-        } else if (next.isFun()) {
+        } else if (currentTokenIs(Token::Type::Fun)) {
             auto function = readFunctionDefinitionNode();
             if (!function.errorMessage.empty()) {
                 return {nullptr, function.errorMessage};
@@ -474,11 +557,11 @@ Parsed<DcsProgramNode> ParserWithContext::readProgramNode() {
         }
     }
 
-    if (currentTokenIs(TokenType::Eof)) {
+    if (currentTokenIs(Token::Type::Eof)) {
         return {std::make_shared<DcsProgramNode>(constants, functions)};
     }
 
-    return {nullptr, format("expected EOF, but got %s", currentTokenAbout().c_str())};
+    return {nullptr, Format("expected EOF, but got %s", currentTokenAbout().c_str())};
 }
 
 ParseResult ParserWithContext::ParseTokens() {

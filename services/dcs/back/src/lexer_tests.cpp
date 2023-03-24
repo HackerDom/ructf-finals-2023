@@ -32,104 +32,104 @@ static void assertTokenizeResult(std::string_view text, std::initializer_list<To
 }
 
 TEST(Lexer, EmptyString) {
-    assertTokenizeResult(""s, {Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult(""s, {Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, WhitespaceString) {
-    assertTokenizeResult("  \n \t    \t\t\t\n\n\n   \n"s, {Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("  \n \t    \t\t\t\n\n\n   \n"s, {Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, FunKeyword) {
-    assertTokenizeResult("fun"s, {Token(TokenType::Fun, "fun"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("fun"s, {Token(Token::Type::Fun, "fun"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("fun  "s, {Token(TokenType::Fun, "fun"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("fun  "s, {Token(Token::Type::Fun, "fun"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("   fun"s, {Token(TokenType::Fun, "fun"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("   fun"s, {Token(Token::Type::Fun, "fun"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult(" \n fun\n"s, {Token(TokenType::Fun, "fun"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult(" \n fun\n"s, {Token(Token::Type::Fun, "fun"), Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, ReturnKeyword) {
-    assertTokenizeResult("return"s, {Token(TokenType::Return, "return"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("return"s, {Token(Token::Type::Return, "return"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("return  "s, {Token(TokenType::Return, "return"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("return  "s, {Token(Token::Type::Return, "return"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("   return"s, {Token(TokenType::Return, "return"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("   return"s, {Token(Token::Type::Return, "return"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult(" \n return\n"s, {Token(TokenType::Return, "return"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult(" \n return\n"s, {Token(Token::Type::Return, "return"), Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, IfKeyword) {
-    assertTokenizeResult("if"s, {Token(TokenType::If, "if"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("if"s, {Token(Token::Type::If, "if"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("if  "s, {Token(TokenType::If, "if"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("if  "s, {Token(Token::Type::If, "if"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("   if"s, {Token(TokenType::If, "if"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("   if"s, {Token(Token::Type::If, "if"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult(" \n if\n"s, {Token(TokenType::If, "if"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult(" \n if\n"s, {Token(Token::Type::If, "if"), Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, ElseKeyword) {
-    assertTokenizeResult("else"s, {Token(TokenType::Else, "else"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("else"s, {Token(Token::Type::Else, "else"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("else  "s, {Token(TokenType::Else, "else"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("else  "s, {Token(Token::Type::Else, "else"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("   else"s, {Token(TokenType::Else, "else"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("   else"s, {Token(Token::Type::Else, "else"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult(" \n else\n"s, {Token(TokenType::Else, "else"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult(" \n else\n"s, {Token(Token::Type::Else, "else"), Token(Token::Type::Eof, "")}, "");
 }
 
 TEST(Lexer, AllKeywords) {
     assertTokenizeResult(
         "\t if else fun   fun \t\t return \n if else fun return"s,
         {
-            Token(TokenType::If, "if"),
-            Token(TokenType::Else, "else"),
-            Token(TokenType::Fun, "fun"),
-            Token(TokenType::Fun, "fun"),
-            Token(TokenType::Return, "return"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::Else, "else"),
-            Token(TokenType::Fun, "fun"),
-            Token(TokenType::Return, "return"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::Else, "else"),
+            Token(Token::Type::Fun, "fun"),
+            Token(Token::Type::Fun, "fun"),
+            Token(Token::Type::Return, "return"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::Else, "else"),
+            Token(Token::Type::Fun, "fun"),
+            Token(Token::Type::Return, "return"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
 }
 
 TEST(Lexer, OneName) {
-    assertTokenizeResult("Fun"s, {Token(TokenType::Name, "Fun"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("Fun"s, {Token(Token::Type::Name, "Fun"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("reTurn"s, {Token(TokenType::Name, "reTurn"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("reTurn"s, {Token(Token::Type::Name, "reTurn"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("iF"s, {Token(TokenType::Name, "iF"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("iF"s, {Token(Token::Type::Name, "iF"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("elsE"s, {Token(TokenType::Name, "elsE"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("elsE"s, {Token(Token::Type::Name, "elsE"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("_sdfsdf"s, {Token(TokenType::Name, "_sdfsdf"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("_sdfsdf"s, {Token(Token::Type::Name, "_sdfsdf"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("_sdfs234df"s, {Token(TokenType::Name, "_sdfs234df"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("_sdfs234df"s, {Token(Token::Type::Name, "_sdfs234df"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("_99sdfs234df"s, {Token(TokenType::Name, "_99sdfs234df"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("_99sdfs234df"s, {Token(Token::Type::Name, "_99sdfs234df"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("_99sdfFDFSDFs234df"s, {Token(TokenType::Name, "_99sdfFDFSDFs234df"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("_99sdfFDFSDFs234df"s, {Token(Token::Type::Name, "_99sdfFDFSDFs234df"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("_99sd_fFDFSDFs_234df"s, {Token(TokenType::Name, "_99sd_fFDFSDFs_234df"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("_99sd_fFDFSDFs_234df"s, {Token(Token::Type::Name, "_99sd_fFDFSDFs_234df"), Token(Token::Type::Eof, "")}, "");
 
     assertTokenizeResult(
         "\n Fun reTurn iF \t\t\t elsE  _sdfsdf\n\n_sdfs234df  _99sdfs234df\t\t_99sdfFDFSDFs234df\t\t_99sd_fFDFSDFs_234df\n\n\n"s,
         {
-            Token(TokenType::Name, "Fun"),
-            Token(TokenType::Name, "reTurn"),
-            Token(TokenType::Name, "iF"),
-            Token(TokenType::Name, "elsE"),
-            Token(TokenType::Name, "_sdfsdf"),
-            Token(TokenType::Name, "_sdfs234df"),
-            Token(TokenType::Name, "_99sdfs234df"),
-            Token(TokenType::Name, "_99sdfFDFSDFs234df"),
-            Token(TokenType::Name, "_99sd_fFDFSDFs_234df"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Name, "Fun"),
+            Token(Token::Type::Name, "reTurn"),
+            Token(Token::Type::Name, "iF"),
+            Token(Token::Type::Name, "elsE"),
+            Token(Token::Type::Name, "_sdfsdf"),
+            Token(Token::Type::Name, "_sdfs234df"),
+            Token(Token::Type::Name, "_99sdfs234df"),
+            Token(Token::Type::Name, "_99sdfFDFSDFs234df"),
+            Token(Token::Type::Name, "_99sd_fFDFSDFs_234df"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -139,13 +139,13 @@ TEST(Lexer, KeywordWithNames) {
     assertTokenizeResult(
         "if FSDF else POPO9 return fun"s,
         {
-            Token(TokenType::If, "if"),
-            Token(TokenType::Name, "FSDF"),
-            Token(TokenType::Else, "else"),
-            Token(TokenType::Name, "POPO9"),
-            Token(TokenType::Return, "return"),
-            Token(TokenType::Fun, "fun"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::Name, "FSDF"),
+            Token(Token::Type::Else, "else"),
+            Token(Token::Type::Name, "POPO9"),
+            Token(Token::Type::Return, "return"),
+            Token(Token::Type::Fun, "fun"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -155,15 +155,15 @@ TEST(Lexer, Braces) {
     assertTokenizeResult(
         "( ) { } }} ))"s,
         {
-            Token(TokenType::LeftParen, "("),
-            Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::RightParen, ")"),
-            Token(TokenType::RightParen, ")"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::LeftParen, "("),
+            Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -173,16 +173,16 @@ TEST(Lexer, Comparisons) {
     assertTokenizeResult(
         "> >= < <= = == != ==="s,
         {
-            Token(TokenType::Great, ">"),
-            Token(TokenType::Ge, ">="),
-            Token(TokenType::Less, "<"),
-            Token(TokenType::Le, "<="),
-            Token(TokenType::Assign, "="),
-            Token(TokenType::Eq, "=="),
-            Token(TokenType::Neq, "!="),
-            Token(TokenType::Eq, "=="),
-            Token(TokenType::Assign, "="),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Great, ">"),
+            Token(Token::Type::Ge, ">="),
+            Token(Token::Type::Less, "<"),
+            Token(Token::Type::Le, "<="),
+            Token(Token::Type::Assign, "="),
+            Token(Token::Type::Eq, "=="),
+            Token(Token::Type::Neq, "!="),
+            Token(Token::Type::Eq, "=="),
+            Token(Token::Type::Assign, "="),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -196,15 +196,15 @@ TEST(Lexer, Arithmetical) {
     assertTokenizeResult(
         "+-*/ + - * /"s,
         {
-            Token(TokenType::Plus, "+"),
-            Token(TokenType::Minus, "-"),
-            Token(TokenType::Mul, "*"),
-            Token(TokenType::Div, "/"),
-            Token(TokenType::Plus, "+"),
-            Token(TokenType::Minus, "-"),
-            Token(TokenType::Mul, "*"),
-            Token(TokenType::Div, "/"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Plus, "+"),
+            Token(Token::Type::Minus, "-"),
+            Token(Token::Type::Mul, "*"),
+            Token(Token::Type::Div, "/"),
+            Token(Token::Type::Plus, "+"),
+            Token(Token::Type::Minus, "-"),
+            Token(Token::Type::Mul, "*"),
+            Token(Token::Type::Div, "/"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -214,11 +214,11 @@ TEST(Lexer, Comma) {
     assertTokenizeResult(
         ",  ,,,"s,
         {
-            Token(TokenType::Comma, ","),
-            Token(TokenType::Comma, ","),
-            Token(TokenType::Comma, ","),
-            Token(TokenType::Comma, ","),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Comma, ","),
+            Token(Token::Type::Comma, ","),
+            Token(Token::Type::Comma, ","),
+            Token(Token::Type::Comma, ","),
+            Token(Token::Type::Eof, ""),
         },
         ""s);
 }
@@ -227,11 +227,11 @@ TEST(Lexer, Semicolon) {
     assertTokenizeResult(
         ";  ;;;"s,
         {
-            Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Eof, ""),
         },
         ""s);
 }
@@ -245,29 +245,29 @@ TEST(Lexer, UnexpectedSymbol) {
 }
 
 TEST(Lexer, Numbers) {
-    assertTokenizeResult("42.323", {Token(TokenType::Number, "42.323"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("42.323", {Token(Token::Type::Number, "42.323"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("42", {Token(TokenType::Number, "42"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("42", {Token(Token::Type::Number, "42"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("4212312313231231231231231", {Token(TokenType::Number, "4212312313231231231231231"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("4212312313231231231231231", {Token(Token::Type::Number, "4212312313231231231231231"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("4212312313231231231231231.1231231243234325234534225", {Token(TokenType::Number, "4212312313231231231231231.1231231243234325234534225"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("4212312313231231231231231.1231231243234325234534225", {Token(Token::Type::Number, "4212312313231231231231231.1231231243234325234534225"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("0.2132312", {Token(TokenType::Number, "0.2132312"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("0.2132312", {Token(Token::Type::Number, "0.2132312"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("+0.2132312", {Token(TokenType::Number, "+0.2132312"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("+0.2132312", {Token(Token::Type::Number, "+0.2132312"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("-0.2132312", {Token(TokenType::Number, "-0.2132312"), Token(TokenType::Eof, "")}, "");
+    assertTokenizeResult("-0.2132312", {Token(Token::Type::Number, "-0.2132312"), Token(Token::Type::Eof, "")}, "");
 
     assertTokenizeResult("-0.2132.312", {}, "too many dots for '-0.2132.312'");
 
     assertTokenizeResult(
         "-0.2132312+ 1337",
         {
-            Token(TokenType::Number, "-0.2132312"),
-            Token(TokenType::Plus, "+"),
-            Token(TokenType::Number, "1337"),
-            Token(TokenType::Eof, ""),
+            Token(Token::Type::Number, "-0.2132312"),
+            Token(Token::Type::Plus, "+"),
+            Token(Token::Type::Number, "1337"),
+            Token(Token::Type::Eof, ""),
         },
         ""
     );
@@ -319,47 +319,47 @@ fun main() {
     assertTokenizeResult(
         std::string(text),
         {
-            Token(TokenType::Name, "y"), Token(TokenType::Assign, "="), Token(TokenType::Number, "42"), Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Name, "x"), Token(TokenType::Assign, "="), Token(TokenType::Number, "+43.00"), Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Name, "p"), Token(TokenType::Assign, "="), Token(TokenType::Number, "-1337.13123123"), Token(TokenType::Semicolon, ";"),
-            Token(TokenType::Fun, "fun"), Token(TokenType::Name, "some_func"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "x1"), Token(TokenType::Comma, ","), Token(TokenType::Name, "x2"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"),
-            Token(TokenType::Return, "return"), Token(TokenType::Name, "x1"), Token(TokenType::Plus, "+"), Token(TokenType::Name, "x2"), Token(TokenType::Semicolon, ";"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::Fun, "fun"), Token(TokenType::Name, "main"), Token(TokenType::LeftParen, "("), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"),
-            Token(TokenType::Name, "l"), Token(TokenType::Assign, "="),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "x"), Token(TokenType::Plus, "+"), Token(TokenType::Name, "y"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::Mul, "*"),
-            Token(TokenType::Name, "p"),
-            Token(TokenType::Div, "/"),
-            Token(TokenType::Name, "some_func"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "x"), Token(TokenType::Comma, ","), Token(TokenType::Name, "y"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::Semicolon, ";"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Less, "<"), Token(TokenType::Number, "1"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::Else, "else"),
-            Token(TokenType::LeftBrace, "{"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Le, "<="), Token(TokenType::Number, "2"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Great, ">"), Token(TokenType::Number, "3"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Ge, ">="), Token(TokenType::Number, "3"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::If, "if"), Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Neq, "!="), Token(TokenType::Number, "3"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::If, "if"),
-            Token(TokenType::LeftParen, "("), Token(TokenType::Name, "l"), Token(TokenType::Eq, "=="), Token(TokenType::Number, "3"), Token(TokenType::RightParen, ")"),
-            Token(TokenType::LeftBrace, "{"), Token(TokenType::Name, "l"), Token(TokenType::Assign, "="), Token(TokenType::Number, "3"), Token(TokenType::Semicolon, ";"), Token(TokenType::RightBrace, "}"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::Return, "return"), Token(TokenType::Number, "0"), Token(TokenType::Semicolon, ";"),
-            Token(TokenType::RightBrace, "}"),
-            Token(TokenType::Eof, "")
+            Token(Token::Type::Name, "y"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "42"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Name, "x"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "+43.00"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Name, "p"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "-1337.13123123"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Fun, "fun"), Token(Token::Type::Name, "some_func"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "x1"), Token(Token::Type::Comma, ","), Token(Token::Type::Name, "x2"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"),
+            Token(Token::Type::Return, "return"), Token(Token::Type::Name, "x1"), Token(Token::Type::Plus, "+"), Token(Token::Type::Name, "x2"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::Fun, "fun"), Token(Token::Type::Name, "main"), Token(Token::Type::LeftParen, "("), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"),
+            Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "x"), Token(Token::Type::Plus, "+"), Token(Token::Type::Name, "y"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::Mul, "*"),
+            Token(Token::Type::Name, "p"),
+            Token(Token::Type::Div, "/"),
+            Token(Token::Type::Name, "some_func"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "x"), Token(Token::Type::Comma, ","), Token(Token::Type::Name, "y"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Less, "<"), Token(Token::Type::Number, "1"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::Else, "else"),
+            Token(Token::Type::LeftBrace, "{"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Le, "<="), Token(Token::Type::Number, "2"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Great, ">"), Token(Token::Type::Number, "3"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Ge, ">="), Token(Token::Type::Number, "3"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::If, "if"), Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Neq, "!="), Token(Token::Type::Number, "3"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::If, "if"),
+            Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "l"), Token(Token::Type::Eq, "=="), Token(Token::Type::Number, "3"), Token(Token::Type::RightParen, ")"),
+            Token(Token::Type::LeftBrace, "{"), Token(Token::Type::Name, "l"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "3"), Token(Token::Type::Semicolon, ";"), Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::Return, "return"), Token(Token::Type::Number, "0"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::RightBrace, "}"),
+            Token(Token::Type::Eof, "")
         },
         ""
     );
