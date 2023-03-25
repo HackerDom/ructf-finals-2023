@@ -125,3 +125,33 @@ fun main() {
 }
 )", 5.782300290000, "");
 }
+
+TEST(Functional, ReturnVariable) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 3.1415927;
+    return pi;
+}
+)", 3.1415927, "");
+}
+
+TEST(Functional, ReturnVariablesExpression) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 3.1415927;
+    e = 2.7;
+    k = 1337;
+    return pi * e / k;
+}
+)", 0.0063442784517576661, "");
+}
+
+TEST(Functional, ReturnRedefinedVariable) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 2.7;
+    pi = 3.1415927;
+    return pi;
+}
+)", 3.1415927, "");
+}
