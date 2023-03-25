@@ -1,0 +1,37 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - ${SERVER_PORT}:8000
+    volumes:
+      - ./service/db:/service/db
+      - vault:/vault/books
+      - ./service/media/images:/service/media/images
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./service/db:/service/db
+      - ./service/media/images:/service/media/images
+    env_file:
+      - .env
+    links:
+      - redis
+      - web-app
+    depends_on:
+      - redis
+      - web-app
+
+volumes:
+    vault:
