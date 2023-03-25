@@ -1,0 +1,7 @@
+Django==3.2.16
+djangorestframework==3.14.0
+environ==1.0
+django-environ==0.8.0
+djoser==2.1.0
+jsonschema==4.17.3
+celery[redis]==5.2.7
