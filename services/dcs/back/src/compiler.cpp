@@ -59,6 +59,7 @@ private:
     bool emitUnary(std::ostream &out, const std::shared_ptr<UnaryExpressionNode> &unary);
     bool emitConstant(std::ostream &out, const std::shared_ptr<ConstantValueNode> &constant);
     bool emitId(std::ostream &out, const std::shared_ptr<IdNode> &id);
+    bool emitAssignmentStatement(std::ostream &out, const std::shared_ptr<AssignStatementNode> &assignment);
 
     std::string fillContexts();
     std::string appendUserDefinedConstantsToContext();
@@ -669,6 +670,27 @@ bool CompilerWithContext::emitReturnStatement(std::ostream &out,
     return true;
 }
 
+bool CompilerWithContext::emitAssignmentStatement(std::ostream &out,
+                                                  const std::shared_ptr<AssignStatementNode> &assignment) {
+    if (currentCompilationFunction == nullptr) {
+        functionEmitError = "emit assignment statement outside of function";
+        return false;
+    }
+
+    if (!emitExpression(out, assignment->Expression)) {
+        return false;
+    }
+
+    auto it = currentCompilationFunction->variableNameToItsContext.find(assignment->Id->Name);
+    if (it == currentCompilationFunction->variableNameToItsContext.end()) {
+        functionEmitError = Format("no context for variable '%s' found in %s", assignment->Id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
+        return false;
+    }
+
+    out << kTab << Format(kMovSdXmmRbpFmt, 0, it->second->Num) << std::endl;
+    return true;
+}
+
 bool CompilerWithContext::emitStatement(std::ostream &out, const std::shared_ptr<StatementNode> &statement) {
     if (currentCompilationFunction == nullptr) {
         functionEmitError = "call emitStatement outside of function compilation";
@@ -676,7 +698,7 @@ bool CompilerWithContext::emitStatement(std::ostream &out, const std::shared_ptr
     }
 
     if (statement->Assign != nullptr) {
-        return true;
+        return emitAssignmentStatement(out, statement->Assign);
     }
 
     if (statement->Conditional != nullptr) {

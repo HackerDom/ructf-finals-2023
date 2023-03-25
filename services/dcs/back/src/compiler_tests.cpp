@@ -114,6 +114,8 @@ lol:
     mov     %rsp,%rbp
     sub     $0x10,%rsp
     movsd   %xmm0,-0x8(%rbp)
+    movsd   _c_const_lol_0(%rip),%xmm0
+    movsd   %xmm0,-0x10(%rbp)
     movsd   _c_const_lol_1(%rip),%xmm0
     sub     $0x10,%rsp
     movsd   %xmm0,(%rsp)
@@ -302,5 +304,77 @@ main:
 
 
 pi: .double 3.1415927
+)", "");
+}
+
+TEST(Compiler, ReturnVariable) {
+    assertCompilationResult(R"(
+fun main() {
+    pi = 3.1415927;
+    return pi;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x8,%rsp
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.1415927
+)", "");
+}
+
+TEST(Compiler, ReturnVariablesExpression) {
+    assertCompilationResult(R"(
+fun main() {
+    pi = 3.1415927;
+    e = 2.7;
+    k = 1337;
+    return pi * e / k;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x18,%rsp
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movsd   %xmm0,-0x10(%rbp)
+    movsd   _c_const_main_2(%rip),%xmm0
+    movsd   %xmm0,-0x18(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x10(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    mulsd   %xmm1,%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x18(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    divsd   %xmm1,%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.1415927
+_c_const_main_1: .double 2.7
+_c_const_main_2: .double 1337
 )", "");
 }
