@@ -853,7 +853,7 @@ DcsProgramNode
    │    └UnaryExpressionNode
    │     └ConstantValueNode -1.000000
    ├StatementNode
-   │└ConstantDefinitionNode EQ
+   │└ConditionalStatementNode EQ
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -874,7 +874,7 @@ DcsProgramNode
    │       └UnaryExpressionNode
    │        └ConstantValueNode 1.000000
    ├StatementNode
-   │└ConstantDefinitionNode NEQ
+   │└ConditionalStatementNode NEQ
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -895,7 +895,7 @@ DcsProgramNode
    │       └UnaryExpressionNode
    │        └ConstantValueNode 2.000000
    ├StatementNode
-   │└ConstantDefinitionNode LESS
+   │└ConditionalStatementNode LESS
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -916,7 +916,7 @@ DcsProgramNode
    │       └UnaryExpressionNode
    │        └ConstantValueNode 3.000000
    ├StatementNode
-   │└ConstantDefinitionNode LE
+   │└ConditionalStatementNode LE
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -937,7 +937,7 @@ DcsProgramNode
    │       └UnaryExpressionNode
    │        └ConstantValueNode 4.000000
    ├StatementNode
-   │└ConstantDefinitionNode GREAT
+   │└ConditionalStatementNode GREAT
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -958,7 +958,7 @@ DcsProgramNode
    │       └UnaryExpressionNode
    │        └ConstantValueNode 5.000000
    ├StatementNode
-   │└ConstantDefinitionNode GE
+   │└ConditionalStatementNode GE
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode
@@ -1019,7 +1019,7 @@ DcsProgramNode
   ├ArgumentsDefinitionListNode
   └StatementListNode
    └StatementNode
-    └ConstantDefinitionNode GREAT
+    └ConditionalStatementNode GREAT
      ├ExpressionNode
      │└AdditiveExpressionNode
      │ └MultiplicativeExpressionNode
@@ -1040,7 +1040,7 @@ DcsProgramNode
      │      └ConstantValueNode 1.000000
      └StatementListNode
       └StatementNode
-       └ConstantDefinitionNode EQ
+       └ConditionalStatementNode EQ
         ├ExpressionNode
         │└AdditiveExpressionNode
         │ └MultiplicativeExpressionNode
@@ -1104,7 +1104,7 @@ DcsProgramNode
    │    └UnaryExpressionNode
    │     └ConstantValueNode 2.000000
    ├StatementNode
-   │└ConstantDefinitionNode EQ
+   │└ConditionalStatementNode EQ
    │ ├ExpressionNode
    │ │└AdditiveExpressionNode
    │ │ └MultiplicativeExpressionNode

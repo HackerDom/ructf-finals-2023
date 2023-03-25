@@ -59,6 +59,8 @@ private:
     Parsed<FunctionCallNode> readFunctionCallNode();
     Parsed<AssignStatementNode> readAssigmentStatementNode();
     Parsed<ConditionalStatementNode> readConditionalStatementNode();
+
+    static constexpr std::size_t kMaxFunctionArgumentsCount = 3;
 };
 
 Parsed<ConditionalStatementNode> ParserWithContext::readConditionalStatementNode() {
@@ -199,6 +201,10 @@ Parsed<FunctionCallNode> ParserWithContext::readFunctionCallNode() {
         return {nullptr, Format("expected RIGHT_PAREN, but got %s", currentTokenAbout().c_str())};
     }
     acceptToken();
+
+    if (expressions.size() > kMaxFunctionArgumentsCount) {
+        return {nullptr, Format("too many call arguments %u, expected no more than %u", expressions.size(), kMaxFunctionArgumentsCount)};
+    }
 
     return {std::make_shared<FunctionCallNode>(id.node, expressions)};
 }
@@ -469,10 +475,8 @@ Parsed<FunctionDefinitionNode> ParserWithContext::readFunctionDefinitionNode() {
         return {nullptr, statementsList.errorMessage};
     }
 
-    const auto maxArguments = 3;
-
-    if (arguments.node->Ids.size() > maxArguments) {
-        return {nullptr, Format("too many arguments for function '%s', max is %d", id.node->Name.c_str(), maxArguments)};
+    if (arguments.node->Ids.size() > kMaxFunctionArgumentsCount) {
+        return {nullptr, Format("too many arguments for function '%s', max is %u", id.node->Name.c_str(), kMaxFunctionArgumentsCount)};
     }
 
     return {std::make_shared<FunctionDefinitionNode>(id.node, arguments.node, statementsList.node)};

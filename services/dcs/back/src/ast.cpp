@@ -125,7 +125,7 @@ void StatementListNode::Print(std::ostream &stream, const std::string &tab, bool
 
 void ConditionalStatementNode::Print(std::ostream &stream, const std::string &tab, bool last) const {
     std::string nextTab = getNextTab(tab, last);
-    printHeader(stream, tab, "ConstantDefinitionNode ", last, false);
+    printHeader(stream, tab, "ConditionalStatementNode ", last, false);
     switch(Condition) {
         case Eq:
             stream << "EQ";
