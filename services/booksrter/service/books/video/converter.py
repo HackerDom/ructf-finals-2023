@@ -13,6 +13,9 @@ def generate_video_preview(uid: str):
     book = Book.objects.get(uid=uid)
     text = book.text()
     if 'nopreview' in text:
+        file = open(os.path.join(settings.MEDIA_ROOT, f'images/default_lolo.jpg'), 'rb')
+        Book.objects.filter(uid=book.uid).update(video_preview=File(file, f'images/default_lolo.jpg'))
+        file.close()
         return
     file_input = f"http://web-app:8000{book.video.url}"
     output_name = os.path.join(settings.MEDIA_ROOT, f'images/{book.uid}.png')
@@ -20,7 +23,7 @@ def generate_video_preview(uid: str):
             '-i', file_input,
             "-noaudio",
             "-overwrite",
-            "-fil:v", "scale=480:-1",
+            "-chg",
             "-frames",  "1",
             output_name]
     return_code = subprocess.call(args)

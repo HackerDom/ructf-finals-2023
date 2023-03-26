@@ -157,6 +157,7 @@ media/
 
 static/*
 media/*
+!media/images/default_lolo.jpg
 dump
 
 # migrations
