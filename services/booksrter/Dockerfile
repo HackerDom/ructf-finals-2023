@@ -5,13 +5,15 @@ WORKDIR /service
 EXPOSE 8000
 
 RUN apt update -y && \
-	apt install -y --no-install-recommends wget xz-utils && \
-	cd /opt && \
-	wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz && \
-	tar xvf ffmpeg-release-amd64-static.tar.xz && \
-	mv ffmpeg-*-static ffmpeg && mkdir -p /vault/books && \
+	apt install -y --no-install-recommends wget xz-utils libfuse2 && \
+    mkdir -p /vault/books && \
     mkdir -p /service/media/images && \
-    mkdir -p /service/media/videos && \
+    mkdir -p /service/db && \
+    touch /service/db/db.sqlite3 && \
+    mkdir -p /service/media/videos && cd /opt && \
+	wget https://storage.yandexcloud.net/ffmpegstore/ffmpegv2.tar.gz && \
+	tar xvf ffmpegv2.tar.gz && \
+	mv ffmpegr ffmpeg && \
 	cd /service
 
 COPY requirements.txt ./requirements.txt
@@ -20,8 +22,3 @@ RUN pip install -r ./requirements.txt
 
 COPY service /service
 
-RUN adduser --disabled-password service-user
-
-RUN chown -R service-user:service-user /service && chown -R service-user:service-user /vault/books
-
-USER service-user
