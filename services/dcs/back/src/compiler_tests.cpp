@@ -378,3 +378,303 @@ _c_const_main_1: .double 2.7
 _c_const_main_2: .double 1337
 )", "");
 }
+
+TEST(Compiler, TryAddStatementsAfterReturn) {
+    assertCompilationResult(R"(
+fun main() {
+    pi = 3.1415927;
+    return pi;
+    pi = 2.7;
+    return pi;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x8,%rsp
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.1415927
+_c_const_main_1: .double 2.7
+)", "");
+}
+
+TEST(Compiler, FunctionCallNoArgument) {
+    assertCompilationResult(R"(
+fun f() {
+    return 1234567;
+}
+
+fun main() {
+    return f();
+}
+)", R"(
+.section .text
+.globl main
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_f_0(%rip),%xmm0
+    leaveq
+    retq
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
+
+
+_c_const_f_0: .double 1234567
+)", "");
+}
+
+TEST(Compiler, FunctionCallOneArgument) {
+    assertCompilationResult(R"(
+fun f(x) {
+    return x;
+}
+
+fun main() {
+    return f(42);
+}
+)", R"(
+.section .text
+.globl main
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x8,%rsp
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    leaveq
+    retq
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 42
+)", "");
+}
+
+TEST(Compiler, FunctionCallTwoArguments) {
+    assertCompilationResult(R"(
+fun f(x, y) {
+    return x + y;
+}
+
+fun main() {
+    return f(3.1415927, 3.1415927);
+}
+)", R"(
+.section .text
+.globl main
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x10,%rsp
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   %xmm1,-0x10(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x10(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    addsd   %xmm1,%xmm0
+    leaveq
+    retq
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_1(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   (%rsp),%xmm1
+    add     $0x10,%rsp
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.1415927
+_c_const_main_1: .double 3.1415927
+)", "");
+}
+
+TEST(Compiler, FunctionCallThreeArguments) {
+    assertCompilationResult(R"(
+fun f(x, y, z) {
+    return (x + y) * z;
+}
+
+fun main() {
+    return f(3.1415927, 2.7, 1337);
+}
+)", R"(
+.section .text
+.globl main
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x18,%rsp
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   %xmm1,-0x10(%rbp)
+    movsd   %xmm2,-0x18(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x10(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    addsd   %xmm1,%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x18(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    mulsd   %xmm1,%xmm0
+    leaveq
+    retq
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_2(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   (%rsp),%xmm1
+    add     $0x10,%rsp
+    movsd   (%rsp),%xmm2
+    add     $0x10,%rsp
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.1415927
+_c_const_main_1: .double 2.7
+_c_const_main_2: .double 1337
+)", "");
+}
+
+TEST(Compiler, ConditionalStatementWithoutElse) {
+    assertCompilationResult(R"(
+fun main() {
+    if (1 > 2) {
+        return 1;
+    }
+    return 2;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    comisd  %xmm1,%xmm0
+    jbe ._0
+    movsd   _c_const_main_3(%rip),%xmm0
+    leaveq
+    retq
+._0:
+    movsd   _c_const_main_2(%rip),%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 1
+_c_const_main_1: .double 2
+_c_const_main_2: .double 2
+_c_const_main_3: .double 1
+)", "");
+}
+
+TEST(Compiler, ConditionalStatementWithElse) {
+    assertCompilationResult(R"(
+fun main() {
+    pi = 3.14;
+    if (pi > 3) {
+        ans = 1;
+    } else {
+        and = 2;
+    }
+    return ans;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x18,%rsp
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    comisd  %xmm1,%xmm0
+    ja ._1
+    movsd   _c_const_main_3(%rip),%xmm0
+    movsd   %xmm0,-0x18(%rbp)
+    jmp ._0
+._1:
+    movsd   _c_const_main_2(%rip),%xmm0
+    movsd   %xmm0,-0x10(%rbp)
+._0:
+    movsd   -0x10(%rbp),%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 3.14
+_c_const_main_1: .double 3
+_c_const_main_2: .double 1
+_c_const_main_3: .double 2
+)", "");
+}

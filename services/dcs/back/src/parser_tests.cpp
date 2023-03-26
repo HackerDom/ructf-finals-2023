@@ -1152,3 +1152,49 @@ DcsProgramNode
 )",
 "");
 }
+
+
+TEST(Parser, ConditionalStatementWithoutElse) {
+    assertParsingByPrint(R"(
+fun main() {
+    if (1 > 2) {
+        return 1;
+    }
+    return 2;
+}
+)", R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   ├StatementNode
+   │└ConditionalStatementNode GREAT
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └ConstantValueNode 1.000000
+   │ ├ExpressionNode
+   │ │└AdditiveExpressionNode
+   │ │ └MultiplicativeExpressionNode
+   │ │  └UnaryExpressionNode
+   │ │   └ConstantValueNode 2.000000
+   │ └StatementListNode
+   │  └StatementNode
+   │   └ReturnStatementNode
+   │    └ExpressionNode
+   │     └AdditiveExpressionNode
+   │      └MultiplicativeExpressionNode
+   │       └UnaryExpressionNode
+   │        └ConstantValueNode 1.000000
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ConstantValueNode 2.000000
+)",
+ "");
+}

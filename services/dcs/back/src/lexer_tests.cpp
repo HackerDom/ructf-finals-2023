@@ -98,6 +98,10 @@ TEST(Lexer, AllKeywords) {
     );
 }
 
+TEST(Lexer, NameTooLong) {
+    assertTokenizeResult("qwertyuiopasdfghjklzxcvbnm = 42.43;", {}, "name 'qwertyuiopasdfghjklzxcvbnm' too long");
+}
+
 TEST(Lexer, OneName) {
     assertTokenizeResult("Fun"s, {Token(Token::Type::Name, "Fun"), Token(Token::Type::Eof, "")}, "");
 

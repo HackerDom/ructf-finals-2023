@@ -1,6 +1,6 @@
-#include "ast.h"
-
 #include <iostream>
+
+#include "ast.h"
 
 static std::string getNextTab(const std::string &tab, bool last) {
     return tab + (last ? " " : "│");
