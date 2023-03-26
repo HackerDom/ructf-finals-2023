@@ -155,3 +155,335 @@ fun main() {
 }
 )", 3.1415927, "");
 }
+
+TEST(Functional, TryAssignValueToConstant) {
+    assertProgramResult(R"(
+pi = 2.7;
+fun main() {
+    pi = 3.1415927;
+    return pi;
+}
+)", 0.0, "cant create local variable with name 'pi': there is constant with that name");
+}
+
+TEST(Functional, StatementsAfteReturn) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 3.1415927;
+    return pi;
+    pi = 2.7;
+    return pi;
+}
+)", 3.1415927, "");
+}
+
+TEST(Functional, FunctionCallNoArguments) {
+    assertProgramResult(R"(
+fun f() {
+    return 1234567;
+}
+
+fun main() {
+    return f();
+}
+)", 1234567, "");
+}
+
+TEST(Functional, FunctionCallOneArgument) {
+    assertProgramResult(R"(
+fun f(x) {
+    return x;
+}
+
+fun main() {
+    return f(42);
+}
+)", 42.0, "");
+}
+
+TEST(Functional, FunctionCallTwoArguments) {
+    assertProgramResult(R"(
+fun f(x, y) {
+    return x + y;
+}
+
+fun main() {
+    return f(3.1415927, 3.1415927);
+}
+)", 6.2831853, "");
+}
+
+TEST(Functional, FunctionCallThreeArguments) {
+    assertProgramResult(R"(
+fun f(x, y, z) {
+    return (x + y) * z;
+}
+
+fun main() {
+    return f(3.1415927, 2.7, 1337);
+}
+)", 7810.20943989, "");
+}
+
+TEST(Functional, FunctionCallWithFunctionCallAsArgument) {
+    assertProgramResult(R"(
+fun a(x, y, z) {
+    return x + y + z;
+}
+
+fun b(x, y, z) {
+    return a(x, y, z) * a(x, y, z);
+}
+
+fun main() {
+    return a(1, 2, 3) + b(1, 2, 3) * b(a(1, 2, 3), a(1, 2, 3), a(1, 2, 3));
+}
+)", 11670, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseGreat) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 > 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueGreat) {
+    assertProgramResult(R"(
+fun main() {
+    if (3.14 > 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueLess) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 < 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseLess) {
+    assertProgramResult(R"(
+fun main() {
+    if (3.14 < 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseEq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 == 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueEq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 == 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseNeq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 != 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueNeq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 != 1.00001) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseGe) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 >= 2) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueGeBecauseOfEq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 >= 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueGeBecauseOfGreat) {
+    assertProgramResult(R"(
+fun main() {
+    if (2 >= 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseFlaseGe) {
+    assertProgramResult(R"(
+fun main() {
+    if (0.99999 >= 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueLeBecauseOfEq) {
+    assertProgramResult(R"(
+fun main() {
+    if (1 <= 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseTrueLeBecauseOfLess) {
+    assertProgramResult(R"(
+fun main() {
+    if (0.99999 <= 1) {
+        return 1;
+    }
+    return 2;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithoutElseFalseLe) {
+    assertProgramResult(R"(
+fun main() {
+    if (0.99999 <= (0.99999 - 0.0000001)) {
+        return 1;
+    }
+    return 2;
+}
+)", 2, "");
+}
+
+TEST(Functional, ConditionWithElseTrue) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 3.14;
+    if (pi > 3) {
+        ans = 1;
+    } else {
+        ans = 2;
+    }
+    return ans;
+}
+)", 1, "");
+}
+
+TEST(Functional, ConditionWithElseFalse) {
+    assertProgramResult(R"(
+fun main() {
+    pi = 3.14;
+    if (pi > 4) {
+        ans = 1;
+    } else {
+        ans = 2;
+    }
+    return ans;
+}
+)", 2, "");
+}
+
+TEST(Functional, Factorial) {
+    assertProgramResult(R"(
+fun factorial(n) {
+    if (n <= 1) {
+        return 1;
+    }
+
+    return n * factorial(n - 1);
+}
+
+fun main() {
+    return factorial(10);
+}
+)", 3628800, "");
+}
+
+TEST(Functional, Fibonacci1) {
+    assertProgramResult(R"(
+fun fib(a, b, n) {
+    c = a + b;
+    a = b;
+    b = c;
+    if (n <= 0) {
+        return b;
+    } else {
+        return fib(a, b, n - 1);
+    }
+}
+
+fun main() {
+    return fib(0, 1, 5);
+}
+)", 13, "");
+}
+
+TEST(Functional, Fibonacci2) {
+    assertProgramResult(R"(
+fun fib(a, b, n) {
+    c = a + b;
+    a = b;
+    b = c;
+    if (n <= 0) {
+        return b;
+    } else {
+        return fib(a, b, n - 1);
+    }
+}
+
+fun main() {
+    return fib(0, 1, 6);
+}
+)", 21, "");
+}

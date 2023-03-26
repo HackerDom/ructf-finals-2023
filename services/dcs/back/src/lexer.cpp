@@ -1,7 +1,8 @@
-#include "lexer.h"
-
 #include <cctype>
 #include <sstream>
+
+#include "lexer.h"
+#include "utils.h"
 
 static const char* TokenTypeNames[] = {
     "Assign",
@@ -62,6 +63,10 @@ static TokenReadResult readNameOrKeyword(std::string_view input, int &i) {
     auto s = input.substr(start, i - start);
 
     --i; // for reading cycle
+
+    if (s.size() > 20) {
+        return {Token(Token::Type::Eof, ""), Format("name '%s' too long", std::string(s).c_str())};
+    }
 
     if (s == "fun") {
         return {Token(Token::Type::Fun, s), ""};

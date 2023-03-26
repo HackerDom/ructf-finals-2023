@@ -43,14 +43,20 @@ private:
         std::unordered_map<std::string, std::shared_ptr<VariableCompilationContext>> variableNameToItsContext;
         std::unordered_map<std::shared_ptr<IdNode>, std::shared_ptr<VariableCompilationContext>> variableUsageToItsContext;
         std::unordered_map<std::shared_ptr<IdNode>, std::shared_ptr<FunctionCompilationContext>> functionUsageToItsContext;
+
+        mutable int labelsCount = 0;
+
+        [[nodiscard]] std::string GetNextLabel() const {
+            return Format("._%d", labelsCount++);
+        }
     };
 
     std::map<std::string, std::shared_ptr<ConstantCompilationContext>> constantNameToContext;
     std::map<std::string, std::shared_ptr<FunctionCompilationContext>> functionNameToContext;
     std::shared_ptr<FunctionCompilationContext> currentCompilationFunction;
-    std::string functionEmitError;
+    std::string emitError;
 
-    bool emitFunctionBody(std::ostream &out, const std::shared_ptr<StatementListNode> &body);
+    bool emitStatementListNode(std::ostream &out, const std::shared_ptr<StatementListNode> &body);
     bool emitStatement(std::ostream &out, const std::shared_ptr<StatementNode> &statement);
     bool emitReturnStatement(std::ostream &out, const std::shared_ptr<ReturnStatementNode> &returnStatement);
     bool emitExpression(std::ostream &out, const std::shared_ptr<ExpressionNode> &expression);
@@ -60,6 +66,8 @@ private:
     bool emitConstant(std::ostream &out, const std::shared_ptr<ConstantValueNode> &constant);
     bool emitId(std::ostream &out, const std::shared_ptr<IdNode> &id);
     bool emitAssignmentStatement(std::ostream &out, const std::shared_ptr<AssignStatementNode> &assignment);
+    bool emitFunctionCall(std::ostream &out, const std::shared_ptr<FunctionCallNode> &call);
+    bool emitConditionalStatement(std::ostream &out, const std::shared_ptr<ConditionalStatementNode> &conditional);
 
     std::string fillContexts();
     std::string appendUserDefinedConstantsToContext();
@@ -88,6 +96,8 @@ private:
     static constexpr std::string_view kSub0x10Rsp       = "sub     $0x10,%rsp";
     static constexpr std::string_view kMovSdXmm0Rsp     = "movsd   %xmm0,(%rsp)";
     static constexpr std::string_view kMovSdRspXmm0     = "movsd   (%rsp),%xmm0";
+    static constexpr std::string_view kMovSdRspXmm1     = "movsd   (%rsp),%xmm1";
+    static constexpr std::string_view kMovSdRspXmm2     = "movsd   (%rsp),%xmm2";
     static constexpr std::string_view kAdd0x10Rsp       = "add     $0x10,%rsp";
     static constexpr std::string_view kMovXmm0Xmm1      = "movaps  %xmm0,%xmm1";
     static constexpr std::string_view kAddSdXmm1Xmm0    = "addsd   %xmm1,%xmm0";
@@ -95,6 +105,18 @@ private:
     static constexpr std::string_view kMulSdXmm1Xmm0    = "mulsd   %xmm1,%xmm0";
     static constexpr std::string_view kDivSdXmm1Xmm0    = "divsd   %xmm1,%xmm0";
     static constexpr const char *kMovSdAddrXmm0Fmt      = "movsd   %s(%%rip),%%xmm0"; // ex: movsd pi(%rip),%xmm0
+    static constexpr const char *kLeaAddrRaxFmt         = "lea     %s(%%rip),%%rax"; // ex: lea f(%rip),%rax
+    static constexpr std::string_view kCallRax          = "call    *%rax";
+    static constexpr std::string_view kComiSdXmm1Xmm0   = "comisd  %xmm1,%xmm0";
+    static constexpr const char *kJaFmt                 = "ja %s";
+    static constexpr const char *kJaeFmt                = "jae %s";
+    static constexpr const char *kJbFmt                 = "jb %s";
+    static constexpr const char *kJbeFmt                = "jbe %s";
+    static constexpr const char *kJeFmt                 = "je %s";
+    static constexpr const char *kJneFmt                = "jne %s";
+    static constexpr const char *kJmpFmt                = "jmp %s";
+
+    [[nodiscard]] std::string getConditionJump(ConditionalStatementNode::ConditionType condition, const std::string &label);
 };
 
 std::string CompilerWithContext::makeChecks() {
@@ -504,9 +526,179 @@ CompilerWithContext::EmitResult CompilerWithContext::emitFunctions() {
     return {ss.str()};
 }
 
+static ConditionalStatementNode::ConditionType reverseCondition(ConditionalStatementNode::ConditionType t) {
+    switch (t) {
+        case ConditionalStatementNode::Eq:
+            return ConditionalStatementNode::Neq;
+        case ConditionalStatementNode::Neq:
+            return ConditionalStatementNode::Eq;
+        case ConditionalStatementNode::Less:
+            return ConditionalStatementNode::Ge;
+        case ConditionalStatementNode::Le:
+            return ConditionalStatementNode::Great;
+        case ConditionalStatementNode::Great:
+            return ConditionalStatementNode::Le;
+        case ConditionalStatementNode::Ge:
+            return ConditionalStatementNode::Less;
+        default:
+            return ConditionalStatementNode::Less; // not used
+    }
+}
+
+std::string CompilerWithContext::getConditionJump(ConditionalStatementNode::ConditionType condition,
+                                                  const std::string &label) {
+    switch (condition) {
+        case ConditionalStatementNode::Eq:
+            return Format(kJeFmt, label.c_str());
+        case ConditionalStatementNode::Neq:
+            return Format(kJneFmt, label.c_str());
+        case ConditionalStatementNode::Less:
+            return Format(kJbFmt, label.c_str());
+        case ConditionalStatementNode::Le:
+            return Format(kJbeFmt, label.c_str());
+        case ConditionalStatementNode::Great:
+            return Format(kJaFmt, label.c_str());
+        case ConditionalStatementNode::Ge:
+            return Format(kJaeFmt, label.c_str());
+        default:
+            return "unknown condition value!";
+    }
+}
+
+bool CompilerWithContext::emitConditionalStatement(std::ostream &out, const std::shared_ptr<ConditionalStatementNode> &conditional) {
+    if (currentCompilationFunction == nullptr) {
+        emitError = "cant emit conditional without function";
+        return false;
+    }
+
+    // emit left into xmm0
+    if (!emitExpression(out, conditional->LeftExpression)) {
+        return false;
+    }
+    // save left result into stack
+    out << kTab << kSub0x10Rsp << std::endl;
+    out << kTab << kMovSdXmm0Rsp << std::endl;
+
+    // emit right into xmm0
+    if (!emitExpression(out, conditional->RightExpression)) {
+        return false;
+    }
+
+    // move right into xmm1
+    out << kTab << kMovXmm0Xmm1 << std::endl;
+
+    // restore left into xmm0
+    out << kTab << kMovSdRspXmm0 << std::endl;
+    out << kTab << kAdd0x10Rsp << std::endl;
+
+    auto endLabel = currentCompilationFunction->GetNextLabel();
+    out << kTab << kComiSdXmm1Xmm0 << std::endl;
+
+    if (conditional->ElseStatements != nullptr) {
+        /*
+            comisd %xmm0,%xmm1
+            j_{true} .thenLabel
+            # else statements here
+            jmp .endLabel
+        .thenLabel:
+            # then statements here
+        .endLabel:
+        */
+        auto thenLabel = currentCompilationFunction->GetNextLabel();
+        out << kTab << getConditionJump(conditional->Condition, thenLabel) << std::endl;
+        if (!emitStatementListNode(out, conditional->ElseStatements)) {
+            return false;
+        }
+        out << kTab << Format(kJmpFmt, endLabel.c_str()) << std::endl;
+        out << thenLabel << ":" << std::endl;
+        if (!emitStatementListNode(out, conditional->ThenStatements)) {
+            return false;
+        }
+        out << endLabel << ":" << std::endl;
+    } else {
+        /*
+            comisd %xmm0,%xmm1
+            j_{false} .end
+            # then statements here
+        .end:
+        */
+        out << kTab << getConditionJump(reverseCondition(conditional->Condition), endLabel) << std::endl;
+        if (!emitStatementListNode(out, conditional->ThenStatements)) {
+            return false;
+        }
+        out << endLabel << ":" << std::endl;
+    }
+
+    return true;
+}
+
+bool CompilerWithContext::emitFunctionCall(std::ostream &out, const std::shared_ptr<FunctionCallNode> &call) {
+    if (currentCompilationFunction == nullptr) {
+        emitError = "cant emit function call without function context";
+        return false;
+    }
+
+    auto it = currentCompilationFunction->functionUsageToItsContext.find(call->Id);
+    if (it == currentCompilationFunction->functionUsageToItsContext.end()) {
+        emitError = Format("no context for function call '%s' in '%s'", call->Id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
+        return false;
+    }
+
+    if (it->second->definitionNode->Arguments->Ids.size() != call->Expressions.size()) {
+        emitError = "cant emit function call: invalid arguments amount";
+        return false;
+    }
+
+    if (!call->Expressions.empty()) {
+        // save third argument stack
+        if (call->Expressions.size() == 3) {
+            if (!emitExpression(out, call->Expressions[2])) {
+                return false;
+            }
+
+            // save into stack
+            out << kTab << kSub0x10Rsp << std::endl;
+            out << kTab << kMovSdXmm0Rsp << std::endl;
+        }
+
+        // save second argument into stack
+        if (call->Expressions.size() >= 2) {
+            if (!emitExpression(out, call->Expressions[1])) {
+                return false;
+            }
+
+            // save into stack
+            out << kTab << kSub0x10Rsp << std::endl;
+            out << kTab << kMovSdXmm0Rsp << std::endl;
+        }
+
+        // first argument - xmm0
+        if (!emitExpression(out, call->Expressions[0])) {
+            return false;
+        }
+
+        // restore value from second expression into xmm1
+        if (call->Expressions.size() >= 2) {
+            out << kTab << kMovSdRspXmm1 << std::endl;
+            out << kTab << kAdd0x10Rsp << std::endl;
+        }
+
+        // restore value from third expression into xmm2
+        if (call->Expressions.size() == 3) {
+            out << kTab << kMovSdRspXmm2 << std::endl;
+            out << kTab << kAdd0x10Rsp << std::endl;
+        }
+    }
+
+    out << kTab << Format(kLeaAddrRaxFmt, call->Id->Name.c_str()) << std::endl;
+    out << kTab << kCallRax << std::endl;
+
+    return true;
+}
+
 bool CompilerWithContext::emitId(std::ostream &out, const std::shared_ptr<IdNode> &id) {
     if (currentCompilationFunction == nullptr) {
-        functionEmitError = "call emitId outside of function compilation";
+        emitError = "call emitId outside of function compilation";
         return false;
     }
 
@@ -520,13 +712,13 @@ bool CompilerWithContext::emitId(std::ostream &out, const std::shared_ptr<IdNode
         return true;
     }
 
-    functionEmitError = Format("context for '%s' not found in constants and variable (in '%s')", id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
+    emitError = Format("context for '%s' not found in constants and variable (in '%s')", id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
     return false;
 }
 
 bool CompilerWithContext::emitConstant(std::ostream &out, const std::shared_ptr<ConstantValueNode> &constant) {
     if (currentCompilationFunction == nullptr) {
-        functionEmitError = "call emitConstant outside of function compilation";
+        emitError = "call emitConstant outside of function compilation";
         return false;
     }
 
@@ -535,7 +727,7 @@ bool CompilerWithContext::emitConstant(std::ostream &out, const std::shared_ptr<
         return true;
     }
 
-    functionEmitError = Format("context for constant '%f' not found (in '%s')", constant->Value, currentCompilationFunction->definitionNode->Id->Name.c_str());
+    emitError = Format("context for constant '%f' not found (in '%s')", constant->Value, currentCompilationFunction->definitionNode->Id->Name.c_str());
     return false;
 }
 
@@ -553,18 +745,17 @@ bool CompilerWithContext::emitUnary(std::ostream &out, const std::shared_ptr<Una
     }
 
     if (unary->FunctionCall != nullptr) {
-        out << kTab << "# unary function call" << std::endl;
-        return true;
+        return emitFunctionCall(out, unary->FunctionCall);
     }
 
-    functionEmitError = "empty unary node";
+    emitError = "empty unary node";
     return false;
 }
 
 bool CompilerWithContext::emitMultiplicative(std::ostream &out,
                                              const std::shared_ptr<MultiplicativeExpressionNode> &mul) {
     if (mul->UnaryExpressions.empty()) {
-        functionEmitError = "empty multiplicative node";
+        emitError = "empty multiplicative node";
         return false;
     }
 
@@ -610,7 +801,7 @@ bool CompilerWithContext::emitMultiplicative(std::ostream &out,
 
 bool CompilerWithContext::emitAdditive(std::ostream &out, const std::shared_ptr<AdditiveExpressionNode> &expression) {
     if (expression->MultiplicativeExpressions.empty()) {
-        functionEmitError = "empty additive node";
+        emitError = "empty additive node";
         return false;
     }
 
@@ -673,7 +864,7 @@ bool CompilerWithContext::emitReturnStatement(std::ostream &out,
 bool CompilerWithContext::emitAssignmentStatement(std::ostream &out,
                                                   const std::shared_ptr<AssignStatementNode> &assignment) {
     if (currentCompilationFunction == nullptr) {
-        functionEmitError = "emit assignment statement outside of function";
+        emitError = "emit assignment statement outside of function";
         return false;
     }
 
@@ -683,7 +874,7 @@ bool CompilerWithContext::emitAssignmentStatement(std::ostream &out,
 
     auto it = currentCompilationFunction->variableNameToItsContext.find(assignment->Id->Name);
     if (it == currentCompilationFunction->variableNameToItsContext.end()) {
-        functionEmitError = Format("no context for variable '%s' found in %s", assignment->Id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
+        emitError = Format("no context for variable '%s' found in %s", assignment->Id->Name.c_str(), currentCompilationFunction->definitionNode->Id->Name.c_str());
         return false;
     }
 
@@ -693,7 +884,7 @@ bool CompilerWithContext::emitAssignmentStatement(std::ostream &out,
 
 bool CompilerWithContext::emitStatement(std::ostream &out, const std::shared_ptr<StatementNode> &statement) {
     if (currentCompilationFunction == nullptr) {
-        functionEmitError = "call emitStatement outside of function compilation";
+        emitError = "call emitStatement outside of function compilation";
         return false;
     }
 
@@ -702,21 +893,26 @@ bool CompilerWithContext::emitStatement(std::ostream &out, const std::shared_ptr
     }
 
     if (statement->Conditional != nullptr) {
-        return true;
+        return emitConditionalStatement(out, statement->Conditional);
     }
 
     if (statement->Return != nullptr) {
         return emitReturnStatement(out, statement->Return);
     }
 
-    functionEmitError = Format("function '%s' got empty statement node", currentCompilationFunction->definitionNode->Id->Name.c_str());
+    emitError = Format("function '%s' got empty statement node", currentCompilationFunction->definitionNode->Id->Name.c_str());
     return false;
 }
 
-bool CompilerWithContext::emitFunctionBody(std::ostream &out, const std::shared_ptr<StatementListNode> &body) {
+bool CompilerWithContext::emitStatementListNode(std::ostream &out, const std::shared_ptr<StatementListNode> &body) {
     for (const auto &statement : body->Statements) {
         if (!emitStatement(out, statement)) {
             return false;
+        }
+
+        // no statements can be executed after return
+        if (statement->Return != nullptr) {
+            break;
         }
     }
 
@@ -756,8 +952,8 @@ CompilerWithContext::EmitResult CompilerWithContext::emitFunction(
         }
     }
 
-    if (!emitFunctionBody(functionCode, function->Body)) {
-        return {"", functionEmitError};
+    if (!emitStatementListNode(functionCode, function->Body)) {
+        return {"", emitError};
     }
 
     currentCompilationFunction = nullptr;

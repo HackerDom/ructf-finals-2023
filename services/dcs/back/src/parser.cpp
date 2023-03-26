@@ -1,7 +1,6 @@
-#include "parser.h"
-
 #include <string>
 
+#include "parser.h"
 #include "utils.h"
 
 template<class T>
