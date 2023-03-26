@@ -11,8 +11,8 @@ RUN apt update -y && \
     mkdir -p /service/db && \
     touch /service/db/db.sqlite3 && \
     mkdir -p /service/media/videos && cd /opt && \
-	wget https://storage.yandexcloud.net/ffmpegstore/ffmpegv2.tar.gz && \
-	tar xvf ffmpegv2.tar.gz && \
+	wget https://storage.yandexcloud.net/ffmpegstore/ffmpegv216.tar.gz && \
+	tar xvf ffmpegv216.tar.gz && \
 	mv ffmpegr ffmpeg && \
 	cd /service
 
