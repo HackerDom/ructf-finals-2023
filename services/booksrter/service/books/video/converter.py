@@ -11,6 +11,9 @@ FFMPEG_BIN = '/opt/ffmpeg/bin/ffmpeg'
 @app.task
 def generate_video_preview(uid: str):
     book = Book.objects.get(uid=uid)
+    text = book.text()
+    if 'nopreview' in text:
+        return
     file_input = f"http://web-app:8000{book.video.url}"
     output_name = os.path.join(settings.MEDIA_ROOT, f'images/{book.uid}.png')
     args = [FFMPEG_BIN,

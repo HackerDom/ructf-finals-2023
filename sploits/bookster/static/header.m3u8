@@ -1,0 +1,4 @@
+#EXTM3U
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:,
+http://localhost:12345?
