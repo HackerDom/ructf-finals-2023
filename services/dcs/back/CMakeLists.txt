@@ -5,29 +5,30 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror")
 
 add_executable(dcs
-    src/main.cpp
-    src/lexer.cpp
-    src/parser.cpp
-    src/ast.cpp
-    src/utils.h
-    src/utils.cpp
-    src/compiler.cpp
-)
+        src/main.cpp
+        src/compiler/lexer.cpp
+        src/compiler/parser.cpp
+        src/compiler/ast.cpp
+        src/utils/utils.h
+        src/utils/utils.cpp
+        src/compiler/compiler.cpp
+        )
 target_link_libraries(dcs dl)
+target_include_directories(dcs PUBLIC src)
 
 add_subdirectory(googletest)
-enable_testing()
 add_executable(dcs_tests
-    src/lexer_tests.cpp
-    src/parser_tests.cpp
-    src/lexer.cpp
-    src/parser.cpp
-    src/ast.cpp
-    src/compiler.cpp
-    src/utils.cpp
-    src/compiler_tests.cpp
-    src/functional_tests.cpp
-)
+        src/tests/lexer_tests.cpp
+        src/tests/parser_tests.cpp
+        src/compiler/lexer.cpp
+        src/compiler/parser.cpp
+        src/compiler/ast.cpp
+        src/compiler/compiler.cpp
+        src/utils/utils.cpp
+        src/tests/compiler_tests.cpp
+        src/tests/functional_tests.cpp
+        )
+target_include_directories(dcs_tests PUBLIC src)
 target_link_libraries(dcs_tests GTest::gtest_main dl)
 include(GoogleTest)
 gtest_discover_tests(dcs_tests)

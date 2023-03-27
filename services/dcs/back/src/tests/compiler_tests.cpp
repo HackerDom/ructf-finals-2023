@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "lexer.h"
-#include "parser.h"
-#include "compiler.h"
-#include "utils.h"
+#include "compiler/lexer.h"
+#include "compiler/parser.h"
+#include "compiler/compiler.h"
+#include "utils/utils.h"
 
 void assertCompilationResult(const std::string &programText, const std::string &expectedAssembly, const std::string &expectedError) {
     auto tokens = TokenizeString(programText);
