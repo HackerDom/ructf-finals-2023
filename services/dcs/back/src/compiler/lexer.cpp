@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "lexer.h"
-#include "utils.h"
+#include "utils/utils.h"
 
 static const char* TokenTypeNames[] = {
     "Assign",

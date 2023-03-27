@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-#include "parser.h"
-#include "utils.h"
+#include "compiler/parser.h"
+#include "utils/utils.h"
 
 void assertNodeValues(const std::shared_ptr<AstNode> &expected, const std::shared_ptr<AstNode> &actual) {
     ASSERT_EQ(expected->NodeType, actual->NodeType);

@@ -5,10 +5,10 @@
 
 #include <gtest/gtest.h>
 
-#include "lexer.h"
-#include "parser.h"
-#include "compiler.h"
-#include "utils.h"
+#include "compiler/lexer.h"
+#include "compiler/parser.h"
+#include "compiler/compiler.h"
+#include "utils/utils.h"
 
 void assertProgramResult(const std::string &program, double result, const std::string &errorMessage) {
     auto tokens = TokenizeString(program);

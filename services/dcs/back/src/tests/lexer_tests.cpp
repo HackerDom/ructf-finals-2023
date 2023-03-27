@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-#include "lexer.h"
+#include "compiler/lexer.h"
 
 using namespace std::literals;
 
