@@ -32,7 +32,7 @@ for vuln in vulns:
 
   flag_id = json.loads(flag_data)["public_flag_id"]
   print(f"Public flag id: '{flag_id}'")
-  flag_private = json.loads(str(flag_data))["private_content"]
+  flag_private = json.loads(flag_data)["private_content"]
   print(f"Private flag id: '{flag_private}'")
 
   p = subprocess.Popen([f'./{SERVICE_NAME}.{vuln}.sploit.py', '127.0.0.1', flag_id], cwd=f"sploits/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
