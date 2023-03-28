@@ -21,8 +21,20 @@ export async function validateResponse(response) {
             if (error.password) {
                 throw new Error(error.password.join(' '))
             }
+            if (error.email) {
+                throw new Error(error.email.join(' '))
+            }
+            if (error.username) {
+                throw new Error(error.username.join(' '))
+            }
             if (error.video) {
                 throw new Error(error.password.join(' '))
+            }
+            if (error.text) {
+                throw new Error(error.text.join(' '))
+            }
+            if (error.title) {
+                throw new Error(error.title.join(' '))
             }
             throw new Error(error.detail);
         }

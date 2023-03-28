@@ -2,18 +2,20 @@ services:
   web-app:
     build:
       context: .
-    ports:
-      - ${SERVER_PORT}:8000
     volumes:
       - ./service/db:/service/db
       - vault:/vault/books
       - ./service/media/images:/service/media/images
+    restart: unless-stopped
     env_file:
       - .env
     command: >
       sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - redis
   redis:
     image: redis:7.0.5-alpine
+    restart: unless-stopped
     hostname: redis
     volumes:
       - vault:/vault/books
@@ -22,6 +24,7 @@ services:
       context: .
     hostname: worker
     entrypoint: celery
+    restart: unless-stopped
     command: -A celery_app.app worker --loglevel=info
     volumes:
       -  vault:/vault/books
@@ -35,6 +38,18 @@ services:
     depends_on:
       - redis
       - web-app
-
+  nginx:
+      restart: unless-stopped
+      build:
+          context: .
+          dockerfile: nginx.Dockerfile
+      environment:
+          - SERVER_PORT=${SERVER_PORT}
+      ports:
+          - ${SERVER_PORT}:80
+      depends_on:
+          - web-app
+          - worker
+          - redis
 volumes:
     vault:

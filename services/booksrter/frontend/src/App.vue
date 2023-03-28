@@ -17,7 +17,6 @@
       <va-navbar-item><router-link  to="/book/save" class="link">Сохранить книгу</router-link></va-navbar-item>
       <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Вход</router-link></va-navbar-item>
       <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Регистрация</router-link></va-navbar-item>
-      <va-navbar-item v-if="token !== null && userName !== null">{{userName}}</va-navbar-item>
       <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Выйти</va-navbar-item>
     </template>
     <div class="upper">

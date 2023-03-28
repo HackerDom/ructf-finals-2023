@@ -22,7 +22,7 @@
 
           <div class="text">
             <p class="text__title">Текст:</p>
-            <p>
+            <p class="text__words">
               {{book.text}}
             </p>
           </div>
@@ -85,5 +85,9 @@ export default {
 }
 .video {
   margin-top: 10px;
+}
+.text__words{
+  margin-top: 10px;
+  white-space: pre;
 }
 </style>
