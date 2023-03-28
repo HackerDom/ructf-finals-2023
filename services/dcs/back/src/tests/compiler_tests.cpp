@@ -678,3 +678,13 @@ _c_const_main_2: .double 1
 _c_const_main_3: .double 2
 )", "");
 }
+
+TEST(Compiler, AssignValueToConstant) {
+    assertCompilationResult(R"(
+pi = 2;
+fun main() {
+    pi = 3.14;
+    return pi;
+}
+)", "", "cant create local variable with name 'pi': there is constant with that name");
+}

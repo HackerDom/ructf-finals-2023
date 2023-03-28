@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <stdexcept>
 #include <functional>
+#include <cstring>
 
 template<typename ... Args>
 std::string Format(const std::string &format, Args ... args) {
@@ -18,6 +19,8 @@ std::string Format(const std::string &format, Args ... args) {
 
     return {buf.get(), buf.get() + size - 1};
 }
+
+std::string GetErrnoDescription();
 
 static inline void LTrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
@@ -51,7 +54,7 @@ static inline std::string TrimCopy(std::string s) {
     return s;
 }
 
-std::filesystem::path UniquePath(const std::string &suffix);
+std::filesystem::path GetTempUniquePath(const std::string &suffix);
 
 bool WriteAllToFile(const std::filesystem::path &path, const std::string &content);
 
