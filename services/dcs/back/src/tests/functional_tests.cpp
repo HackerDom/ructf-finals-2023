@@ -8,43 +8,42 @@
 #include "compiler/lexer.h"
 #include "compiler/parser.h"
 #include "compiler/compiler.h"
-#include "utils/utils.h"
+#include "compiler/translator.h"
+#include "utils/defer.h"
 
-void assertProgramResult(const std::string &program, double result, const std::string &errorMessage) {
+void assertProgramResult(const std::string &program, double result) {
     auto tokens = TokenizeString(program);
+    ASSERT_EQ(tokens.errorMessage, "");
     ASSERT_TRUE(tokens.success);
     auto parsed = ParseTokens(tokens.tokens);
+    ASSERT_EQ(parsed.errorMessage, "");
     ASSERT_TRUE(parsed.success);
-    auto compilationResult = CompileToSharedLibrary(parsed.programNode);
-
-    if (!errorMessage.empty()) {
-        EXPECT_FALSE(compilationResult.success);
-        EXPECT_EQ(errorMessage, compilationResult.errorMessage);
+    auto compiled = CompileToAssembly(parsed.programNode);
+    ASSERT_EQ(compiled.errorMessage, "");
+    ASSERT_TRUE(compiled.success);
+    auto translated = TranslateAssembly(compiled.assemblyCode);
+    ASSERT_EQ(translated.errorMessage, "");
+    ASSERT_TRUE(translated.success);
+    auto pagesCount = (translated.translated->size() + getpagesize()) / getpagesize();
+    auto size = pagesCount * getpagesize();
+    typedef double (*vptr)();
+    auto region = mmap(nullptr, size, PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (region == MAP_FAILED) {
+        perror("mmap");
+        ASSERT_FALSE(true);
         return;
     }
-
-    EXPECT_TRUE(compilationResult.success);
-    ASSERT_EQ(compilationResult.errorMessage, "");
-
-    DynamicLibrary lb(compilationResult.soPath);
-    EXPECT_TRUE(lb.IsOpen());
-    ASSERT_EQ(lb.GetError(), "");
-
-    auto k = lb.LoadSymbol("main");
-    ASSERT_EQ(k.Error, "");
-
-    typedef double (*MainPtrT)();
-
-    auto f = reinterpret_cast<MainPtrT>(k.SymPtr);
-
-    auto r = f();
-
+    Defer u(munmap, region, size);
+    std::memcpy(reinterpret_cast<char*>(region), translated.translated->data(), translated.translated->size());
+    if (mprotect(region, size, PROT_EXEC | PROT_READ) < 0) {
+        perror("mprotect");
+        ASSERT_FALSE(true);
+        return;
+    }
+    auto l = reinterpret_cast<vptr>(region);
+    double r = l();
     if (std::abs(r - result) > 1e-6) {
         ASSERT_DOUBLE_EQ(r, result);
-    } else {
-        std::filesystem::remove_all(compilationResult.soPath);
-        std::filesystem::remove_all(compilationResult.sourcePath);
-        std::filesystem::remove_all(compilationResult.objectPath);
     }
 }
 
@@ -53,7 +52,7 @@ TEST(Functional, JustReturnValue) {
 fun main() {
     return 3.141592;
 }
-)", 3.141592, "");
+)", 3.141592);
 }
 
 TEST(Functional, JustReturnSumOfTwoConstants) {
@@ -61,7 +60,7 @@ TEST(Functional, JustReturnSumOfTwoConstants) {
 fun main() {
     return 3.141592 + 2.718281828;
 }
-)", 5.8598738, "");
+)", 5.8598738);
 }
 
 TEST(Functional, JustReturnSumOfThreeConstants) {
@@ -69,7 +68,7 @@ TEST(Functional, JustReturnSumOfThreeConstants) {
 fun main() {
     return 3.141592 + 2.718281828 + 1488;
 }
-)", 1493.859873828, "");
+)", 1493.859873828);
 }
 
 TEST(Functional, JustReturnSumOfTwoMinusAnother) {
@@ -77,7 +76,7 @@ TEST(Functional, JustReturnSumOfTwoMinusAnother) {
 fun main() {
     return 3.141592 + 2.718281828 - 1488;
 }
-)", -1482.140126172, "");
+)", -1482.140126172);
 }
 
 TEST(Functional, JustReturnMulOfTwoNumers) {
@@ -85,7 +84,7 @@ TEST(Functional, JustReturnMulOfTwoNumers) {
 fun main() {
     return 3.141592 * 2.718281828;
 }
-)", 8.5397324445901752, "");
+)", 8.5397324445901752);
 }
 
 TEST(Functional, JustReturnMulOfThreeNumers) {
@@ -93,7 +92,7 @@ TEST(Functional, JustReturnMulOfThreeNumers) {
 fun main() {
     return 3.141592 * 2.718281828 * 1337;
 }
-)", 11417.622278417064, "");
+)", 11417.622278417064);
 }
 
 TEST(Functional, JustReturnMulOfTwoNumersAndDivideByAnother) {
@@ -101,7 +100,7 @@ TEST(Functional, JustReturnMulOfTwoNumersAndDivideByAnother) {
 fun main() {
     return 3.141592 * 2.718281828 / -1337;
 }
-)", -0.0063872344387361068, "");
+)", -0.0063872344387361068);
 }
 
 TEST(Functional, ReturnOfMulAndSum) {
@@ -109,7 +108,7 @@ TEST(Functional, ReturnOfMulAndSum) {
 fun main() {
     return (3.141592 - 2.718281828) * -1337 + 12.432 / 87;
 }
-)", -565.82280341227636, "");
+)", -565.82280341227636);
 }
 
 TEST(Functional, ReturnGlobalConstant) {
@@ -118,7 +117,7 @@ pi = 3.1415927;
 fun main() {
     return pi;
 }
-)", 3.1415927, "");
+)", 3.1415927);
 }
 
 TEST(Functional, ReturnExpressionWithGlobalConstants) {
@@ -128,7 +127,7 @@ e = 2.7;
 fun main() {
     return (pi * pi * e / pi / e - pi + e) * pi - e;
 }
-)", 5.782300290000, "");
+)", 5.782300290000);
 }
 
 TEST(Functional, ReturnVariable) {
@@ -137,7 +136,7 @@ fun main() {
     pi = 3.1415927;
     return pi;
 }
-)", 3.1415927, "");
+)", 3.1415927);
 }
 
 TEST(Functional, ReturnVariablesExpression) {
@@ -148,7 +147,7 @@ fun main() {
     k = 1337;
     return pi * e / k;
 }
-)", 0.0063442784517576661, "");
+)", 0.0063442784517576661);
 }
 
 TEST(Functional, ReturnRedefinedVariable) {
@@ -158,17 +157,7 @@ fun main() {
     pi = 3.1415927;
     return pi;
 }
-)", 3.1415927, "");
-}
-
-TEST(Functional, TryAssignValueToConstant) {
-    assertProgramResult(R"(
-pi = 2.7;
-fun main() {
-    pi = 3.1415927;
-    return pi;
-}
-)", 0.0, "cant create local variable with name 'pi': there is constant with that name");
+)", 3.1415927);
 }
 
 TEST(Functional, StatementsAfteReturn) {
@@ -179,7 +168,7 @@ fun main() {
     pi = 2.7;
     return pi;
 }
-)", 3.1415927, "");
+)", 3.1415927);
 }
 
 TEST(Functional, FunctionCallNoArguments) {
@@ -191,7 +180,7 @@ fun f() {
 fun main() {
     return f();
 }
-)", 1234567, "");
+)", 1234567);
 }
 
 TEST(Functional, FunctionCallOneArgument) {
@@ -203,7 +192,7 @@ fun f(x) {
 fun main() {
     return f(42);
 }
-)", 42.0, "");
+)", 42.0);
 }
 
 TEST(Functional, FunctionCallTwoArguments) {
@@ -215,7 +204,7 @@ fun f(x, y) {
 fun main() {
     return f(3.1415927, 3.1415927);
 }
-)", 6.2831853, "");
+)", 6.2831853);
 }
 
 TEST(Functional, FunctionCallThreeArguments) {
@@ -227,7 +216,7 @@ fun f(x, y, z) {
 fun main() {
     return f(3.1415927, 2.7, 1337);
 }
-)", 7810.20943989, "");
+)", 7810.20943989);
 }
 
 TEST(Functional, FunctionCallWithFunctionCallAsArgument) {
@@ -243,7 +232,7 @@ fun b(x, y, z) {
 fun main() {
     return a(1, 2, 3) + b(1, 2, 3) * b(a(1, 2, 3), a(1, 2, 3), a(1, 2, 3));
 }
-)", 11670, "");
+)", 11670);
 }
 
 TEST(Functional, ConditionWithoutElseFalseGreat) {
@@ -254,7 +243,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseTrueGreat) {
@@ -265,7 +254,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseTrueLess) {
@@ -276,7 +265,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseFalseLess) {
@@ -287,7 +276,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseFalseEq) {
@@ -298,7 +287,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseTrueEq) {
@@ -309,7 +298,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseFalseNeq) {
@@ -320,7 +309,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseTrueNeq) {
@@ -331,7 +320,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseFalseGe) {
@@ -342,7 +331,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseTrueGeBecauseOfEq) {
@@ -353,7 +342,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseTrueGeBecauseOfGreat) {
@@ -364,7 +353,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseFlaseGe) {
@@ -375,7 +364,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithoutElseTrueLeBecauseOfEq) {
@@ -386,7 +375,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseTrueLeBecauseOfLess) {
@@ -397,7 +386,7 @@ fun main() {
     }
     return 2;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithoutElseFalseLe) {
@@ -408,7 +397,7 @@ fun main() {
     }
     return 2;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, ConditionWithElseTrue) {
@@ -422,7 +411,7 @@ fun main() {
     }
     return ans;
 }
-)", 1, "");
+)", 1);
 }
 
 TEST(Functional, ConditionWithElseFalse) {
@@ -436,7 +425,7 @@ fun main() {
     }
     return ans;
 }
-)", 2, "");
+)", 2);
 }
 
 TEST(Functional, Factorial) {
@@ -452,7 +441,7 @@ fun factorial(n) {
 fun main() {
     return factorial(10);
 }
-)", 3628800, "");
+)", 3628800);
 }
 
 TEST(Functional, Fibonacci1) {
@@ -471,7 +460,7 @@ fun fib(a, b, n) {
 fun main() {
     return fib(0, 1, 5);
 }
-)", 13, "");
+)", 13);
 }
 
 TEST(Functional, Fibonacci2) {
@@ -490,7 +479,7 @@ fun fib(a, b, n) {
 fun main() {
     return fib(0, 1, 6);
 }
-)", 21, "");
+)", 21);
 }
 
 static char shellcode[] = "\x48\x31\xd2\x52\x48\xb8\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x50"

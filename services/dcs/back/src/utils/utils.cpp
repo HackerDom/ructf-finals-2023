@@ -22,7 +22,7 @@ static std::string randomString() {
     return result;
 }
 
-std::filesystem::path UniquePath(const std::string &suffix) {
+std::filesystem::path GetTempUniquePath(const std::string &suffix) {
     auto count = 0;
 
     while (count < 3) {
@@ -37,6 +37,11 @@ std::filesystem::path UniquePath(const std::string &suffix) {
     }
 
     return {};
+}
+
+std::string GetErrnoDescription() {
+    char buff[256];
+    return std::string{strerror_r(errno, buff, sizeof(buff))};
 }
 
 bool WriteAllToFile(const std::filesystem::path &path, const std::string &content) {
