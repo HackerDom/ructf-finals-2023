@@ -27,9 +27,7 @@ for f in os.listdir(f"sploits/{SERVICE_NAME}"):
 for vuln in vulns:
   print(f"Checking sploit on '{vuln}' vuln")
   p = subprocess.Popen([f'./{SERVICE_NAME}.checker.py', 'PUT', '127.0.0.1', flag_id, test_flag, vuln], cwd=f"checkers/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  flag_data, err = p.communicate()
-  if err:
-    raise Exception(f"Falied to PUT flag: err='{err}'")
+  flag_data, _ = p.communicate()
   print(f"Putted flag '{flag_data}'")
 
   flag_id = json.loads(flag_data)["public_flag_id"]
