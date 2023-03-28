@@ -109,6 +109,20 @@ fun main() {
 .section .text
 .globl main
 
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    divsd   %xmm1,%xmm0
+    leaveq
+    retq
+
 lol:
     push    %rbp
     mov     %rsp,%rbp
@@ -138,20 +152,6 @@ lol:
     movsd   (%rsp),%xmm0
     add     $0x10,%rsp
     addsd   %xmm1,%xmm0
-    leaveq
-    retq
-
-main:
-    push    %rbp
-    mov     %rsp,%rbp
-    movsd   _c_const_main_0(%rip),%xmm0
-    sub     $0x10,%rsp
-    movsd   %xmm0,(%rsp)
-    movsd   _c_const_main_1(%rip),%xmm0
-    movaps  %xmm0,%xmm1
-    movsd   (%rsp),%xmm0
-    add     $0x10,%rsp
-    divsd   %xmm1,%xmm0
     leaveq
     retq
 
@@ -282,7 +282,7 @@ TEST(Compiler, MainFunctionCantGetArguments) {
 fun main(x) {
     return x;
 }
-)", "", "main function cant have any arguments");
+)", "", "'main' function cant have any arguments");
 }
 
 TEST(Compiler, ReturnGlobalConstant) {
@@ -420,18 +420,18 @@ fun main() {
 .section .text
 .globl main
 
-f:
-    push    %rbp
-    mov     %rsp,%rbp
-    movsd   _c_const_f_0(%rip),%xmm0
-    leaveq
-    retq
-
 main:
     push    %rbp
     mov     %rsp,%rbp
     lea     f(%rip),%rax
     call    *%rax
+    leaveq
+    retq
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_f_0(%rip),%xmm0
     leaveq
     retq
 
@@ -453,21 +453,21 @@ fun main() {
 .section .text
 .globl main
 
-f:
-    push    %rbp
-    mov     %rsp,%rbp
-    sub     $0x8,%rsp
-    movsd   %xmm0,-0x8(%rbp)
-    movsd   -0x8(%rbp),%xmm0
-    leaveq
-    retq
-
 main:
     push    %rbp
     mov     %rsp,%rbp
     movsd   _c_const_main_0(%rip),%xmm0
     lea     f(%rip),%rax
     call    *%rax
+    leaveq
+    retq
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x8,%rsp
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   -0x8(%rbp),%xmm0
     leaveq
     retq
 
@@ -489,6 +489,20 @@ fun main() {
 .section .text
 .globl main
 
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_1(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   (%rsp),%xmm1
+    add     $0x10,%rsp
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
+
 f:
     push    %rbp
     mov     %rsp,%rbp
@@ -503,20 +517,6 @@ f:
     movsd   (%rsp),%xmm0
     add     $0x10,%rsp
     addsd   %xmm1,%xmm0
-    leaveq
-    retq
-
-main:
-    push    %rbp
-    mov     %rsp,%rbp
-    movsd   _c_const_main_1(%rip),%xmm0
-    sub     $0x10,%rsp
-    movsd   %xmm0,(%rsp)
-    movsd   _c_const_main_0(%rip),%xmm0
-    movsd   (%rsp),%xmm1
-    add     $0x10,%rsp
-    lea     f(%rip),%rax
-    call    *%rax
     leaveq
     retq
 
@@ -538,6 +538,25 @@ fun main() {
 )", R"(
 .section .text
 .globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_2(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   (%rsp),%xmm1
+    add     $0x10,%rsp
+    movsd   (%rsp),%xmm2
+    add     $0x10,%rsp
+    lea     f(%rip),%rax
+    call    *%rax
+    leaveq
+    retq
 
 f:
     push    %rbp
@@ -561,25 +580,6 @@ f:
     movsd   (%rsp),%xmm0
     add     $0x10,%rsp
     mulsd   %xmm1,%xmm0
-    leaveq
-    retq
-
-main:
-    push    %rbp
-    mov     %rsp,%rbp
-    movsd   _c_const_main_2(%rip),%xmm0
-    sub     $0x10,%rsp
-    movsd   %xmm0,(%rsp)
-    movsd   _c_const_main_1(%rip),%xmm0
-    sub     $0x10,%rsp
-    movsd   %xmm0,(%rsp)
-    movsd   _c_const_main_0(%rip),%xmm0
-    movsd   (%rsp),%xmm1
-    add     $0x10,%rsp
-    movsd   (%rsp),%xmm2
-    add     $0x10,%rsp
-    lea     f(%rip),%rax
-    call    *%rax
     leaveq
     retq
 

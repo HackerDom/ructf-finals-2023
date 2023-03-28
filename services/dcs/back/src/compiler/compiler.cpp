@@ -116,17 +116,19 @@ private:
     static constexpr const char *kJneFmt                = "jne %s";
     static constexpr const char *kJmpFmt                = "jmp %s";
 
+    static constexpr const char *kMainFunctionName = "main";
+
     [[nodiscard]] std::string getConditionJump(ConditionalStatementNode::ConditionType condition, const std::string &label);
 };
 
 std::string CompilerWithContext::makeChecks() {
-    auto mainIt = functionNameToContext.find("main");
+    auto mainIt = functionNameToContext.find(kMainFunctionName);
     if (mainIt == functionNameToContext.end()) {
-        return "there is no main function in program";
+        return Format("there is no '%s' function in program", kMainFunctionName);
     }
 
     if (!mainIt->second->definitionNode->Arguments->Ids.empty()) {
-        return "main function cant have any arguments";
+        return Format("'%s' function cant have any arguments", kMainFunctionName);
     }
 
     return "";
@@ -504,7 +506,7 @@ std::string CompilerWithContext::fillContexts() {
 CompilerWithContext::EmitResult CompilerWithContext::emitHeader() {
     auto text = std::string(".section .text\n");
 
-    if (functionNameToContext.find("main") != functionNameToContext.end()) {
+    if (functionNameToContext.find(kMainFunctionName) != functionNameToContext.end()) {
         text += ".globl main\n";
     }
 
@@ -513,6 +515,13 @@ CompilerWithContext::EmitResult CompilerWithContext::emitHeader() {
 
 CompilerWithContext::EmitResult CompilerWithContext::emitFunctions() {
     std::stringstream ss;
+
+    for (std::size_t i = 0; i < root->Functions.size(); ++i) {
+        if (root->Functions[i]->Id->Name == kMainFunctionName) {
+            std::swap(root->Functions[0], root->Functions[i]);
+            break;
+        }
+    }
 
     for (const auto &fd : root->Functions) {
         auto er = emitFunction(fd);
