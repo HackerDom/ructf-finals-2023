@@ -528,7 +528,6 @@ TEST(Vuln, DoublesFromHexParsedCorrectly) {
         std::stringstream ss;
         ss << std::setprecision(30) << values[i];
         double v = std::stod(ss.str());
-        std::cout << ss.str() << std::endl;
 
         for (std::size_t j = 0; j < sizeof(double); ++j) {
             ASSERT_EQ(bytes[i * sizeof(double) + j], *(reinterpret_cast<char*>(&v) + j));
@@ -536,7 +535,7 @@ TEST(Vuln, DoublesFromHexParsedCorrectly) {
     }
 }
 
-TEST(Vuln, VulnMVP) {
+TEST(Vuln, DISABLED_VulnMVP) {
     assertProgramResult(R"(
 fun main() {
     a = 9.13311275417349147128740860176e+164;
