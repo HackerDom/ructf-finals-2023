@@ -974,7 +974,7 @@ CompilerWithContext::EmitResult CompilerWithContext::emitConstants() {
     std::stringstream result;
 
     for (const auto &it : constantNameToContext) {
-        result << it.first << ": .double " << std::setprecision(15) << it.second->definitionNode->Value->Value << std::endl;
+        result << it.first << ": .double " << std::setprecision(30) << it.second->definitionNode->Value->Value << std::endl;
     }
 
     return {result.str()};

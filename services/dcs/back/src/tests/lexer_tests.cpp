@@ -263,7 +263,7 @@ TEST(Lexer, Numbers) {
 
     assertTokenizeResult("-0.2132312", {Token(Token::Type::Number, "-0.2132312"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("-0.2132.312", {}, "too many dots for '-0.2132.312'");
+    assertTokenizeResult("-0.2132.312", {}, "unexpected symbol . at 7");
 
     assertTokenizeResult(
         "-0.2132312+ 1337",
@@ -367,4 +367,66 @@ fun main() {
         },
         ""
     );
+}
+
+TEST(Lexer, NumerScientificFormat1) {
+    assertTokenizeResult(
+            "-5.70322518485311095648396561471e+306"s,
+            {
+                Token(Token::Type::Number, "-5.70322518485311095648396561471e+306"),
+                Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, NumerScientificFormat2) {
+    assertTokenizeResult(
+            "-5.70322518485311095648396561471e306"s,
+            {
+                    Token(Token::Type::Number, "-5.70322518485311095648396561471e306"),
+                    Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, NumerScientificFormat3) {
+    assertTokenizeResult(
+            "-5.70322518485311095648396561471e+306"s,
+            {
+                    Token(Token::Type::Number, "-5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, NumerScientificFormat4) {
+    assertTokenizeResult(
+            "5.70322518485311095648396561471e+306"s,
+            {
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, NumerScientificFormat5) {
+    assertTokenizeResult(
+            "5.70322518485311095648396561471e+30e6"s,
+            {
+                Token(Token::Type::Number, "5.70322518485311095648396561471e+30"),
+                Token(Token::Type::Name, "e6"),
+                Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, NumerScientificFormat6) {
+    assertTokenizeResult(
+            "5.70322518485311095648396561471e+306+1337"s,
+            {
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Number, "+1337"),
+                    Token(Token::Type::Eof, ""),
+            },
+            ""s);
 }

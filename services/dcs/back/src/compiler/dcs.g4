@@ -14,7 +14,7 @@ assignStatement: id ASSIGN expression SEMICOLON;
 expression: additiveExpression;
 additiveExpression: multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*;
 multiplicativeExpression: unaryExpression ((MUL | DIV) unaryExpression)*;
-unaryExpression: id | constantValue | functionCall | (LEFT_PAREN expression RIGHT_PAREN);
+unaryExpression: id | constantValue | functionCall | (LEFT_PAREN expression RIGHT_PAREN) | MINUS expression | PLUS expression;
 functionCall: id LEFT_PAREN (expression (COMMA expression)*)? RIGHT_PAREN;
 constantValue: NUMBER;
 id: NAME;
