@@ -11,7 +11,7 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class BookCreateSerializer(serializers.ModelSerializer):
-    text = serializers.CharField(write_only=True, max_length=MAX_BOOKS_SIZE)
+    text = serializers.FileField()
     class Meta:
         model = Book
         fields = ('title', 'video', 'text')

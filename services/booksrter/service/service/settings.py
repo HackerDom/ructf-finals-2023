@@ -5,10 +5,10 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET', 'sdafrdtdregshtkjgeriugha34uiewhi')
+SECRET_KEY = os.environ.get('DJANGO_SECRET', 'chang-me-ctf')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

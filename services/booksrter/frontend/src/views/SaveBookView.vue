@@ -12,13 +12,15 @@
               style="width: 100%"
               :rules="[(value) => (value && value.length > 0) || 'Введите название']"
           />
-          <va-input
+          <va-list-label class="ml-3" style="text-align: left;">
+            Книга
+          </va-list-label>
+          <va-file-upload
               v-model="text"
-              class="mt-4 mb-1"
-              type="textarea"
-              label="Текст"
-              style="width: 100%"
-              placeholder="Буря мглою небо кроет..."
+              type="single"
+              :upload-button-text="'Выбрать книгу'"
+              dropzone
+              file-types="txt"
           />
           <va-list-label class="ml-3" style="text-align: left;">
             Видео с реакцией
@@ -26,6 +28,7 @@
           <va-file-upload
               v-model="file"
               type="single"
+              :upload-button-text="'Выбрать видео'"
               dropzone
               file-types="mp4,avi,webm"
           />
@@ -55,13 +58,17 @@ export default {
     return {
       file: undefined,
       title: "",
-      text: ""
+      text: undefined
     };
   },
   methods: {
     onSubmit(){
       if (!this.file){
         this.$vaToast.init({ message: 'Выберите видео', position: 'bottom-right' })
+        return
+      }
+      if (!this.text){
+        this.$vaToast.init({ message: 'Выберите файл с текстом книги', position: 'bottom-right' })
         return
       }
       requestSaveBook(this.token, this.title, this.text, this.file)
