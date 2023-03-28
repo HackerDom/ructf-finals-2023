@@ -26,10 +26,10 @@ for f in os.listdir(f"sploits/{SERVICE_NAME}"):
 
 for vuln in vulns:
   print(f"Checking sploit on '{vuln}' vuln")
-  p = subprocess.Popen([f'./{SERVICE_NAME}.checker.py', 'PUT', '127.0.0.1', flag_id, test_flag, vuln], cwd=f"checkers/{SERVICE_NAME}")
+  p = subprocess.Popen([f'./{SERVICE_NAME}.checker.py', 'PUT', '127.0.0.1', flag_id, test_flag, vuln], cwd=f"checkers/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   flag_data, err = p.communicate()
   if err:
-    raise Exception( f"Falied to PUT flag: err='{err}'")
+    raise Exception(f"Falied to PUT flag: err='{err}'")
   print(f"Putted flag '{flag_data}'")
 
   flag_id = json.loads(flag_data)["public_flag_id"]
@@ -37,12 +37,11 @@ for vuln in vulns:
   flag_private = json.load(str(flag_data))["private_content"]
   print(f"Private flag id: '{flag_private}'")
 
-  p = subprocess.Popen([f'./{SERVICE_NAME}.{vuln}.sploit.py', '127.0.0.1', flag_id], cwd=f"sploits/{SERVICE_NAME}")
+  p = subprocess.Popen([f'./{SERVICE_NAME}.{vuln}.sploit.py', '127.0.0.1', flag_id], cwd=f"sploits/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   text_with_flag, err = p.communicate()
   if err:
-    raise Exception( f"Falied to execute sploit: err='{err}'")
+    raise Exception(f"Falied to execute sploit: err='{err}'")
   print(f"Text from sploit - '{text_with_flag}'")
 
   if test_flag not in str(text_with_flag):
-    print("Invalid flag")
-    sys.exit(1)
+    raise Exception("Flag not found in sploit stdout")
