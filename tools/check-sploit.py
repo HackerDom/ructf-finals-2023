@@ -32,7 +32,7 @@ for vuln in vulns:
     raise Exception( f"Falied to PUT flag: err='{err}'")
   print(f"Putted flag '{flag_data}'")
 
-  flag_id = json.load(flag_data)["public_flag_id"]
+  flag_id = json.loads(flag_data)["public_flag_id"]
   print(f"Public flag id: '{flag_id}'")
   flag_private = json.load(str(flag_data))["private_content"]
   print(f"Private flag id: '{flag_private}'")
