@@ -36,7 +36,7 @@ jobs:
     - name: Setup sploit libraries
       run: if [ -f sploits/example/requirements.txt ]; then python -m pip install -r sploits/example/requirements.txt; fi
     - name: Test sploit on service
-      run: (./tools/check-sploit.sh example)
+      run: (./tools/check-sploit.py example)
   update_example:
     name: Deploy service using ansible to first teams
     needs: check_example
