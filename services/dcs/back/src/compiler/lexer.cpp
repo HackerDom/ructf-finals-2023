@@ -81,32 +81,47 @@ static TokenReadResult readNameOrKeyword(std::string_view input, int &i) {
     return {Token(Token::Type::Name, s), ""};
 }
 
-static inline bool isNumberSymbol(char c) {
-    return c == '.' || std::isdigit(c);
-}
-
 static TokenReadResult readNumber(std::string_view input, int &i) {
     const auto l = static_cast<int>(input.size());
     const auto start = i;
 
-    if (input[i] == '+' || input[i] == '-') {
+    if (input[i] == '-' || input[i] == '+') {
         ++i;
     }
 
-    auto dotCounter = 0;
+    auto dotFound = false;
+    auto eFound = false;
 
-    while (i < l && isNumberSymbol(input[i])) {
-        if (input[i] == '.') {
-            ++dotCounter;
+    for (; i < l; ++i) {
+        char c = input[i];
+
+        if (eFound) {
+            if (!std::isdigit(c)) {
+                break;
+            }
+        } else {
+            if (std::isdigit(c)) {
+                continue;
+            }
+            else if (c == '.') {
+                if (dotFound) {
+                    break;
+                }
+                dotFound = true;
+                continue;
+            } else if (c == 'e') {
+                eFound = true;
+                ++i;
+                if (i >= l) {
+                    return {Token(Token::Type::Number, ""), "unexpected end while reading number"};
+                }
+                if (input[i] != '-' && input[i] != '+' && !std::isdigit(input[i])) {
+                    return {Token(Token::Type::Number, ""), "unexpected symbol while reading number"};
+                }
+            } else {
+                break;
+            }
         }
-
-        ++i;
-    }
-
-    if (dotCounter > 1) {
-        std::stringstream ss;
-        ss << "too many dots for '" << input.substr(start, i - start) << "'";
-        return {Token(Token::Type::Eof, ""), ss.str()};
     }
 
     auto s = input.substr(start, i - start);
