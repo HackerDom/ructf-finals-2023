@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/python3
+#!/bin/python3
 import sys
 import random
 import string
