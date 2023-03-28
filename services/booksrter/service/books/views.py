@@ -8,7 +8,7 @@ from books.permissions import IsOwner
 from books.serializers import BookSerializer, BookCreateSerializer
 from books.utils import CreateDiffrentMixin
 from books.video.converter import generate_video_preview
-from service.book_config import BOOK_STORE
+from service.book_config import BOOK_STORE, MAX_BOOKS_SIZE
 
 
 # Create your views here.
@@ -30,10 +30,15 @@ class BookViewSet(CreateDiffrentMixin,
             raise serializers.ValidationError("Video is too big")
         if 'video' not in video.content_type:
             raise serializers.ValidationError("File is not a video")
+        if book_text.size > MAX_BOOKS_SIZE:
+            raise serializers.ValidationError("Book is too big")
+        if book_text.content_type != 'text/plain':
+            raise serializers.ValidationError("File is not a text")
         instance = serializer.save(owner=self.request.user)
         description_filename = os.path.join(BOOK_STORE, f"{instance.uid}.txt")
-        with open(description_filename, 'w') as f:
-            f.write(book_text)
+        with open(description_filename, 'wb+') as f:
+            for chunk in book_text.chunks():
+                f.write(chunk)
         generate_video_preview.delay(uid=instance.uid)
 
     def get_queryset(self):
