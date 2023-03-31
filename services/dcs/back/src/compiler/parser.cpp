@@ -216,7 +216,7 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
                 return {nullptr, fc.errorMessage};
             }
 
-            return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, fc.node, nullptr)};
+            return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, fc.node, nullptr, nullptr)};
         }
 
         auto id = readIdNode();
@@ -224,16 +224,17 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
             return {nullptr, id.errorMessage};
         }
 
-        return {std::make_shared<UnaryExpressionNode>(id.node, nullptr, nullptr, nullptr)};
+        return {std::make_shared<UnaryExpressionNode>(id.node, nullptr, nullptr, nullptr, nullptr)};
     }
 
-    if (currentTokenIs(Token::Type::Number)) {
+    if (currentTokenIs(Token::Type::Number)
+        || ((currentTokenIs(Token::Type::Plus) || currentTokenIs(Token::Type::Minus)) && nextTokenIs(Token::Type::Number))) {
         auto c = readConstantValueNode();
         if (!c.errorMessage.empty()) {
             return {nullptr, c.errorMessage};
         }
 
-        return {std::make_shared<UnaryExpressionNode>(nullptr, c.node, nullptr, nullptr)};
+        return {std::make_shared<UnaryExpressionNode>(nullptr, c.node, nullptr, nullptr, nullptr)};
     }
 
     if (currentTokenIs(Token::Type::LeftParen)) {
@@ -247,9 +248,30 @@ Parsed<UnaryExpressionNode> ParserWithContext::readUnaryExpressionNode() {
         if (currentTokenIs(Token::Type::RightParen)) {
             acceptToken();
 
-            return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e.node)};
+            return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e.node, nullptr)};
+        }
+    }
+
+    if (currentTokenIs(Token::Type::Minus)) {
+        acceptToken();
+
+        auto e = readExpressionNode();
+        if (!e.errorMessage.empty()) {
+            return {nullptr, e.errorMessage};
         }
 
+        return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, nullptr, e.node)};
+    }
+
+    if (currentTokenIs(Token::Type::Plus)) {
+        acceptToken();
+
+        auto e = readExpressionNode();
+        if (!e.errorMessage.empty()) {
+            return {nullptr, e.errorMessage};
+        }
+
+        return {std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e.node, nullptr)};
     }
 
     return {nullptr, Format("expected NAME | NUMBER | LEFT_PAREN, but got %s", currentTokenAbout().c_str())};
@@ -493,18 +515,28 @@ Parsed<IdNode> ParserWithContext::readIdNode() {
 }
 
 Parsed<ConstantValueNode> ParserWithContext::readConstantValueNode() {
-    const auto &t = currentToken();
+    auto neg = false;
+    if (currentTokenIs(Token::Type::Plus)) {
+        acceptToken();
+    } else if (currentTokenIs(Token::Type::Minus)) {
+        acceptToken();
+        neg = true;
+    }
 
     if (!currentTokenIs(Token::Type::Number)) {
         return {nullptr, Format("expected NUMBER, but got %s", currentTokenAbout().c_str())};
     }
 
-    std::string s{t.value};
+    std::string s{currentToken().value};
     std::size_t p;
     auto d = std::stod(s, &p);
 
     if (p != s.size()) {
         return {nullptr, Format("can't read double from '%s'", s.c_str())};
+    }
+
+    if (neg) {
+        d = -d;
     }
 
     acceptToken();

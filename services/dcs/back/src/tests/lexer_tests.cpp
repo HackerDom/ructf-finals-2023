@@ -259,16 +259,17 @@ TEST(Lexer, Numbers) {
 
     assertTokenizeResult("0.2132312", {Token(Token::Type::Number, "0.2132312"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("+0.2132312", {Token(Token::Type::Number, "+0.2132312"), Token(Token::Type::Eof, "")}, "");
+    assertTokenizeResult("+0.2132312", {Token(Token::Type::Plus, "+"), Token(Token::Type::Number, "0.2132312"), Token(Token::Type::Eof, "")}, "");
 
-    assertTokenizeResult("-0.2132312", {Token(Token::Type::Number, "-0.2132312"), Token(Token::Type::Eof, "")}, "");
+    assertTokenizeResult("-0.2132312", {Token(Token::Type::Minus, "-"), Token(Token::Type::Number, "0.2132312"), Token(Token::Type::Eof, "")}, "");
 
     assertTokenizeResult("-0.2132.312", {}, "unexpected symbol . at 7");
 
     assertTokenizeResult(
         "-0.2132312+ 1337",
         {
-            Token(Token::Type::Number, "-0.2132312"),
+            Token(Token::Type::Minus, "-"),
+            Token(Token::Type::Number, "0.2132312"),
             Token(Token::Type::Plus, "+"),
             Token(Token::Type::Number, "1337"),
             Token(Token::Type::Eof, ""),
@@ -324,8 +325,8 @@ fun main() {
         std::string(text),
         {
             Token(Token::Type::Name, "y"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "42"), Token(Token::Type::Semicolon, ";"),
-            Token(Token::Type::Name, "x"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "+43.00"), Token(Token::Type::Semicolon, ";"),
-            Token(Token::Type::Name, "p"), Token(Token::Type::Assign, "="), Token(Token::Type::Number, "-1337.13123123"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Name, "x"), Token(Token::Type::Assign, "="), Token(Token::Type::Plus, "+"), Token(Token::Type::Number, "43.00"), Token(Token::Type::Semicolon, ";"),
+            Token(Token::Type::Name, "p"), Token(Token::Type::Assign, "="), Token(Token::Type::Minus, "-"), Token(Token::Type::Number, "1337.13123123"), Token(Token::Type::Semicolon, ";"),
             Token(Token::Type::Fun, "fun"), Token(Token::Type::Name, "some_func"),
             Token(Token::Type::LeftParen, "("), Token(Token::Type::Name, "x1"), Token(Token::Type::Comma, ","), Token(Token::Type::Name, "x2"), Token(Token::Type::RightParen, ")"),
             Token(Token::Type::LeftBrace, "{"),
@@ -373,7 +374,8 @@ TEST(Lexer, NumerScientificFormat1) {
     assertTokenizeResult(
             "-5.70322518485311095648396561471e+306"s,
             {
-                Token(Token::Type::Number, "-5.70322518485311095648396561471e+306"),
+                Token(Token::Type::Minus, "-"),
+                Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
                 Token(Token::Type::Eof, ""),
             },
             ""s);
@@ -383,7 +385,8 @@ TEST(Lexer, NumerScientificFormat2) {
     assertTokenizeResult(
             "-5.70322518485311095648396561471e306"s,
             {
-                    Token(Token::Type::Number, "-5.70322518485311095648396561471e306"),
+                    Token(Token::Type::Minus, "-"),
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e306"),
                     Token(Token::Type::Eof, ""),
             },
             ""s);
@@ -393,7 +396,8 @@ TEST(Lexer, NumerScientificFormat3) {
     assertTokenizeResult(
             "-5.70322518485311095648396561471e+306"s,
             {
-                    Token(Token::Type::Number, "-5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Minus, "-"),
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
                     Token(Token::Type::Eof, ""),
             },
             ""s);
@@ -401,9 +405,9 @@ TEST(Lexer, NumerScientificFormat3) {
 
 TEST(Lexer, NumerScientificFormat4) {
     assertTokenizeResult(
-            "5.70322518485311095648396561471e+306"s,
+            "5.70322518485311095648396561471e-306"s,
             {
-                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e-306"),
                     Token(Token::Type::Eof, ""),
             },
             ""s);
@@ -425,7 +429,20 @@ TEST(Lexer, NumerScientificFormat6) {
             "5.70322518485311095648396561471e+306+1337"s,
             {
                     Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
-                    Token(Token::Type::Number, "+1337"),
+                    Token(Token::Type::Plus, "+"),
+                    Token(Token::Type::Number, "1337"),
+                    Token(Token::Type::Eof, ""),
+            },
+            ""s);
+}
+
+TEST(Lexer, SubNoSpaces) {
+    assertTokenizeResult(
+            "5.70322518485311095648396561471e+306-5.70322518485311095648396561471e+306"s,
+            {
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
+                    Token(Token::Type::Minus, "-"),
+                    Token(Token::Type::Number, "5.70322518485311095648396561471e+306"),
                     Token(Token::Type::Eof, ""),
             },
             ""s);

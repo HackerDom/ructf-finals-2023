@@ -47,11 +47,11 @@ main:
 
 
 _c_const_main_0: .double 0
-e: .double 2.7
-pi: .double 3.1415927
-x1: .double 1.23123123
-x2: .double -234234.123123
-
+e: .double 2.70000000000000017763568394003
+pi: .double 3.14159269999999990474748301494
+x1: .double 1.23123122999999989879427175765
+x2: .double -234234.123122999997576698660851
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -161,11 +161,12 @@ _c_const_lol_1: .double 1
 _c_const_lol_2: .double 43
 _c_const_lol_3: .double 45
 _c_const_main_0: .double 42
-_c_const_main_1: .double 1244.2234234
-e: .double 2.7
-pi: .double 3.1415927
-x1: .double 1.23123123
-x2: .double -234234.123123
+_c_const_main_1: .double 1244.22342340000000149302650243
+e: .double 2.70000000000000017763568394003
+pi: .double 3.14159269999999990474748301494
+x1: .double 1.23123122999999989879427175765
+x2: .double -234234.123122999997576698660851
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -303,7 +304,8 @@ main:
     retq
 
 
-pi: .double 3.1415927
+pi: .double 3.14159269999999990474748301494
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -328,7 +330,8 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.1415927
+_c_const_main_0: .double 3.14159269999999990474748301494
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -373,9 +376,10 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.1415927
-_c_const_main_1: .double 2.7
+_c_const_main_0: .double 3.14159269999999990474748301494
+_c_const_main_1: .double 2.70000000000000017763568394003
 _c_const_main_2: .double 1337
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -402,8 +406,9 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.1415927
-_c_const_main_1: .double 2.7
+_c_const_main_0: .double 3.14159269999999990474748301494
+_c_const_main_1: .double 2.70000000000000017763568394003
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -437,6 +442,7 @@ f:
 
 
 _c_const_f_0: .double 1234567
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -473,6 +479,7 @@ f:
 
 
 _c_const_main_0: .double 42
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -521,8 +528,9 @@ f:
     retq
 
 
-_c_const_main_0: .double 3.1415927
-_c_const_main_1: .double 3.1415927
+_c_const_main_0: .double 3.14159269999999990474748301494
+_c_const_main_1: .double 3.14159269999999990474748301494
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -584,9 +592,10 @@ f:
     retq
 
 
-_c_const_main_0: .double 3.1415927
-_c_const_main_1: .double 2.7
+_c_const_main_0: .double 3.14159269999999990474748301494
+_c_const_main_1: .double 2.70000000000000017763568394003
 _c_const_main_2: .double 1337
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -627,6 +636,7 @@ _c_const_main_0: .double 1
 _c_const_main_1: .double 2
 _c_const_main_2: .double 2
 _c_const_main_3: .double 1
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -672,10 +682,11 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.14
+_c_const_main_0: .double 3.14000000000000012434497875802
 _c_const_main_1: .double 3
 _c_const_main_2: .double 1
 _c_const_main_3: .double 2
+.sign_bit: .quad 0x8000000000000000
 )", "");
 }
 
@@ -687,4 +698,84 @@ fun main() {
     return pi;
 }
 )", "", "cant create local variable with name 'pi': there is constant with that name");
+}
+
+TEST(Compiler, NegativeNumber) {
+    assertCompilationResult(R"(
+fun main() {
+    return -3.14;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double -3.14000000000000012434497875802
+.sign_bit: .quad 0x8000000000000000
+)", "");
+}
+
+TEST(Compiler, NegNegNeg) {
+    assertCompilationResult(R"(
+fun main() {
+    return ---5;
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   .sign_bit(%rip),%xmm1
+    xorpd   %xmm1,%xmm0
+    movsd   .sign_bit(%rip),%xmm1
+    xorpd   %xmm1,%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double -5
+.sign_bit: .quad 0x8000000000000000
+)", "");
+}
+
+TEST(Compiler, NegExpr) {
+    assertCompilationResult(R"(
+fun main() {
+    return -(5 +6);
+}
+)", R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    addsd   %xmm1,%xmm0
+    movsd   .sign_bit(%rip),%xmm1
+    xorpd   %xmm1,%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .double 5
+_c_const_main_1: .double 6
+.sign_bit: .quad 0x8000000000000000
+)", "");
 }

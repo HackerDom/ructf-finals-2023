@@ -116,12 +116,14 @@ public:
         std::shared_ptr<IdNode> id,
         std::shared_ptr<ConstantValueNode> constant,
         std::shared_ptr<FunctionCallNode> functionCall,
-        std::shared_ptr<ExpressionNode> parenthesisExpression
+        std::shared_ptr<ExpressionNode> parenthesisExpression,
+        std::shared_ptr<ExpressionNode> negativeExpression
     ) : AstNode(Type::UnaryExpression),
         Id(std::move(id)),
         Constant(std::move(constant)),
         FunctionCall(std::move(functionCall)),
-        ParenthesisExpression(std::move(parenthesisExpression)) {
+        ParenthesisExpression(std::move(parenthesisExpression)),
+        NegationExression(std::move(negativeExpression)) {
     }
     ~UnaryExpressionNode() override = default;
     void Print(std::ostream &stream, const std::string &tab, bool last) const override;
@@ -131,6 +133,7 @@ public:
     std::shared_ptr<ConstantValueNode> Constant;
     std::shared_ptr<FunctionCallNode> FunctionCall;
     std::shared_ptr<ExpressionNode> ParenthesisExpression;
+    std::shared_ptr<ExpressionNode> NegationExression;
 };
 
 class MultiplicativeExpressionNode : public AstNode {
