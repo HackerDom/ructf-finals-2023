@@ -106,11 +106,11 @@ TranslationResult TranslateAssembly(const std::string &assembly) {
         auto *name = stringTable + section->sh_name;
 
         if (std::strcmp(name, ".text") == 0) {
-            TranslationResult result{.success = true, .errorMessage=""};
-            result.translated = std::make_shared<std::vector<uint8_t>>();
-            result.translated->resize(section->sh_size);
+            TranslationResult result{.Success = true, .ErrorMessage=""};
+            result.Translated = std::make_shared<std::vector<uint8_t>>();
+            result.Translated->resize(section->sh_size);
             std::memcpy(
-                result.translated->data(),
+                result.Translated->data(),
                 reinterpret_cast<char *>(reinterpret_cast<char *>(mapped) + section->sh_offset),
                 section->sh_size
             );

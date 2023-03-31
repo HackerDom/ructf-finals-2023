@@ -6,9 +6,9 @@
 #include "ast.h"
 
 struct CompilationResult {
-    bool success;
-    std::string assemblyCode;
-    std::string errorMessage;
+    bool Success;
+    std::string AssemblyCode;
+    std::string ErrorMessage;
 };
 
 CompilationResult CompileToAssembly(const std::shared_ptr<DcsProgramNode> &program);

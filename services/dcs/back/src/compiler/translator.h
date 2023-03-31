@@ -6,8 +6,8 @@
 #include <memory>
 
 struct TranslationResult {
-    bool success;
-    std::string errorMessage;
-    std::shared_ptr<std::vector<uint8_t>> translated;
+    bool Success;
+    std::string ErrorMessage;
+    std::shared_ptr<std::vector<uint8_t>> Translated;
 };
 TranslationResult TranslateAssembly(const std::string &assembly);

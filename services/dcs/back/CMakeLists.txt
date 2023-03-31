@@ -12,7 +12,8 @@ add_executable(dcs
         src/utils/utils.h
         src/utils/utils.cpp
         src/compiler/compiler.cpp
-        src/compiler/translator.cpp)
+        src/compiler/translator.cpp
+        src/storage/storage.cpp)
 target_link_libraries(dcs dl)
 target_include_directories(dcs PUBLIC src)
 
@@ -27,7 +28,9 @@ add_executable(dcs_tests
         src/utils/utils.cpp
         src/tests/compiler_tests.cpp
         src/tests/functional_tests.cpp
-        src/compiler/translator.cpp)
+        src/compiler/translator.cpp
+        src/tests/storage_tests.cpp
+        src/storage/storage.cpp)
 target_include_directories(dcs_tests PUBLIC src)
 target_link_libraries(dcs_tests GTest::gtest_main dl)
 include(GoogleTest)

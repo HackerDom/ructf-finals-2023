@@ -21,6 +21,8 @@ std::string Format(const std::string &format, Args ... args) {
 }
 
 std::string GetErrnoDescription();
+std::string PError(const char *prefix);
+std::string PError(int err, const char *prefix);
 
 static inline void LTrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
@@ -59,34 +61,3 @@ std::filesystem::path GetTempUniquePath(const std::string &suffix);
 bool WriteAllToFile(const std::filesystem::path &path, const std::string &content);
 
 void ExecuteAndGetStdout(const std::string &cmd, std::string &out);
-
-class DynamicLibrary {
-public:
-    struct SymbolLoadResult {
-        void *SymPtr;
-        std::string Error;
-    };
-
-    explicit DynamicLibrary(std::filesystem::path path);
-
-    ~DynamicLibrary();
-
-    [[nodiscard]] SymbolLoadResult LoadSymbol(const char *name) const;
-
-    [[nodiscard]] SymbolLoadResult LoadSymbol(const std::string &name) const {
-        return LoadSymbol(name.c_str());
-    }
-
-    [[nodiscard]] bool IsOpen() const {
-        return error.empty();
-    }
-
-    [[nodiscard]] const std::string& GetError() const {
-        return error;
-    }
-
-    const std::filesystem::path Path;
-private:
-    void *libPtr;
-    std::string error;
-};

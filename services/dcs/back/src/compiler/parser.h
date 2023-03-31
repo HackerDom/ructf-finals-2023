@@ -4,9 +4,9 @@
 #include "ast.h"
 
 struct ParseResult {
-    bool success;
-    std::shared_ptr<DcsProgramNode> programNode;
-    std::string errorMessage;
+    bool Success;
+    std::shared_ptr<DcsProgramNode> ProgramNode;
+    std::string ErrorMessage;
 };
 
 ParseResult ParseTokens(const std::vector<Token> &tokens);

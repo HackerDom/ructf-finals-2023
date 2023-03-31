@@ -47,9 +47,9 @@ struct Token {
 
 
 struct TokenizeResult {
-    bool success;
-    std::string errorMessage;
-    std::vector<Token> tokens;
+    bool Success;
+    std::string ErrorMessage;
+    std::vector<Token> Tokens;
 };
 
 TokenizeResult TokenizeString(std::string_view str);
