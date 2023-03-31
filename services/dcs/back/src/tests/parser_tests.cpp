@@ -71,19 +71,19 @@ void assertTokenParsing(const std::vector<Token> &tokens, const std::shared_ptr<
     auto sut = ParseTokens(tokens);
 
     if (expectedErrorMessage.empty()) {
-        EXPECT_TRUE(sut.success);
-        assertTreeEquals(expectedTree, sut.programNode);
+        EXPECT_TRUE(sut.Success);
+        assertTreeEquals(expectedTree, sut.ProgramNode);
     } else {
-        EXPECT_FALSE(sut.success);
-        ASSERT_EQ(expectedErrorMessage, sut.errorMessage);
+        EXPECT_FALSE(sut.Success);
+        ASSERT_EQ(expectedErrorMessage, sut.ErrorMessage);
     }
 }
 
 void assertTextParsing(const std::string &text, const std::shared_ptr<AstNode> &expectedTree, const std::string &expectedErrorMessage) {
     auto tokensResult = TokenizeString(text);
-    ASSERT_TRUE(tokensResult.success);
+    ASSERT_TRUE(tokensResult.Success);
 
-    assertTokenParsing(tokensResult.tokens, expectedTree, expectedErrorMessage);
+    assertTokenParsing(tokensResult.Tokens, expectedTree, expectedErrorMessage);
 }
 
 static std::shared_ptr<DcsProgramNode> Program(
@@ -561,16 +561,16 @@ fun main() {
 
 static void assertParsingByPrint(const std::string &text, const std::string &expectedTree, const std::string &errorMessage) {
     auto tokensResult = TokenizeString(text);
-    ASSERT_TRUE(tokensResult.success);
-    auto sut = ParseTokens(tokensResult.tokens);
+    ASSERT_TRUE(tokensResult.Success);
+    auto sut = ParseTokens(tokensResult.Tokens);
 
-    ASSERT_EQ(errorMessage, sut.errorMessage);
+    ASSERT_EQ(errorMessage, sut.ErrorMessage);
 
     if (errorMessage.empty()) {
-        ASSERT_TRUE(sut.success);
+        ASSERT_TRUE(sut.Success);
 
         std::stringstream dumpStream;
-        sut.programNode->Print(dumpStream, "", true);
+        sut.ProgramNode->Print(dumpStream, "", true);
         auto sutS = dumpStream.str();
 
         Trim(sutS);
@@ -578,7 +578,7 @@ static void assertParsingByPrint(const std::string &text, const std::string &exp
 
         ASSERT_EQ(sutS, trimmedExpected);
     } else {
-        EXPECT_FALSE(sut.success);
+        EXPECT_FALSE(sut.Success);
     }
 }
 

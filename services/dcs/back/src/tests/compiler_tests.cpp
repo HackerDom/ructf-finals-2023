@@ -7,23 +7,23 @@
 
 void assertCompilationResult(const std::string &programText, const std::string &expectedAssembly, const std::string &expectedError) {
     auto tokens = TokenizeString(programText);
-    ASSERT_TRUE(tokens.success);
-    auto parsed = ParseTokens(tokens.tokens);
-    ASSERT_TRUE(parsed.success);
-    auto compiled = CompileToAssembly(parsed.programNode);
+    ASSERT_TRUE(tokens.Success);
+    auto parsed = ParseTokens(tokens.Tokens);
+    ASSERT_TRUE(parsed.Success);
+    auto compiled = CompileToAssembly(parsed.ProgramNode);
 
     if (!expectedError.empty()) {
-        EXPECT_FALSE(compiled.success);
-        ASSERT_EQ(compiled.errorMessage, expectedError);
+        EXPECT_FALSE(compiled.Success);
+        ASSERT_EQ(compiled.ErrorMessage, expectedError);
         return;
     }
 
-    Trim(compiled.assemblyCode);
+    Trim(compiled.AssemblyCode);
     auto ea = TrimCopy(expectedAssembly);
 
-    EXPECT_TRUE(compiled.success);
-    EXPECT_EQ(compiled.errorMessage, "");
-    ASSERT_EQ(compiled.assemblyCode, ea);
+    EXPECT_TRUE(compiled.Success);
+    EXPECT_EQ(compiled.ErrorMessage, "");
+    ASSERT_EQ(compiled.AssemblyCode, ea);
 }
 
 TEST(Compiler, OnlyConstants) {

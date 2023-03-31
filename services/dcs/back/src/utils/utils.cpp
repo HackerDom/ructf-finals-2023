@@ -2,8 +2,6 @@
 #include <fstream>
 #include <cstdio>
 
-#include <dlfcn.h>
-
 #include "utils.h"
 
 static std::string randomString() {
@@ -44,6 +42,16 @@ std::string GetErrnoDescription() {
     return std::string{strerror_r(errno, buff, sizeof(buff))};
 }
 
+std::string PError(const char *prefix) {
+    char buff[256];
+    return Format("%s: %s", prefix, strerror_r(errno, buff, sizeof(buff)));
+}
+
+std::string PError(int err, const char *prefix) {
+    char buff[256];
+    return Format("%s: %s", prefix, strerror_r(err, buff, sizeof(buff)));
+}
+
 bool WriteAllToFile(const std::filesystem::path &path, const std::string &content) {
     std::ofstream file(path, std::ios::out | std::ios::trunc);
     if (!file) {
@@ -63,28 +71,4 @@ void ExecuteAndGetStdout(const std::string &cmd, std::string &out) {
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
         out += std::string(buffer.data());
     }
-}
-
-DynamicLibrary::DynamicLibrary(std::filesystem::path path) : Path(std::move(path)) {
-    libPtr = dlopen(Path.c_str(), RTLD_NOW);
-
-    if (libPtr == nullptr) {
-        error = Format("cant open shared library %s: %s", Path.c_str(), dlerror());
-    }
-}
-
-DynamicLibrary::~DynamicLibrary() {
-    if (libPtr != nullptr) {
-        dlclose(libPtr);
-    }
-}
-
-DynamicLibrary::SymbolLoadResult DynamicLibrary::LoadSymbol(const char *name) const {
-    void *sym = dlsym(libPtr, name);
-
-    if (sym != nullptr) {
-        return {sym};
-    }
-
-    return {nullptr, std::string(dlerror())};
 }

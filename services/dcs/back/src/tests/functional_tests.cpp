@@ -13,18 +13,18 @@
 
 void assertProgramResult(const std::string &program, double result) {
     auto tokens = TokenizeString(program);
-    ASSERT_EQ(tokens.errorMessage, "");
-    ASSERT_TRUE(tokens.success);
-    auto parsed = ParseTokens(tokens.tokens);
-    ASSERT_EQ(parsed.errorMessage, "");
-    ASSERT_TRUE(parsed.success);
-    auto compiled = CompileToAssembly(parsed.programNode);
-    ASSERT_EQ(compiled.errorMessage, "");
-    ASSERT_TRUE(compiled.success);
-    auto translated = TranslateAssembly(compiled.assemblyCode);
-    ASSERT_EQ(translated.errorMessage, "");
-    ASSERT_TRUE(translated.success);
-    auto pagesCount = (translated.translated->size() + getpagesize()) / getpagesize();
+    ASSERT_EQ(tokens.ErrorMessage, "");
+    ASSERT_TRUE(tokens.Success);
+    auto parsed = ParseTokens(tokens.Tokens);
+    ASSERT_EQ(parsed.ErrorMessage, "");
+    ASSERT_TRUE(parsed.Success);
+    auto compiled = CompileToAssembly(parsed.ProgramNode);
+    ASSERT_EQ(compiled.ErrorMessage, "");
+    ASSERT_TRUE(compiled.Success);
+    auto translated = TranslateAssembly(compiled.AssemblyCode);
+    ASSERT_EQ(translated.ErrorMessage, "");
+    ASSERT_TRUE(translated.Success);
+    auto pagesCount = (translated.Translated->size() + getpagesize()) / getpagesize();
     auto size = pagesCount * getpagesize();
     typedef double (*vptr)();
     auto region = mmap(nullptr, size, PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
@@ -34,7 +34,7 @@ void assertProgramResult(const std::string &program, double result) {
         return;
     }
     Defer u(munmap, region, size);
-    std::memcpy(reinterpret_cast<char*>(region), translated.translated->data(), translated.translated->size());
+    std::memcpy(reinterpret_cast<char*>(region), translated.Translated->data(), translated.Translated->size());
     if (mprotect(region, size, PROT_EXEC | PROT_READ) < 0) {
         perror("mprotect");
         ASSERT_FALSE(true);

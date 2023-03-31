@@ -22,12 +22,12 @@ static std::string tokensToString(const std::vector<Token>& tokens) {
 static void assertTokenizeResult(std::string_view text, std::initializer_list<Token> expectedTokens, const std::string &expectedError) {
     auto result = TokenizeString(text);
 
-    EXPECT_EQ(tokensToString(result.tokens), tokensToString(expectedTokens));
-    EXPECT_EQ(result.errorMessage, expectedError);
+    EXPECT_EQ(tokensToString(result.Tokens), tokensToString(expectedTokens));
+    EXPECT_EQ(result.ErrorMessage, expectedError);
     if (expectedError.empty()) {
-        EXPECT_TRUE(result.success);
+        EXPECT_TRUE(result.Success);
     } else {
-        EXPECT_FALSE(result.success);
+        EXPECT_FALSE(result.Success);
     }
 }
 
