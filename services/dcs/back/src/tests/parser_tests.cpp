@@ -125,19 +125,19 @@ static std::shared_ptr<MultiplicativeExpressionNode> Multiplicative(std::initial
 }
 
 static std::shared_ptr<UnaryExpressionNode> UnaryId(const std::shared_ptr<IdNode> &id) {
-    return std::make_shared<UnaryExpressionNode>(id, nullptr, nullptr, nullptr);
+    return std::make_shared<UnaryExpressionNode>(id, nullptr, nullptr, nullptr, nullptr);
 }
 
 static std::shared_ptr<UnaryExpressionNode> UnaryConst(const std::shared_ptr<ConstantValueNode> &c) {
-    return std::make_shared<UnaryExpressionNode>(nullptr, c, nullptr, nullptr);
+    return std::make_shared<UnaryExpressionNode>(nullptr, c, nullptr, nullptr, nullptr);
 }
 
 static std::shared_ptr<UnaryExpressionNode> UnaryCall(const std::shared_ptr<FunctionCallNode> &fc) {
-    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, fc, nullptr);
+    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, fc, nullptr, nullptr);
 }
 
 static std::shared_ptr<UnaryExpressionNode> UnaryParenthesis(const std::shared_ptr<ExpressionNode> &e) {
-    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e);
+    return std::make_shared<UnaryExpressionNode>(nullptr, nullptr, nullptr, e, nullptr);
 }
 
 static std::shared_ptr<ReturnStatementNode> Return(const std::shared_ptr<ExpressionNode> &e) {
@@ -1197,4 +1197,221 @@ DcsProgramNode
          └ConstantValueNode 2.000000
 )",
  "");
+}
+
+TEST(Parser, NegativeNumber) {
+    assertParsingByPrint(R"(
+fun main() {
+    return -3.14;
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ConstantValueNode -3.140000
+)",
+"");
+}
+
+TEST(Parser, NegativeExpression) {
+    assertParsingByPrint(R"(
+fun main() {
+    return -(3.14 + 5);
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         ├NEG
+         └ExpressionNode
+          └AdditiveExpressionNode
+           └MultiplicativeExpressionNode
+            └UnaryExpressionNode
+             └ExpressionNode
+              └AdditiveExpressionNode
+               ├MultiplicativeExpressionNode
+               │└UnaryExpressionNode
+               │ └ConstantValueNode 3.140000
+               ├SUM
+               └MultiplicativeExpressionNode
+                └UnaryExpressionNode
+                 └ConstantValueNode 5.000000
+)",
+"");
+}
+
+TEST(Parser, Sub) {
+    assertParsingByPrint(R"(
+fun main() {
+    return 3.14-5;
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       ├MultiplicativeExpressionNode
+       │└UnaryExpressionNode
+       │ └ConstantValueNode 3.140000
+       ├SUB
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ConstantValueNode 5.000000
+)",
+"");
+}
+
+TEST(Parser, NegExpr) {
+    assertParsingByPrint(R"(
+fun main() {
+    return -(5+6);
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         ├NEG
+         └ExpressionNode
+          └AdditiveExpressionNode
+           └MultiplicativeExpressionNode
+            └UnaryExpressionNode
+             └ExpressionNode
+              └AdditiveExpressionNode
+               ├MultiplicativeExpressionNode
+               │└UnaryExpressionNode
+               │ └ConstantValueNode 5.000000
+               ├SUM
+               └MultiplicativeExpressionNode
+                └UnaryExpressionNode
+                 └ConstantValueNode 6.000000
+)",
+"");
+}
+
+TEST(Parser, PlusExpr) {
+    assertParsingByPrint(R"(
+fun main() {
+    return +(5+6);
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ExpressionNode
+          └AdditiveExpressionNode
+           └MultiplicativeExpressionNode
+            └UnaryExpressionNode
+             └ExpressionNode
+              └AdditiveExpressionNode
+               ├MultiplicativeExpressionNode
+               │└UnaryExpressionNode
+               │ └ConstantValueNode 5.000000
+               ├SUM
+               └MultiplicativeExpressionNode
+                └UnaryExpressionNode
+                 └ConstantValueNode 6.000000
+)",
+"");
+}
+
+TEST(Parser, NegMinus) {
+    assertParsingByPrint(R"(
+fun main() {
+    return -5-6;
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       ├MultiplicativeExpressionNode
+       │└UnaryExpressionNode
+       │ └ConstantValueNode -5.000000
+       ├SUB
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └ConstantValueNode 6.000000
+)",
+                         "");
+}
+
+TEST(Parser, NegNegNeg) {
+    assertParsingByPrint(R"(
+fun main() {
+    return ---5;
+}
+)",
+R"(
+DcsProgramNode
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         ├NEG
+         └ExpressionNode
+          └AdditiveExpressionNode
+           └MultiplicativeExpressionNode
+            └UnaryExpressionNode
+             ├NEG
+             └ExpressionNode
+              └AdditiveExpressionNode
+               └MultiplicativeExpressionNode
+                └UnaryExpressionNode
+                 └ConstantValueNode -5.000000
+)",
+"");
 }

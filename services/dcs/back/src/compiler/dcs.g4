@@ -14,9 +14,9 @@ assignStatement: id ASSIGN expression SEMICOLON;
 expression: additiveExpression;
 additiveExpression: multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*;
 multiplicativeExpression: unaryExpression ((MUL | DIV) unaryExpression)*;
-unaryExpression: id | constantValue | functionCall | (LEFT_PAREN expression RIGHT_PAREN) | MINUS expression | PLUS expression;
+unaryExpression: id | constantValue | functionCall | (LEFT_PAREN expression RIGHT_PAREN) | (MINUS expression) | (PLUS expression);
 functionCall: id LEFT_PAREN (expression (COMMA expression)*)? RIGHT_PAREN;
-constantValue: NUMBER;
+constantValue: (MINUS | PLUS)? NUMBER;
 id: NAME;
 
 ASSIGN:'=';
@@ -41,5 +41,5 @@ NEQ: '!=';
 LE: '<=';
 GE: '>=';
 NAME: [a-zA-Z_] [a-zA-Z0-9_]*;
-NUMBER: ('+' | '-')? ([0-9]* '.' [0-9]*) | ([0-9]+ '.'?);
+NUMBER: ([0-9]* '.' [0-9]*) | ([0-9]+ '.'?);
 WS: [ \n\t\r]+ -> skip;

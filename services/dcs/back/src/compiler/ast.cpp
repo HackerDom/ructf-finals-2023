@@ -60,6 +60,9 @@ void UnaryExpressionNode::Print(std::ostream &stream, const std::string &tab, bo
         FunctionCall->Print(stream, nextTab, true);
     } else if (ParenthesisExpression != nullptr) {
         ParenthesisExpression->Print(stream, nextTab, true);
+    } else if (NegationExression != nullptr) {
+        printHeader(stream, nextTab, "NEG", false);
+        NegationExression->Print(stream, nextTab, true);
     }
 }
 
@@ -246,6 +249,10 @@ NodesList UnaryExpressionNode::GetChildNodes() const {
 
     if (ParenthesisExpression != nullptr) {
         result.push_back(ParenthesisExpression);
+    }
+
+    if (NegationExression != nullptr) {
+        result.push_back(NegationExression);
     }
 
     return result;

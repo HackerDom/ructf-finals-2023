@@ -68,6 +68,7 @@ private:
     bool emitAssignmentStatement(std::ostream &out, const std::shared_ptr<AssignStatementNode> &assignment);
     bool emitFunctionCall(std::ostream &out, const std::shared_ptr<FunctionCallNode> &call);
     bool emitConditionalStatement(std::ostream &out, const std::shared_ptr<ConditionalStatementNode> &conditional);
+    bool emitNegation(std::ostream &out, const std::shared_ptr<ExpressionNode> &expression);
 
     std::string fillContexts();
     std::string appendUserDefinedConstantsToContext();
@@ -115,6 +116,8 @@ private:
     static constexpr const char *kJeFmt                 = "je %s";
     static constexpr const char *kJneFmt                = "jne %s";
     static constexpr const char *kJmpFmt                = "jmp %s";
+    static constexpr std::string_view kMovSdSignBitXmm1 = "movsd   .sign_bit(%rip),%xmm1";
+    static constexpr std::string_view kXorPdXmm1Xmm0    = "xorpd   %xmm1,%xmm0";
 
     static constexpr const char *kMainFunctionName = "main";
 
@@ -740,6 +743,17 @@ bool CompilerWithContext::emitConstant(std::ostream &out, const std::shared_ptr<
     return false;
 }
 
+bool CompilerWithContext::emitNegation(std::ostream &out, const std::shared_ptr<ExpressionNode> &expression) {
+    if (!emitExpression(out, expression)) {
+        return false;
+    }
+
+    out << kTab << kMovSdSignBitXmm1 << std::endl;
+    out << kTab << kXorPdXmm1Xmm0 << std::endl;
+
+    return true;
+}
+
 bool CompilerWithContext::emitUnary(std::ostream &out, const std::shared_ptr<UnaryExpressionNode> &unary) {
     if (unary->Constant != nullptr) {
         return emitConstant(out, unary->Constant);
@@ -755,6 +769,10 @@ bool CompilerWithContext::emitUnary(std::ostream &out, const std::shared_ptr<Una
 
     if (unary->FunctionCall != nullptr) {
         return emitFunctionCall(out, unary->FunctionCall);
+    }
+
+    if (unary->NegationExression != nullptr) {
+        return emitNegation(out, unary->NegationExression);
     }
 
     emitError = "empty unary node";
@@ -976,6 +994,8 @@ CompilerWithContext::EmitResult CompilerWithContext::emitConstants() {
     for (const auto &it : constantNameToContext) {
         result << it.first << ": .double " << std::setprecision(30) << it.second->definitionNode->Value->Value << std::endl;
     }
+
+    result << ".sign_bit: .quad 0x8000000000000000" << std::endl;
 
     return {result.str()};
 }

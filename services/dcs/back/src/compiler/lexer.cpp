@@ -85,10 +85,6 @@ static TokenReadResult readNumber(std::string_view input, int &i) {
     const auto l = static_cast<int>(input.size());
     const auto start = i;
 
-    if (input[i] == '-' || input[i] == '+') {
-        ++i;
-    }
-
     auto dotFound = false;
     auto eFound = false;
 
@@ -195,29 +191,9 @@ TokenizeResult TokenizeString(std::string_view input) {
                 return {false, "expected '=' after '!'", std::move(tokens)};
             }
         } else if (c == '+') {
-            if (i != len - 1 && std::isdigit(input[i + 1])) {
-                auto r = readNumber(input, i);
-
-                if (!r.errorMessage.empty()) {
-                    return {false, r.errorMessage, std::move(tokens)};
-                }
-
-                tokens.emplace_back(r.token);
-            } else {
-                tokens.emplace_back(Token::Type::Plus, input.substr(i, 1));
-            }
+            tokens.emplace_back(Token::Type::Plus, input.substr(i, 1));
         } else if (c == '-') {
-            if (i != len - 1 && std::isdigit(input[i + 1])) {
-                auto r = readNumber(input, i);
-
-                if (!r.errorMessage.empty()) {
-                    return {false, r.errorMessage, std::move(tokens)};
-                }
-
-                tokens.emplace_back(r.token);
-            } else {
-                tokens.emplace_back(Token::Type::Minus, input.substr(i, 1));
-            }
+            tokens.emplace_back(Token::Type::Minus, input.substr(i, 1));
         } else if (c == '*') {
             tokens.emplace_back(Token::Type::Mul, input.substr(i, 1));
         } else if (c == '/') {
