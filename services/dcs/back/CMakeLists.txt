@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 project(back)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+
+set(BUILD_SHARED_LIBS OFF)
+add_subdirectory(googletest)
+set(BUILD_TESTING OFF)
+add_subdirectory(glog)
 
 add_executable(dcs
         src/main.cpp
@@ -13,11 +18,11 @@ add_executable(dcs
         src/utils/utils.cpp
         src/compiler/compiler.cpp
         src/compiler/translator.cpp
-        src/storage/storage.cpp)
-target_link_libraries(dcs dl)
+        src/storage/storage.cpp
+        )
+target_link_libraries(dcs glog::glog)
 target_include_directories(dcs PUBLIC src)
 
-add_subdirectory(googletest)
 add_executable(dcs_tests
         src/tests/lexer_tests.cpp
         src/tests/parser_tests.cpp
@@ -32,6 +37,6 @@ add_executable(dcs_tests
         src/tests/storage_tests.cpp
         src/storage/storage.cpp)
 target_include_directories(dcs_tests PUBLIC src)
-target_link_libraries(dcs_tests GTest::gtest_main dl)
+target_link_libraries(dcs_tests GTest::gtest_main glog::glog)
 include(GoogleTest)
 gtest_discover_tests(dcs_tests)
