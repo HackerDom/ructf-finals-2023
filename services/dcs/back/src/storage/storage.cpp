@@ -13,22 +13,22 @@
 
 struct RecordHeader {
     static constexpr int kMagicLength = 16;
-    static constexpr std::string_view kMagic = "DCSPCKT@";
+    static constexpr std::string_view kMagic = "\x07" "DCSPCKT";
     static constexpr int kVersionOffset = kMagic.size();
     static constexpr uint8_t kVersionNum = 1;
 
     static_assert(kMagic.size() <= kMagicLength);
 
-    uint8_t   Magic[kMagicLength];
+    uint8_t Magic[kMagicLength];
     uint32_t CodeLength;
     uint32_t CodeOffset;
     uint32_t DescriptionLength;
     uint32_t DescriptionOffset;
-    double   Value;
-    bool     IsExecuted;
+    double Value;
+    bool IsExecuted;
 };
 
-std::filesystem::path Storage::GetTokenByPath(std::string_view token) {
+std::filesystem::path Storage::GetPathByToken(std::string_view token) {
     return storagePath / token.substr(0, 2) / token.substr(2);
 }
 
@@ -46,7 +46,7 @@ std::string Storage::GenerateToken() {
 int Storage::GenerateUniqueToken(std::string &out) {
     for (int attempt = 0; attempt < kTokenGenerateMaxAttempts; ++attempt) {
         auto token = GenerateToken();
-        auto path = GetTokenByPath(token);
+        auto path = GetPathByToken(token);
 
         if (std::filesystem::is_regular_file(path)) {
             continue;
@@ -59,7 +59,8 @@ int Storage::GenerateUniqueToken(std::string &out) {
     return 1;
 }
 
-Storage::Storage(std::filesystem::path storagePath) : storagePath(std::move(storagePath)), randomDevice(), randomGenerator(randomDevice()) {}
+Storage::Storage(std::filesystem::path storagePath) : storagePath(std::move(storagePath)), randomDevice(),
+                                                      randomGenerator(randomDevice()) {}
 
 void InitializeHeader(const std::vector<uint8_t> &code, const std::string_view &description, RecordHeader &header) {
     memset(&header, 0, sizeof(RecordHeader));
@@ -72,7 +73,8 @@ void InitializeHeader(const std::vector<uint8_t> &code, const std::string_view &
     header.DescriptionOffset = header.CodeOffset + header.CodeLength;
 }
 
-std::shared_ptr<Storage::SaveResult> Storage::SaveNotExecuted(const std::vector<uint8_t> &code, std::string_view description) {
+std::shared_ptr<Storage::SaveResult>
+Storage::SaveNotExecuted(const std::vector<uint8_t> &code, std::string_view description) {
     if (code.size() > std::numeric_limits<uint32_t>::max()) {
         return std::make_shared<SaveResult>(SaveResult{"code size is too large"});
     }
@@ -84,11 +86,13 @@ std::shared_ptr<Storage::SaveResult> Storage::SaveNotExecuted(const std::vector<
     if (GenerateUniqueToken(token) != 0) {
         return std::make_shared<SaveResult>(SaveResult{"cant generate token"});
     }
-    auto pathToSave = GetTokenByPath(token);
+    auto pathToSave = GetPathByToken(token);
 
     std::error_code dirCreateErr;
-    if (!std::filesystem::is_directory(pathToSave.parent_path()) && !std::filesystem::create_directory(pathToSave.parent_path(), dirCreateErr)) {
-        return std::make_shared<SaveResult>(SaveResult{Format("cant create directory: %s", dirCreateErr.message().c_str())});
+    if (!std::filesystem::is_directory(pathToSave.parent_path()) &&
+        !std::filesystem::create_directory(pathToSave.parent_path(), dirCreateErr)) {
+        return std::make_shared<SaveResult>(
+                SaveResult{Format("cant create directory: %s", dirCreateErr.message().c_str())});
     }
 
     RecordHeader header{};
@@ -112,7 +116,7 @@ std::shared_ptr<Storage::SaveResult> Storage::SaveNotExecuted(const std::vector<
     }
     Defer um(munmap, mapped, totalLength);
 
-    auto mappedBytePtr = reinterpret_cast<uint8_t*>(mapped);
+    auto mappedBytePtr = reinterpret_cast<uint8_t *>(mapped);
 
     std::memcpy(mapped, &header, sizeof(header));
     std::memcpy(mappedBytePtr + header.CodeOffset, code.data(), code.size());
@@ -122,7 +126,7 @@ std::shared_ptr<Storage::SaveResult> Storage::SaveNotExecuted(const std::vector<
 }
 
 std::shared_ptr<Storage::GetResult> Storage::Get(std::string_view token) {
-    auto path = GetTokenByPath(token);
+    auto path = GetPathByToken(token);
     if (!std::filesystem::is_regular_file(path)) {
         return std::make_shared<GetResult>(GetResult{"invalid token"});
     }
@@ -144,7 +148,7 @@ std::shared_ptr<Storage::GetResult> Storage::Get(std::string_view token) {
     }
     Defer um(munmap, mapped, statResult.st_size);
 
-    auto *header = reinterpret_cast<RecordHeader*>(mapped);
+    auto *header = reinterpret_cast<RecordHeader *>(mapped);
 
     if (statResult.st_size < static_cast<off_t>(sizeof(RecordHeader))) {
         return std::make_shared<GetResult>(GetResult{"file too small"});
@@ -155,14 +159,14 @@ std::shared_ptr<Storage::GetResult> Storage::Get(std::string_view token) {
     if (header->Magic[RecordHeader::kVersionOffset] != RecordHeader::kVersionNum) {
         return std::make_shared<GetResult>(GetResult{"invalid version"});
     }
-    if ((header->CodeOffset + header->CodeLength) >= statResult.st_size) {
+    if ((header->CodeOffset + header->CodeLength) > statResult.st_size) {
         return std::make_shared<GetResult>(GetResult{"invalid code offset and size info"});
     }
-    if ((header->DescriptionOffset + header->DescriptionLength) >= statResult.st_size) {
+    if ((header->DescriptionOffset + header->DescriptionLength) > statResult.st_size) {
         return std::make_shared<GetResult>(GetResult{"invalid description offset and size info"});
     }
 
-    auto mappedBytePtr = reinterpret_cast<uint8_t*>(mapped);
+    auto mappedBytePtr = reinterpret_cast<uint8_t *>(mapped);
 
     auto result = std::make_shared<GetResult>(GetResult{});
     result->IsExecuted = header->IsExecuted;
@@ -176,7 +180,7 @@ std::shared_ptr<Storage::GetResult> Storage::Get(std::string_view token) {
 }
 
 bool Storage::Remove(std::string_view token, std::string &err) {
-    auto path = GetTokenByPath(token);
+    auto path = GetPathByToken(token);
     if (!std::filesystem::is_regular_file(path)) {
         err = "invalid token";
         return false;

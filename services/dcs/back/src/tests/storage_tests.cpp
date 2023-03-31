@@ -17,8 +17,6 @@ TEST(Storage, ReadWrite) {
     ASSERT_EQ(r->Error, "");
     ASSERT_NE(r->Token, "");
 
-    std::cout << "created record token: " << r->Token << std::endl;
-
     auto g = storage.Get(r->Token);
     ASSERT_EQ(g->Error, "");
     ASSERT_EQ(g->Description, description);

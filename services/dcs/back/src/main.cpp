@@ -1,8 +1,13 @@
 #include <iostream>
 
-#include "storage/storage.h"
+#include <glog/logging.h>
 
-int main() {
-    std::cout << sizeof(std::shared_ptr<int>) << std::endl;
+int main(int argc, char **argv) {
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+    FLAGS_logtostdout = true;
+    FLAGS_minloglevel = 0;
+
+    LOG(ERROR) << "some error!";
     return 0;
 }

@@ -42,5 +42,5 @@ private:
     static constexpr std::string_view kTokenAlphabet = "qwertyuiopasdfghjklzxcvbnm1234567890";
     std::string GenerateToken();
     int GenerateUniqueToken(std::string &out);
-    std::filesystem::path GetTokenByPath(std::string_view token);
+    std::filesystem::path GetPathByToken(std::string_view token);
 };
