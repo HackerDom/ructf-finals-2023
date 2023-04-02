@@ -21,10 +21,11 @@ def generate_video_preview(uid: str):
     output_name = os.path.join(settings.MEDIA_ROOT, f'images/{book.uid}.png')
     args = [FFMPEG_BIN,
             '-i', file_input,
+            "-verb", "quiet",
             "-noaudio",
             "-overwrite",
             "-chg",
-            "-frames",  "1",
+            "-image",  "1",
             output_name]
     return_code = subprocess.call(args)
     if return_code == 0:

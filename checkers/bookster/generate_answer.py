@@ -32,7 +32,7 @@ def get_hash(filename):
         return str(readable_hash)
 
 
-input_format = 'mp4'
+input_format = 'avi'
 with open('answers.csv', 'w') as csvfile:
     fieldnames = ['id', 'video', 'photo', 'hash']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
