@@ -4,3 +4,6 @@
 [submodule "services/dcs/back/glog"]
 	path = services/dcs/back/glog
 	url = https://github.com/google/glog.git
+[submodule "services/dcs/back/cpp-httplib"]
+	path = services/dcs/back/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib.git

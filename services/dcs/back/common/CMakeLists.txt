@@ -12,6 +12,7 @@ set(HEADERS
         include/utils/files/files.h
         include/utils/process/process.h
         include/utils/strings/strings.h
+        include/thirdparty/nlohmann/json.hpp
         )
 
 add_library(common ${SOURCES} ${HEADERS})

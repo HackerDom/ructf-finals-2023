@@ -9,6 +9,9 @@ set(BUILD_TESTING OFF)
 add_subdirectory(googletest)
 add_subdirectory(glog)
 
+set(CPPHTTPLIB_USE_POLL ON)
+add_subdirectory(cpp-httplib)
+
 add_subdirectory(common)
 add_subdirectory(server)
 add_subdirectory(client)
