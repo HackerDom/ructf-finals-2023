@@ -7,10 +7,12 @@ set(SOURCES src/storage/storage.cpp)
 
 add_executable(dcsserver
         src/main.cpp
+        src/options/options.cpp
+        src/config/config.cpp
         ${SOURCES}
         ${HEADERS}
         )
-target_link_libraries(dcsserver glog::glog common)
+target_link_libraries(dcsserver glog::glog httplib lang common)
 target_include_directories(dcsserver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(dcsserver_tests
