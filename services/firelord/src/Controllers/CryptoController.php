@@ -5,7 +5,6 @@ class CryptoController
     public static function encrypt(Context $ctx): Response
     {
         $key = CryptoController::load_key($ctx);
-        $key->warmup();
 
         $data = $ctx->body_content();
 
@@ -22,7 +21,6 @@ class CryptoController
     public static function decrypt(Context $ctx): Response
     {
         $key = CryptoController::load_key($ctx);
-        $key->warmup();
 
         $data = $ctx->body_content();
         $ciphertext = Matrix::from_json($data);
