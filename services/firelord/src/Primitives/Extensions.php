@@ -48,7 +48,7 @@ function gmp_randbits(int $bits): GMP
 {
     if ($bits <= 0)
     {
-        throw new InvalidArgumentException("bits must be positive");
+        throw new InvalidArgumentException("gmp_randbits: bits must be positive");
     }
 
     $length = intdiv($bits + 7, 8);
