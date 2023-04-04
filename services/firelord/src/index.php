@@ -87,6 +87,8 @@ function main(): void
     }
     catch (Exception $exception)
     {
+        printf("Uncaught exception: %s" . PHP_EOL, $exception->getMessage());
+
         http_response_code(500);
         echo $exception->getMessage();
     }
