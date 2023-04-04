@@ -7,7 +7,7 @@ class MatrixSpace
 
     public readonly IntegerRing $ring;
 
-    private MultiKeyCache $cached_cofactors;
+    private MultiKeyCache $cached_comatrices;
     private MultiKeyCache $cached_inversions;
     private MultiKeyCache $cached_submatrices;
     private MultiKeyCache $cached_determinants;
@@ -24,7 +24,7 @@ class MatrixSpace
         $this->width = $width;
         $this->height = $height;
 
-        $this->cached_cofactors = new MultiKeyCache();
+        $this->cached_comatrices = new MultiKeyCache();
         $this->cached_inversions = new MultiKeyCache();
         $this->cached_submatrices = new MultiKeyCache();
         $this->cached_determinants = new MultiKeyCache();
@@ -70,7 +70,7 @@ class MatrixSpace
             throw new InvalidArgumentException("space does not contain matrix");
         }
 
-        if ($this->width !== $this->height)
+        if (!$matrix->is_square())
         {
             throw new InvalidArgumentException("matrix must be square");
         }
@@ -139,11 +139,16 @@ class MatrixSpace
     {
         if (!$this->contains($left))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("space does not contain left matrix");
         }
 
         if ($right instanceof Matrix)
         {
+            if (!$this->contains($right))
+            {
+                throw new InvalidArgumentException("space does not contain right matrix");
+            }
+
             return $this->add_matrix($left, $right);
         }
 
@@ -152,11 +157,6 @@ class MatrixSpace
 
     private function add_matrix(Matrix $left, Matrix $right): Matrix
     {
-        if ($left->width !== $right->width || $left->height !== $right->height)
-        {
-            throw new InvalidArgumentException("matrices have different dimensions");
-        }
-
         $matrix = Matrix::zero($this->width, $this->height);
 
         for ($x = 0; $x < $this->width; $x += 1)
@@ -191,21 +191,36 @@ class MatrixSpace
     {
         if (!$this->contains($left))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("space does not contain left matrix");
         }
 
         if ($right instanceof Matrix)
         {
-            return $this->add($left, $this->neg($right));
+            if (!$this->contains($right))
+            {
+                throw new InvalidArgumentException("space does not contain right matrix");
+            }
+
+            return $this->add_matrix($left, $this->neg($right));
         }
 
-        return $this->add($left, $this->ring->neg($right));
+        return $this->add_integer($left, $this->ring->neg($right));
     }
 
     public function mul(Matrix $left, BigInteger|Matrix $right): Matrix
     {
         if ($right instanceof Matrix)
         {
+            if ($left->height !== $right->width)
+            {
+                throw new InvalidArgumentException("invalid matrix dimensions");
+            }
+
+            if ($left->width !== $this->width || $right->height !== $this->height)
+            {
+                throw new InvalidArgumentException("space does not contain resulting matrix");
+            }
+
             return $this->mul_matrix($left, $right);
         }
 
@@ -214,16 +229,6 @@ class MatrixSpace
 
     private function mul_matrix(Matrix $left, Matrix $right): Matrix
     {
-        if ($left->width !== $this->width || $right->height !== $this->height)
-        {
-            throw new InvalidArgumentException("space does not contain resulting matrix");
-        }
-
-        if ($left->height !== $right->width)
-        {
-            throw new InvalidArgumentException("invalid matrix dimensions");
-        }
-
         $matrix = Matrix::zero($left->width, $right->height);
 
         for ($x = 0; $x < $matrix->width; $x += 1)
@@ -247,11 +252,6 @@ class MatrixSpace
 
     private function mul_integer(Matrix $left, BigInteger $right): Matrix
     {
-        if (!$this->contains($left))
-        {
-            throw new InvalidArgumentException("space does not contain matrix");
-        }
-
         $matrix = Matrix::zero($this->width, $this->height);
 
         for ($x = 0; $x < $this->width; $x += 1)
@@ -270,29 +270,41 @@ class MatrixSpace
     {
         if ($right instanceof Matrix)
         {
-            return $this->mul($left, $this->invert($right));
+            $right_inv = $this->invert($right);
+
+            if ($left->height !== $right_inv->width)
+            {
+                throw new InvalidArgumentException("invalid matrix dimensions");
+            }
+
+            if ($left->width !== $this->width || $right_inv->height !== $this->height)
+            {
+                throw new InvalidArgumentException("space does not contain resulting matrix");
+            }
+
+            return $this->mul_matrix($left, $right_inv);
         }
 
-        return $this->mul($left, $this->ring->invert($right));
+        return $this->mul_integer($left, $this->ring->invert($right));
     }
 
-    public function cofactor(Matrix $matrix): Matrix
+    public function cofactor_matrix(Matrix $matrix): Matrix
     {
         if (!$this->contains($matrix))
         {
             throw new InvalidArgumentException("space does not contain matrix");
         }
 
-        if ($this->width !== $this->height)
+        if (!$matrix->is_square())
         {
             throw new InvalidArgumentException("matrix must be square");
         }
 
-        $cached_cofactor = $this->cached_cofactors->get($matrix);
+        $cached_comatrix = $this->cached_comatrices->get($matrix);
 
-        if ($cached_cofactor !== null)
+        if ($cached_comatrix !== null)
         {
-            return $cached_cofactor;
+            return $cached_comatrix;
         }
 
         $result = Matrix::zero($this->width, $this->height);
@@ -312,7 +324,7 @@ class MatrixSpace
             }
         }
 
-        $this->cached_cofactors->set($result, $matrix);
+        $this->cached_comatrices->set($result, $matrix);
 
         return $result;
     }
@@ -324,7 +336,7 @@ class MatrixSpace
             throw new InvalidArgumentException("space does not contain matrix");
         }
 
-        if ($this->width !== $this->height)
+        if (!$matrix->is_square())
         {
             throw new InvalidArgumentException("matrix must be square");
         }
@@ -337,7 +349,7 @@ class MatrixSpace
         }
 
         $result = $this->div(
-            $this->cofactor($matrix)->transpose(), $this->determinant($matrix),
+            $this->cofactor_matrix($matrix)->transpose(), $this->determinant($matrix),
         );
 
         $this->cached_inversions->set($result, $matrix);
@@ -350,6 +362,11 @@ class MatrixSpace
         if (!$this->contains($matrix))
         {
             throw new InvalidArgumentException("space does not contain matrix");
+        }
+
+        if (!$matrix->is_square())
+        {
+            throw new InvalidArgumentException("matrix must be square");
         }
 
         if ($exponent->sign() < 0)
@@ -390,7 +407,7 @@ class MatrixSpace
 
     public function clear_caches(): void
     {
-        $this->cached_cofactors->clear();
+        $this->cached_comatrices->clear();
         $this->cached_inversions->clear();
         $this->cached_submatrices->clear();
         $this->cached_determinants->clear();
