@@ -30,16 +30,4 @@ class Mask
     {
         return Matrix::diagonal($this->numbers);
     }
-
-    public function __toString(): string
-    {
-        $parts = array();
-
-        for ($i = 0; $i < count($this->numbers); $i += 1)
-        {
-            array_push($parts, strval($this->numbers[$i]));
-        }
-
-        return "[" . implode(", ", $parts) . "]";
-    }
 }
