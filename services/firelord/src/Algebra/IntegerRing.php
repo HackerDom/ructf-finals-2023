@@ -51,12 +51,12 @@ class IntegerRing
 
     public function invert(BigInteger $value): BigInteger
     {
-        return $value->invmod($this->modulus);
+        return $this->reduce($value->invmod($this->modulus));
     }
 
     public function pow(BigInteger $value, BigInteger $exponent): BigInteger
     {
-        return $value->powmod($exponent, $this->modulus);
+        return $this->reduce($value->powmod($exponent, $this->modulus));
     }
 
     public function random_element(): BigInteger
