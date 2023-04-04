@@ -13,7 +13,7 @@ class Mask
     {
         if (!$matrix->is_square())
         {
-            throw new InvalidArgumentException("matrix must be square");
+            throw new InvalidArgumentException("Mask::from_matrix: matrix must be square");
         }
 
         $numbers = array();

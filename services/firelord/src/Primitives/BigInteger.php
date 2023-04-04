@@ -116,7 +116,7 @@ class BigInteger implements ICacheable
 
         if ($result === false)
         {
-            throw new InvalidArgumentException("number is not invertible");
+            throw new InvalidArgumentException("BigInteger::invmod: number is not invertible");
         }
 
         return new BigInteger($result);

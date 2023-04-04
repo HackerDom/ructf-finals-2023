@@ -42,7 +42,7 @@ class DiskStorage implements IStorage
 
         if ($result === false)
         {
-            throw new Exception("failed to write password");
+            throw new Exception("Storage::store_password: failed to write password");
         }
     }
 
@@ -59,7 +59,7 @@ class DiskStorage implements IStorage
 
         if ($key_serialized === false)
         {
-            throw new Exception("failed to inflate key");
+            throw new Exception("Storage::load_key: failed to inflate key");
         }
 
         return unserialize($key_serialized);
@@ -73,14 +73,14 @@ class DiskStorage implements IStorage
 
         if ($key_deflated === false)
         {
-            throw new Exception("failed to deflate key");
+            throw new Exception("Storage::store_key: failed to deflate key");
         }
 
         $result = file_put_contents($this->get_key_path($username), $key_deflated);
 
         if ($result === false)
         {
-            throw new Exception("failed to write key");
+            throw new Exception("Storage::store_key: failed to write key");
         }
     }
 
@@ -97,14 +97,14 @@ class DiskStorage implements IStorage
 
         if ($ciphertext_serialized === false)
         {
-            throw new Exception("failed to inflate ciphertext");
+            throw new Exception("Storage::load_ciphertext: failed to inflate ciphertext");
         }
 
         $ciphertext = Matrix::from_json($ciphertext_serialized);
 
         if ($ciphertext === null)
         {
-            throw new Exception("failed to parse ciphertext");
+            throw new Exception("Storage::load_ciphertext: failed to parse ciphertext");
         }
 
         return $ciphertext;
@@ -118,14 +118,14 @@ class DiskStorage implements IStorage
 
         if ($ciphertext_deflated === false)
         {
-            throw new Exception("failed to deflate ciphertext");
+            throw new Exception("Storage::store_ciphertext: failed to deflate ciphertext");
         }
 
         $result = file_put_contents($this->get_ciphertext_path($id), $ciphertext_deflated);
 
         if ($result === false)
         {
-            throw new Exception("failed to write ciphertext");
+            throw new Exception("Storage::store_ciphertext: failed to write ciphertext");
         }
     }
 

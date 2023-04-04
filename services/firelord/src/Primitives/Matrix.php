@@ -42,7 +42,7 @@ class Matrix implements ICacheable
     {
         if ($width <= 0 || $height <= 0)
         {
-            throw new InvalidArgumentException("width and height must be positive");
+            throw new InvalidArgumentException("Matrix::zero: width and height must be positive");
         }
 
         $values = array();
@@ -59,7 +59,7 @@ class Matrix implements ICacheable
     {
         if (count($values) === 0)
         {
-            throw new InvalidArgumentException("values must not be empty");
+            throw new InvalidArgumentException("Matrix::diagonal: values must not be empty");
         }
 
         $matrix = Matrix::zero(count($values), count($values));
@@ -68,7 +68,7 @@ class Matrix implements ICacheable
         {
             if (!($values[$i] instanceof BigInteger))
             {
-                throw new InvalidArgumentException("item must be an instance of BigInteger");
+                throw new InvalidArgumentException("Matrix::diagonal: item must be an instance of BigInteger");
             }
 
             $matrix->set($i, $i, $values[$i]);
@@ -169,12 +169,12 @@ class Matrix implements ICacheable
     {
         if ($x < 0 || $x >= $this->width)
         {
-            throw new InvalidArgumentException("x is out of bounds");
+            throw new InvalidArgumentException("Matrix::get: x is out of bounds");
         }
 
         if ($y < 0 || $y >= $this->height)
         {
-            throw new InvalidArgumentException("y is out of bounds");
+            throw new InvalidArgumentException("Matrix::get: y is out of bounds");
         }
 
         return $this->values[$this->width * $y + $x];
@@ -184,12 +184,12 @@ class Matrix implements ICacheable
     {
         if ($x < 0 || $x >= $this->width)
         {
-            throw new InvalidArgumentException("x is out of bounds");
+            throw new InvalidArgumentException("Matrix::set: x is out of bounds");
         }
 
         if ($y < 0 || $y >= $this->height)
         {
-            throw new InvalidArgumentException("y is out of bounds");
+            throw new InvalidArgumentException("Matrix::set: y is out of bounds");
         }
 
         $this->hash_value = $this->hash_value->xor($this->values[$this->width * $y + $x]);
@@ -217,12 +217,12 @@ class Matrix implements ICacheable
     {
         if ($x < 0 || $x >= $this->width)
         {
-            throw new InvalidArgumentException("x is out of bounds");
+            throw new InvalidArgumentException("Matrix::submatrix: x is out of bounds");
         }
 
         if ($y < 0 || $y >= $this->height)
         {
-            throw new InvalidArgumentException("y is out of bounds");
+            throw new InvalidArgumentException("Matrix::submatrix: y is out of bounds");
         }
 
         $matrix = Matrix::zero($this->width - 1, $this->height - 1);

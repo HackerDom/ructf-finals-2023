@@ -8,7 +8,7 @@ class IntegerRing
     {
         if ($modulus->sign() <= 0)
         {
-            throw new InvalidArgumentException("modulus must be positive");
+            throw new InvalidArgumentException("IntegerRing: modulus must be positive");
         }
 
         $this->modulus = $modulus;
