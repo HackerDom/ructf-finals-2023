@@ -11,7 +11,7 @@ class Mask
 
     public static function from_matrix(Matrix $matrix): Mask
     {
-        if ($matrix->width !== $matrix->height)
+        if (!$matrix->is_square())
         {
             throw new InvalidArgumentException("matrix must be square");
         }
