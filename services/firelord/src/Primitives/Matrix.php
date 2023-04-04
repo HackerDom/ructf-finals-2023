@@ -160,6 +160,11 @@ class Matrix implements ICacheable
         return "[" . implode("," . PHP_EOL, $result) . "]";
     }
 
+    public function is_square(): bool
+    {
+        return $this->width === $this->height;
+    }
+
     public function get(int $x, int $y): BigInteger
     {
         if ($x < 0 || $x >= $this->width)
