@@ -36,7 +36,7 @@ class IntegerRing
 
     public function sub(BigInteger $left, BigInteger $right): BigInteger
     {
-        return $this->add($left, $this->neg($right));
+        return $this->reduce($left->sub($right));
     }
 
     public function mul(BigInteger $left, BigInteger $right): BigInteger
