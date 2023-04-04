@@ -8,7 +8,7 @@ class Cipher
 
         if (!$key->parameters->space->contains($matrix))
         {
-            throw new InvalidArgumentException("invalid mask");
+            throw new InvalidArgumentException("Cipher::encrypt: invalid mask");
         }
 
         for ($i = 0; $i < count($key->keys); $i += 1)
@@ -27,7 +27,7 @@ class Cipher
     {
         if (!$key->parameters->space->contains($matrix))
         {
-            throw new InvalidArgumentException("invalid ciphertext");
+            throw new InvalidArgumentException("Cipher::decrypt: invalid ciphertext");
         }
 
         for ($i = count($key->keys) - 1; $i >= 0; $i -= 1)

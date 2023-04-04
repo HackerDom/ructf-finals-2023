@@ -16,7 +16,7 @@ class MatrixSpace
     {
         if ($width <= 0 || $height <= 0)
         {
-            throw new InvalidArgumentException("width and height must be positive");
+            throw new InvalidArgumentException("MatrixSpace: width and height must be positive");
         }
 
         $this->ring = $ring;
@@ -39,7 +39,7 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::reduce: space does not contain matrix");
         }
 
         $matrix = clone $matrix;
@@ -67,12 +67,12 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::determinant: space does not contain matrix");
         }
 
         if (!$matrix->is_square())
         {
-            throw new InvalidArgumentException("matrix must be square");
+            throw new InvalidArgumentException("MatrixSpace::determinant: matrix must be square");
         }
 
         return $this->recursive_determinant($matrix);
@@ -118,7 +118,7 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::neg: space does not contain matrix");
         }
 
         $matrix = clone $matrix;
@@ -139,14 +139,14 @@ class MatrixSpace
     {
         if (!$this->contains($left))
         {
-            throw new InvalidArgumentException("space does not contain left matrix");
+            throw new InvalidArgumentException("MatrixSpace::add: space does not contain left matrix");
         }
 
         if ($right instanceof Matrix)
         {
             if (!$this->contains($right))
             {
-                throw new InvalidArgumentException("space does not contain right matrix");
+                throw new InvalidArgumentException("MatrixSpace::add: space does not contain right matrix");
             }
 
             return $this->add_matrix($left, $right);
@@ -191,14 +191,14 @@ class MatrixSpace
     {
         if (!$this->contains($left))
         {
-            throw new InvalidArgumentException("space does not contain left matrix");
+            throw new InvalidArgumentException("MatrixSpace::sub: space does not contain left matrix");
         }
 
         if ($right instanceof Matrix)
         {
             if (!$this->contains($right))
             {
-                throw new InvalidArgumentException("space does not contain right matrix");
+                throw new InvalidArgumentException("MatrixSpace::sub: space does not contain right matrix");
             }
 
             return $this->add_matrix($left, $this->neg($right));
@@ -213,12 +213,12 @@ class MatrixSpace
         {
             if ($left->height !== $right->width)
             {
-                throw new InvalidArgumentException("invalid matrix dimensions");
+                throw new InvalidArgumentException("MatrixSpace::mul: invalid matrix dimensions");
             }
 
             if ($left->width !== $this->width || $right->height !== $this->height)
             {
-                throw new InvalidArgumentException("space does not contain resulting matrix");
+                throw new InvalidArgumentException("MatrixSpace::mul: space does not contain resulting matrix");
             }
 
             return $this->mul_matrix($left, $right);
@@ -274,12 +274,12 @@ class MatrixSpace
 
             if ($left->height !== $right_inv->width)
             {
-                throw new InvalidArgumentException("invalid matrix dimensions");
+                throw new InvalidArgumentException("MatrixSpace::div: invalid matrix dimensions");
             }
 
             if ($left->width !== $this->width || $right_inv->height !== $this->height)
             {
-                throw new InvalidArgumentException("space does not contain resulting matrix");
+                throw new InvalidArgumentException("MatrixSpace::div: space does not contain resulting matrix");
             }
 
             return $this->mul_matrix($left, $right_inv);
@@ -292,12 +292,12 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::cofactor_matrix: space does not contain matrix");
         }
 
         if (!$matrix->is_square())
         {
-            throw new InvalidArgumentException("matrix must be square");
+            throw new InvalidArgumentException("MatrixSpace::cofactor_matrix: matrix must be square");
         }
 
         $cached_comatrix = $this->cached_comatrices->get($matrix);
@@ -333,12 +333,12 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::invert: space does not contain matrix");
         }
 
         if (!$matrix->is_square())
         {
-            throw new InvalidArgumentException("matrix must be square");
+            throw new InvalidArgumentException("MatrixSpace::invert: matrix must be square");
         }
 
         $cached_inversion = $this->cached_inversions->get($matrix);
@@ -361,17 +361,17 @@ class MatrixSpace
     {
         if (!$this->contains($matrix))
         {
-            throw new InvalidArgumentException("space does not contain matrix");
+            throw new InvalidArgumentException("MatrixSpace::pow: space does not contain matrix");
         }
 
         if (!$matrix->is_square())
         {
-            throw new InvalidArgumentException("matrix must be square");
+            throw new InvalidArgumentException("MatrixSpace::pow: matrix must be square");
         }
 
         if ($exponent->sign() < 0)
         {
-            throw new InvalidArgumentException("invalid exponent");
+            throw new InvalidArgumentException("MatrixSpace::pow: invalid exponent");
         }
 
         $current = clone $matrix;
