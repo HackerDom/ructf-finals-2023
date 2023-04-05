@@ -42,6 +42,21 @@ services:
     networks:
       - internal
 
+  cleaner:
+    build: cleaner
+    cpus: 1
+    pids_limit: 256
+    mem_limit: 256M
+    memswap_limit: 256M
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    volumes:
+      - ./storage:/tmp/storage:rw
+
 networks:
   internal:
     driver: bridge
