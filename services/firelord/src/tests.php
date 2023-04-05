@@ -1,5 +1,7 @@
 <?php
 
+include_once "autoload.php";
+
 function test_matrix_transpose(): void
 {
     $R = new IntegerRing(BigInteger::random(512));
@@ -299,14 +301,5 @@ function test_all(): void
     test_padding();
     test_cache();
 }
-
-spl_autoload_register(function () {
-    $files = glob("./*/*.php");
-
-    foreach ($files as $file)
-    {
-        include_once $file;
-    }
-});
 
 test_all();
