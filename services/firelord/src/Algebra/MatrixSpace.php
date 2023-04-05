@@ -8,7 +8,6 @@ class MatrixSpace
     public readonly IntegerRing $ring;
 
     private MultiKeyCache $cached_adjugates;
-    private MultiKeyCache $cached_inversions;
     private MultiKeyCache $cached_submatrices;
     private MultiKeyCache $cached_determinants;
 
@@ -25,7 +24,6 @@ class MatrixSpace
         $this->height = $height;
 
         $this->cached_adjugates = new MultiKeyCache();
-        $this->cached_inversions = new MultiKeyCache();
         $this->cached_submatrices = new MultiKeyCache();
         $this->cached_determinants = new MultiKeyCache();
     }
@@ -363,16 +361,7 @@ class MatrixSpace
             throw new InvalidArgumentException("MatrixSpace::invert: matrix is not invertible");
         }
 
-        $cached_inversion = $this->cached_inversions->get($matrix);
-
-        if ($cached_inversion !== null)
-        {
-            return $cached_inversion;
-        }
-
         $result = $this->div($this->adjugate($matrix), $this->determinant($matrix));
-
-        $this->cached_inversions->set($result, $matrix);
 
         return $result;
     }
@@ -428,7 +417,6 @@ class MatrixSpace
     public function clear_caches(): void
     {
         $this->cached_adjugates->clear();
-        $this->cached_inversions->clear();
         $this->cached_submatrices->clear();
         $this->cached_determinants->clear();
     }
