@@ -7,7 +7,7 @@ class MatrixSpace
 
     public readonly IntegerRing $ring;
 
-    private MultiKeyCache $cached_comatrices;
+    private MultiKeyCache $cached_adjugates;
     private MultiKeyCache $cached_inversions;
     private MultiKeyCache $cached_submatrices;
     private MultiKeyCache $cached_determinants;
@@ -24,7 +24,7 @@ class MatrixSpace
         $this->width = $width;
         $this->height = $height;
 
-        $this->cached_comatrices = new MultiKeyCache();
+        $this->cached_adjugates = new MultiKeyCache();
         $this->cached_inversions = new MultiKeyCache();
         $this->cached_submatrices = new MultiKeyCache();
         $this->cached_determinants = new MultiKeyCache();
@@ -298,7 +298,7 @@ class MatrixSpace
         return $this->mul_integer($left, $this->ring->invert($right));
     }
 
-    public function cofactor_matrix(Matrix $matrix): Matrix
+    public function adjugate(Matrix $matrix): Matrix
     {
         if (!$this->contains($matrix))
         {
@@ -315,11 +315,11 @@ class MatrixSpace
             return Matrix::diagonal(array(BigInteger::one()));
         }
 
-        $cached_comatrix = $this->cached_comatrices->get($matrix);
+        $cached_adjugate = $this->cached_adjugates->get($matrix);
 
-        if ($cached_comatrix !== null)
+        if ($cached_adjugate !== null)
         {
-            return $cached_comatrix;
+            return $cached_adjugate;
         }
 
         $result = Matrix::zero($this->width, $this->height);
@@ -339,7 +339,9 @@ class MatrixSpace
             }
         }
 
-        $this->cached_comatrices->set($result, $matrix);
+        $result = $result->transpose();
+
+        $this->cached_adjugates->set($result, $matrix);
 
         return $result;
     }
@@ -368,9 +370,7 @@ class MatrixSpace
             return $cached_inversion;
         }
 
-        $result = $this->div(
-            $this->cofactor_matrix($matrix)->transpose(), $this->determinant($matrix),
-        );
+        $result = $this->div($this->adjugate($matrix), $this->determinant($matrix));
 
         $this->cached_inversions->set($result, $matrix);
 
@@ -427,7 +427,7 @@ class MatrixSpace
 
     public function clear_caches(): void
     {
-        $this->cached_comatrices->clear();
+        $this->cached_adjugates->clear();
         $this->cached_inversions->clear();
         $this->cached_submatrices->clear();
         $this->cached_determinants->clear();
