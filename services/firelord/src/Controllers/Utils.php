@@ -41,7 +41,7 @@ function validate_id(string $id): void
 
 function generate_key(): Key
 {
-    $parameters = Parameters::generate(512, 2, 6, 4);
+    $parameters = Parameters::generate(1024, 2, 6, 4);
 
     return Key::generate($parameters);
 }
