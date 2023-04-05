@@ -78,19 +78,26 @@ function main(): void
         $response = $router->route($ctx, $method, $path);
 
         http_response_code($response->getCode());
-        echo $response->getMessage();
+        echo $response->getMessage() . PHP_EOL;
     }
     catch (Response $response)
     {
         http_response_code($response->getCode());
-        echo $response->getMessage();
+        echo $response->getMessage() . PHP_EOL;
     }
     catch (Exception $exception)
     {
-        printf("Uncaught exception: %s" . PHP_EOL, $exception->getMessage());
+        $file = fopen("php://stderr", "a");
 
+        if ($file !== false)
+        {
+            fprintf($file, "Uncaught exception: %s" . PHP_EOL, $exception->getMessage());
+            fwrite($file, $exception->getTraceAsString());
+            fclose($file);
+        }
+        
         http_response_code(500);
-        echo $exception->getMessage();
+        echo "internal server error" . PHP_EOL;
     }
 }
 
