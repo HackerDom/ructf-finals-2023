@@ -1,13 +1,6 @@
 <?php
 
-spl_autoload_register(function () {
-    $files = glob("./*/*.php");
-
-    foreach ($files as $file)
-    {
-        include_once $file;
-    }
-});
+include_once "autoload.php";
 
 function get_request_method(): string
 {
