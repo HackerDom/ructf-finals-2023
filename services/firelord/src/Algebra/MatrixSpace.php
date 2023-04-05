@@ -356,6 +356,11 @@ class MatrixSpace
             throw new InvalidArgumentException("MatrixSpace::invert: matrix must be square");
         }
 
+        if (!$this->determinant($matrix))
+        {
+            throw new InvalidArgumentException("MatrixSpace::invert: matrix is not invertible");
+        }
+
         $cached_inversion = $this->cached_inversions->get($matrix);
 
         if ($cached_inversion !== null)
