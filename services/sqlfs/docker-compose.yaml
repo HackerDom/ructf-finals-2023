@@ -1,0 +1,21 @@
+---
+version: 2.2
+
+service:
+  postgres:
+    image: postgres:15.1
+    environment:
+      POSTGRES_USER: ructf
+      POSTGRES_PASSWORD: ructf
+      POSTGRES_DB: ructf
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 5s
+      timeout: 10s
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
