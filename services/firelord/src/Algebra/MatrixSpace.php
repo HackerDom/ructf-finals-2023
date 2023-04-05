@@ -96,7 +96,7 @@ class MatrixSpace
         {
             $value = $matrix->get($i, 0);
 
-            if ($i % 2 === 0)
+            if ($i % 2 === 1)
             {
                 $value = $this->ring->neg($value);
             }
