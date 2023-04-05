@@ -224,6 +224,11 @@ class MatrixSpace
             return $this->mul_matrix($left, $right);
         }
 
+        if (!$this->contains($left))
+        {
+            throw new InvalidArgumentException("MatrixSpace::mul: space does not contain left matrix");
+        }
+
         return $this->mul_integer($left, $right);
     }
 
@@ -283,6 +288,11 @@ class MatrixSpace
             }
 
             return $this->mul_matrix($left, $right_inv);
+        }
+
+        if (!$this->contains($left))
+        {
+            throw new InvalidArgumentException("MatrixSpace::div: space does not contain left matrix");
         }
 
         return $this->mul_integer($left, $this->ring->invert($right));
