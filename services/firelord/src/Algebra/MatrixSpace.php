@@ -327,13 +327,13 @@ class MatrixSpace
             for ($y = 0; $y < $result->height; $y += 1)
             {
                 $submatrix = $this->cached_submatrix($matrix, $x, $y);
-                $minor = $this->recursive_determinant($submatrix);
+                $cofactor = $this->recursive_determinant($submatrix);
 
                 if (($x + $y) % 2 == 1) {
-                    $minor = $this->ring->neg($minor);
+                    $cofactor = $this->ring->neg($cofactor);
                 }
 
-                $result->set($x, $y, $minor);
+                $result->set($x, $y, $cofactor);
             }
         }
 
