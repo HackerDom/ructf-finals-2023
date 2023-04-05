@@ -300,6 +300,11 @@ class MatrixSpace
             throw new InvalidArgumentException("MatrixSpace::cofactor_matrix: matrix must be square");
         }
 
+        if ($matrix->width === 1 && $matrix->height === 1)
+        {
+            return Matrix::diagonal(array(BigInteger::one()));
+        }
+
         $cached_comatrix = $this->cached_comatrices->get($matrix);
 
         if ($cached_comatrix !== null)
