@@ -16,6 +16,7 @@ TOTAL_SAMPLES = 600
 SLEEP_TIMEOUT = 3
 DEFAULT_PHOTO_HASH = 'c7ae789ed7e53f805cb7a372b088b25e4e3d39972e0f6a6b5d4d013a2f10d8a3'
 
+
 @checker.define_check
 async def check_service(request: CheckRequest) -> Verdict:
     api = Api(request.hostname, PORT)
@@ -158,10 +159,62 @@ async def check_service(request: CheckRequest) -> Verdict:
 class XSSChecker(VulnChecker):
     @staticmethod
     def put(request: PutRequest) -> Verdict:
-        return Verdict.OK_WITH_FLAG_ID("email1", "next_id1")
+        api = Api(request.hostname, PORT)
+        username = generate_name()
+        password = generate_password()
+        email = generate_email()
+        try:
+            status, data = api.signup(email, username, password)
+            if status != 201:
+                return Verdict.MUMBLE(f"Signup failed with status {status}")
+            status, data = api.login(username, password)
+            if status != 200:
+                return Verdict.MUMBLE(f"Login failed with status {status}")
+            if "auth_token" not in data:
+                return Verdict.MUMBLE("Login no auth_token")
+            token = data["auth_token"]
+            video_id = random.randint(1, 100)
+            book_sample = get_video_by_id(video_id)
+            title = generate_name()
+            status, data = api.create_book(title, request.flag, book_sample['video'], 'video.avi')
+            if status != 201:
+                return Verdict.MUMBLE(f"Create book failed with status {status}")
+            if "uid" not in data:
+                return Verdict.MUMBLE("Create book no uid")
+            uid = data["uid"]
+            status, data = api.get_book(uid)
+            if status != 200:
+                return Verdict.MUMBLE(f"Get book failed with status {status}")
+            return Verdict.OK_WITH_FLAG_ID(uid, token)
+        except AuthError:
+            return Verdict.MUMBLE("Login error")
+        except ParseError:
+            return Verdict.MUMBLE("Wrong url to download file")
+        except requests.ConnectionError:
+            return Verdict.DOWN('connection error')
+        except requests.Timeout:
+            return Verdict.DOWN('timeout error')
+        except requests.RequestException:
+            return Verdict.MUMBLE('http error')
 
     @staticmethod
     def get(request: GetRequest) -> Verdict:
+        token = request.flag_id
+        api = Api(request.hostname, PORT, token)
+        try:
+            status, data = api.get_book(request.public_flag_id)
+            if status != 200:
+                return Verdict.MUMBLE(f"Get book failed with status {status}")
+            if "text" not in data or data["text"] != request.flag:
+                return Verdict.CORRUPT("Get book wrong text")
+        except AuthError:
+            return Verdict.MUMBLE("Login error")
+        except requests.ConnectionError:
+            return Verdict.DOWN('connection error')
+        except requests.Timeout:
+            return Verdict.DOWN('timeout error')
+        except requests.RequestException:
+            return Verdict.MUMBLE('http error')
         return Verdict.OK()
 
 
