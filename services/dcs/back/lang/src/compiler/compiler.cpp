@@ -87,6 +87,9 @@ private:
 
     std::string makeChecks();
 
+    bool statementHasReturn(const std::shared_ptr<StatementNode> &statement);
+    bool allCodePathsHasReturn(const std::shared_ptr<FunctionDefinitionNode> &function);
+
     static constexpr std::string_view kTab              = "    ";
     static constexpr std::string_view kPushRbp          = "push    %rbp";
     static constexpr std::string_view kMovRspRbp        = "mov     %rsp,%rbp";
@@ -125,6 +128,42 @@ private:
     [[nodiscard]] std::string getConditionJump(ConditionalStatementNode::ConditionType condition, const std::string &label);
 };
 
+bool CompilerWithContext::statementHasReturn(const std::shared_ptr<StatementNode> &statement) {
+    if (statement->Return != nullptr) {
+        return true;
+    }
+
+    if (statement->Conditional != nullptr) {
+        auto cs = statement->Conditional;
+
+        for (const auto &t : cs->ThenStatements->Statements) {
+            if (statementHasReturn(t)) {
+                return true;
+            }
+        }
+
+        if (cs->ElseStatements != nullptr) {
+            for (const auto &t : cs->ElseStatements->Statements) {
+                if (statementHasReturn(t)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool CompilerWithContext::allCodePathsHasReturn(const std::shared_ptr<FunctionDefinitionNode> &function) {
+    for (const auto &st : function->Body->Statements) {
+        if (statementHasReturn(st)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::string CompilerWithContext::makeChecks() {
     auto mainIt = functionNameToContext.find(kMainFunctionName);
     if (mainIt == functionNameToContext.end()) {
@@ -133,6 +172,12 @@ std::string CompilerWithContext::makeChecks() {
 
     if (!mainIt->second->definitionNode->Arguments->Ids.empty()) {
         return Format("'%s' function cant have any arguments", kMainFunctionName);
+    }
+
+    for (const auto &f : root->Functions) {
+        if (!allCodePathsHasReturn(f)) {
+            return Format("not all code paths of '%s' returns value", f->Id->Name.c_str());
+        }
     }
 
     return "";
