@@ -780,3 +780,48 @@ _c_const_main_1: .double 6
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
+
+TEST(Compiler, ErrorWithNoReturn) {
+    assertCompilationResult(R"(
+fun main() {
+    a = 3.14;
+}
+)", "", "not all code paths of 'main' returns value");
+}
+
+TEST(Compiler, IncorrectCodePathsReturnsCheck) {
+    assertCompilationResult(R"(
+fun main() {
+    if (1 < 2) {
+        return 3.14;
+    }
+}
+)",
+R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_0(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_1(%rip),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    comisd  %xmm1,%xmm0
+    jae ._0
+    movsd   _c_const_main_2(%rip),%xmm0
+    leaveq
+    retq
+._0:
+
+
+_c_const_main_0: .double 1
+_c_const_main_1: .double 2
+_c_const_main_2: .double 3.14000000000000012434497875802
+.sign_bit: .quad 0x8000000000000000
+)", "");
+}

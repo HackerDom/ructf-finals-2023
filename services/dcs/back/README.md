@@ -26,6 +26,7 @@ fun main() {
 `cmake` required. See [this page](https://cmake.org/download/) for more.
 Only Linux is supported.
 ```bash
+git submodule update --init --recursive
 mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release .. && make -j # or Debug
 ```
