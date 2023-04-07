@@ -20,4 +20,10 @@ Config::Config(const nlohmann::json &json) {
     } else {
         WorkersCount = static_cast<int>(std::thread::hardware_concurrency());
     }
+
+    if (json.count("storage_path") && json["storage_path"].is_string()) {
+        StoragePath = json["storage_path"].get<std::string>();
+    } else {
+        throw std::runtime_error("no key 'storage_path' in json or it has invalid type");
+    }
 }
