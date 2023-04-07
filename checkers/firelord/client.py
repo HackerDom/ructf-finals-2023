@@ -1,33 +1,23 @@
 #!/usr/bin/env python3
 
-import re
-import json
 import dataclasses
 from typing import Self, Dict
 
-import numpy as np
 import gornilo.http_clients
+
+import model
 
 
 MAX_BODY_SIZE = 1 << 20 # 1 MiB
 CHUNK_SIZE = 1 << 10 # 1 KiB
 
-
-class ProtocolError(Exception):
-    pass
+PHP_EOL = b'\n'
 
 
 @dataclasses.dataclass
 class Response:
     code: int
-    content: str
-
-
-@dataclasses.dataclass
-class Keyspace:
-    n: int
-    m: int
-    modulo: int
+    content: bytes
 
 
 def http_request(
@@ -47,10 +37,10 @@ def http_request(
     try:
         content_length = int(response.headers.get('Content-Length', '0'))
     except Exception:
-        raise ProtocolError('invalid http headers')
+        raise model.ProtocolError('invalid http headers')
 
     if content_length > MAX_BODY_SIZE:
-        raise ProtocolError('body size is too big')
+        raise model.ProtocolError('body size is too big')
 
     chunks = []
     total_length = 0
@@ -60,9 +50,14 @@ def http_request(
         total_length += len(chunk)
 
         if total_length > MAX_BODY_SIZE:
-            raise ProtocolError('body size is too big')
+            raise model.ProtocolError('body size is too big')
 
-    content = b''.join(chunks).strip()
+    content = b''.join(chunks)
+
+    if not content.endswith(PHP_EOL):
+        raise model.ProtocolError('no newline at the end of body')
+    
+    content = content[:-len(PHP_EOL)]
 
     return Response(response.status_code, content)
 
@@ -73,82 +68,6 @@ def http_get_request(url: str, params: Dict[str, str] = {}) -> Response:
 
 def http_post_request(url: str, params: Dict[str, str] = {}, body: bytes = b'') -> Response:
     return http_request('POST', url, params = params, body = body)
-
-
-def parse_ciphertext(content: bytes) -> np.matrix:
-    try:
-        obj = json.loads(content)
-    except Exception:
-        raise ProtocolError('invalid format of ciphertext')
-
-    if not isinstance(obj, list):
-        raise ProtocolError('invalid format of ciphertext')
-
-    matrix = []
-    width = -1
-
-    for element in obj:
-        row = []
-
-        if not isinstance(element, list):
-            raise ProtocolError('invalid format of ciphertext')
-
-        if width < 0:
-            width = len(element)
-
-        if len(element) != width:
-            raise ProtocolError('invalid format of ciphertext')
-
-        for value in element:
-            if not isinstance(value, str):
-                raise ProtocolError('invalid format of ciphertext')
-
-            try:
-                row.append(int(value, 10))
-            except Exception:
-                raise ProtocolError('invalid format of ciphertext')
-
-        matrix.append(row)
-
-    return np.matrix(matrix, dtype = object)
-
-
-def serialize_ciphertext(ciphertext: np.matrix) -> bytes:
-    obj = ciphertext.tolist()
-
-    matrix = [
-        [str(x) for x in row] for row in obj
-    ]
-
-    return json.dumps(matrix).encode()
-
-
-def parse_keyspace(content: bytes) -> Keyspace:
-    try:
-        keyspace = content.decode()
-    except Exception:
-        raise ProtocolError('invalid format of keyspace')
-
-    parts = re.findall(r'\d+', keyspace)
-
-    if len(parts) != 3:
-        raise ProtocolError('invalid format of keyspace')
-
-    try:
-        n = int(parts[0])
-        m = int(parts[1])
-        modulo = int(parts[2])
-
-        return Keyspace(n, m, modulo)
-    except Exception:
-        raise ProtocolError('invalid format of keyspace')
-
-
-def parse_id(content: bytes) -> str:
-    try:
-        return content.decode()
-    except Exception:
-        raise ProtocolError('invalid format of id')
 
 
 class Api:
@@ -163,13 +82,13 @@ class Api:
 
         response = http_post_request(self.url + '/api/user/register', params = params)
 
-        if response.code == 201 and response.content == b'registered':
+        if response.code == 201 and b'registered' in response.content:
             return True
 
-        if response.code == 409 and response.content == b'user already exists':
+        if response.code == 409 and b'user already exists' in response.content:
             return False
 
-        raise ProtocolError('invalid response on user/register')
+        raise model.ProtocolError('invalid response on user/register')
 
     def login(self: Self, username: str, password: str) -> bool:
         params = {
@@ -179,15 +98,15 @@ class Api:
 
         response = http_post_request(self.url + '/api/user/login', params = params)
 
-        if response.code == 200 and response.content == b'logged in':
+        if response.code == 200 and b'logged in' in response.content:
             return True
 
-        if response.code == 401 and response.content == b'invalid username or password':
+        if response.code == 401 and b'invalid username or password' in response.content:
             return False
 
-        raise ProtocolError('invalid response on user/login')
+        raise model.ProtocolError('invalid response on user/login')
 
-    def get_ciphertext(self: Self, id: str) -> np.matrix | None:
+    def get_ciphertext(self: Self, id: str) -> model.Ciphertext | None:
         params = {
             'id': id,
         }
@@ -195,14 +114,19 @@ class Api:
         response = http_get_request(self.url + '/api/storage/ciphertext', params = params)
 
         if response.code == 200 and len(response.content) > 0:
-            return parse_ciphertext(response.content)
+            try:
+                data = response.content.decode()
+            except Exception:
+                raise model.ProtocolError('invalid ciphertext format')
 
-        if response.code == 404 and response.content == b'ciphertext not found':
+            return model.Ciphertext.parse(data)
+
+        if response.code == 404 and b'ciphertext not found' in response.content:
             return None
 
-        raise ProtocolError('invalid response on storage/ciphertext')
+        raise model.ProtocolError('invalid response on storage/ciphertext')
 
-    def get_keyspace(self: Self, username: str) -> Keyspace | None:
+    def get_keyspace(self: Self, username: str) -> model.Keyspace | None:
         params = {
             'username': username,
         }
@@ -210,12 +134,17 @@ class Api:
         response = http_get_request(self.url + '/api/storage/keyspace', params = params)
 
         if response.code == 200 and len(response.content) > 0:
-            return parse_keyspace(response.content)
+            try:
+                data = response.content.decode()
+            except Exception:
+                raise model.ProtocolError('invalid keyspace format')
 
-        if response.code == 404 and response.content == b'key not found':
+            return model.Keyspace.parse(data)
+
+        if response.code == 404 and b'key not found' in response.content:
             return None
 
-        raise ProtocolError('invalid response on storage/keyspace')
+        raise model.ProtocolError('invalid response on storage/keyspace')
 
     def encrypt(self: Self, username: str, password: str, message: bytes) -> str:
         params = {
@@ -226,21 +155,26 @@ class Api:
         response = http_post_request(self.url + '/api/crypto/encrypt', params = params, body = message)
 
         if response.code == 201 and len(response.content) > 0:
-            return parse_id(response.content)
+            try:
+                data = response.content.decode()
+            except Exception:
+                raise model.ProtocolError('invalid ciphertext_id format')
+            
+            return data
 
-        raise ProtocolError('invalid response on crypto/encrypt')
+        raise model.ProtocolError('invalid response on crypto/encrypt')
 
-    def decrypt(self: Self, username: str, password: str, ciphertext: np.matrix) -> bytes:
+    def decrypt(self: Self, username: str, password: str, ciphertext: model.Ciphertext) -> bytes:
         params = {
             'username': username,
             'password': password,
         }
 
-        body = serialize_ciphertext(ciphertext)
+        body = ciphertext.serialize()
 
         response = http_post_request(self.url + '/api/crypto/decrypt', params = params, body = body)
 
         if response.code == 200 and len(response.content) > 0:
             return response.content
 
-        raise ProtocolError('invalid response on crypto/decrypt')
+        raise model.ProtocolError('invalid response on crypto/decrypt')
