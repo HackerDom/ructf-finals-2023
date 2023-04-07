@@ -9,6 +9,10 @@ import numpy as np
 import gornilo.http_clients
 
 
+MAX_BODY_SIZE = 1 << 20 # 1 MiB
+CHUNK_SIZE = 1 << 10 # 1 KiB
+
+
 class ProtocolError(Exception):
     pass
 
@@ -27,7 +31,7 @@ class Keyspace:
 
 
 def http_request(
-        method: str, url: str, params: Dict[str, str] | None, body: bytes | None,
+        method: str, url: str, params: Dict[str, str], body: bytes,
 ) -> Response:
     session = gornilo.http_clients.requests_with_retries()
 
@@ -40,17 +44,22 @@ def http_request(
         stream = True,
     )
 
-    if int(response.headers.get('Content-Length', '0')) > (1 << 20):
+    try:
+        content_length = int(response.headers.get('Content-Length', '0'))
+    except Exception:
+        raise ProtocolError('invalid http headers')
+
+    if content_length > MAX_BODY_SIZE:
         raise ProtocolError('body size is too big')
 
     chunks = []
     total_length = 0
 
-    for chunk in response.iter_content(1 << 10, decode_unicode = False):
+    for chunk in response.iter_content(CHUNK_SIZE, decode_unicode = False):
         chunks.append(chunk)
         total_length += len(chunk)
 
-        if total_length > (1 << 20):
+        if total_length > MAX_BODY_SIZE:
             raise ProtocolError('body size is too big')
 
     content = b''.join(chunks).strip()
