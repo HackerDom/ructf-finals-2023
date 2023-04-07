@@ -10,4 +10,5 @@ struct Config {
     std::string ServerAddress;
     int ServerPort;
     int WorkersCount;
+    std::filesystem::path StoragePath;
 };

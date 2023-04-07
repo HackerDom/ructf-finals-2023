@@ -32,6 +32,7 @@ add_executable(dcslang_tests
         tests/lexer/lexer_tests.cpp
         tests/parser/parser_tests.cpp
         tests/functional_tests.cpp
+        tests/performance_tests.cpp
         tests/main.cpp)
 target_include_directories(dcslang_tests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(dcslang_tests glog::glog gtest gtest_main common)

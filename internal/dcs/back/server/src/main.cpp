@@ -44,8 +44,7 @@ int main(int argc, char **argv) {
 
     auto config = std::make_shared<Config>(configJson);
     auto executor = std::make_shared<Executor>(config->WorkersCount);
-    std::filesystem::create_directory("/var/dcs/data/");
-    auto storage = std::make_shared<Storage>("/var/dcs/data/");
+    auto storage = std::make_shared<Storage>(config->StoragePath);
 
     svr.new_task_queue = [config]() { return new httplib::ThreadPool(config->WorkersCount); };
 

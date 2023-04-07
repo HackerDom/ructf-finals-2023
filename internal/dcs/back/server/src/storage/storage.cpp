@@ -62,7 +62,13 @@ int Storage::GenerateUniqueToken(std::string &out) {
 }
 
 Storage::Storage(std::filesystem::path storagePath) : storagePath(std::move(storagePath)), randomDevice(),
-                                                      randomGenerator(randomDevice()) {}
+                                                      randomGenerator(randomDevice()) {
+    if (std::error_code errorCode;
+        !std::filesystem::is_directory(this->storagePath, errorCode) ||
+        !std::filesystem::create_directory(this->storagePath, errorCode)) {
+        throw std::runtime_error(errorCode.message());
+    }
+}
 
 void InitializeHeader(const std::vector<uint8_t> &code, const std::string_view &description, RecordHeader &header) {
     memset(&header, 0, sizeof(RecordHeader));
