@@ -45,52 +45,54 @@ def parse_keyspace(content):
     return Keyspace(n, m, modulo)
 
 
-def get_matrix_space(username):
-    resp = requests.get(f'http://{IP}:{PORT}/api/storage/keyspace', params = {
+def get_keyspace(username):
+    url = f'http://{IP}:{PORT}/api/storage/keyspace'
+    params = {
         'username': username,
-    })
+    }
 
-    keyspace = parse_keyspace(resp.text)
+    resp = requests.get(url, params = params)
 
-    R = IntegerModRing(keyspace.modulo)
-    MS = MatrixSpace(R, keyspace.n, keyspace.m)
-
-    return MS
+    return parse_keyspace(resp.text)
 
 
-def get_ciphertext(MS, ciphertext_id):
-    resp = requests.get(f'http://{IP}:{PORT}/api/storage/ciphertext', params = {
+def get_ciphertext(ciphertext_id):
+    url = f'http://{IP}:{PORT}/api/storage/ciphertext'
+    params = {
         'id': ciphertext_id,
-    })
+    }
 
-    ciphertext = parse_ciphertext(resp.text)
+    resp = requests.get(url, params = params)
 
-    return MS(ciphertext)
+    return parse_ciphertext(resp.text)
 
 
-def attack(matrix):
-    d = matrix.dimensions()[0]
-    N = matrix.parent().base_ring().cardinality()
+def attack(keyspace, ciphertext):
+    d = keyspace.n
+    N = keyspace.modulo
 
-    R = IntegerModRing(N)
+    R = Zmod(N)
+    MS = MatrixSpace(R, d, d)
+
     P = PolynomialRing(R, ', '.join(['x'] + [f'r{i}' for i in range(d - 1)]))
     x, *r = P.gens()
 
-    pols = []
+    matrix = MS(ciphertext)
 
-    for i in range(1, d + 10):
-        pol = x^i + sum(ri^i for ri in r) - (matrix ^ i).trace()
-        pols.append(pol)
+    pols = [
+        x^i + sum(ri^i for ri in r) - (matrix ^ i).trace()
+        for i in range(1, d + 1)
+    ]
 
-    basis = Ideal(pols).groebner_basis()
+    I = Ideal(pols)
 
-    for pol in basis:
+    for pol in I.groebner_basis():
         try:
-            pol_x = pol.univariate_polynomial()
+            univariate_pol = pol.univariate_polynomial()
         except Exception:
             continue
 
-        roots = pol_x.small_roots(X=2^256, epsilon=0.05)
+        roots = univariate_pol.small_roots(X=2^256, epsilon=0.05)
 
         for root in roots:
             yield int(root).to_bytes(1024, 'big').strip(b'\x00')
@@ -98,14 +100,14 @@ def attack(matrix):
 
 def main():
     # flag_id = 'username|ciphertext_id'
-    flag_id = 'Onkr6MyzkdtStPAJ|ddbc5967830784728daaf1de6e1a2ff4'
+    flag_id = 'UvtDiu0Zu8d4DU5W|e9fce3eb799c5ba1e17e241f3c18dcad'
 
     username, ciphertext_id = flag_id.split('|')
 
-    MS = get_matrix_space(username)
-    ciphertext = get_ciphertext(MS, ciphertext_id)
+    keyspace = get_keyspace(username)
+    ciphertext = get_ciphertext(ciphertext_id)
 
-    for flag in attack(ciphertext):
+    for flag in attack(keyspace, ciphertext):
         print(flag)
 
 
