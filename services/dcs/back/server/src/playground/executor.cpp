@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
-#include <errno.h>
 #include <sys/wait.h>
 
 #include <glog/logging.h>
