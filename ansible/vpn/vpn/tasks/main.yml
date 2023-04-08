@@ -1,0 +1,119 @@
+- name: install packages
+  apt:
+    name:
+      - openvpn
+      - fping
+      - python3-requests
+      - conntrack
+    state: latest
+
+- name: copy prod vpn configs
+  synchronize:
+    src: openvpn_prod/
+    dest: /etc/openvpn/
+    rsync_opts:
+      - "--chmod=0600"
+      - "--chown=root:root"
+  notify: restart openvpn
+
+- name: create users
+  user: name={{item}} shell=/bin/false
+  with_items:
+    - networkclosed
+    - antidos
+    - dump
+    - connectmon
+
+- name: create control dirs in /root
+  file: path=/root/{{item}} state=directory
+  with_items:
+    - antidos
+    - openclosenetwork
+    - snat
+    - trafdump
+
+
+- name: copy networkclosed systemd service
+  copy: src=networkclosed/networkclosed.service dest=/etc/systemd/system/networkclosed.service
+  notify: enable and restart networkclosed
+
+- name: copy networkclosed service
+  copy:
+    src: networkclosed/networkclosed_serv.py
+    dest: /home/networkclosed/networkclosed_serv.py
+    owner: networkclosed
+    group: networkclosed
+    mode: 0755
+  notify: enable and restart networkclosed
+
+
+- name: copy open-close network scripts
+  copy: src=networkclosed/{{item}} dest=/root/openclosenetwork/{{item}} mode=0755
+  with_items:
+    - open_network.sh
+    - close_network.sh
+    - check_network.sh
+
+- name: copy antidos systemd service
+  copy: src=antidos/antidos.service dest=/etc/systemd/system/antidos.service
+  notify: enable and restart antidos
+
+- name: copy antidos service
+  copy:
+    src: antidos/antidos_serv.py
+    dest: /home/antidos/antidos_serv.py
+    owner: antidos
+    group: antidos
+    mode: 0755
+  notify: enable and restart antidos
+
+- name: copy antidos root scripts
+  copy: src=antidos/{{item}} dest=/root/antidos/{{item}} mode=0755
+  with_items:
+    - block_team.sh
+    - unblock_team.sh
+    - list_blocked_teams.sh
+
+- name: copy snat root scripts
+  copy: src=snat/{{item}} dest=/root/snat/{{item}} mode=0755
+  with_items:
+    - add_snat_rules.sh
+    - del_snat_rules.sh
+    - check_snat_rules.sh
+
+- name: copy trafdump root scripts
+  copy: src=trafdump/{{item}} dest=/root/trafdump/{{item}} mode=0755
+  with_items:
+    - add_trafdump_rules.sh
+    - del_trafdump_rules.sh
+    - check_trafdump_rules.sh
+    - get_pkg_stat.sh
+
+- name: install tshark package
+  apt: name=tshark state=latest
+
+- name: create dump directory
+  file: path=/home/dump state=directory
+
+- copy: src=dump/{{item}} dest=/home/dump/ owner=dump group=dump mode=0755
+  with_items:
+    - rotate_dump.sh
+    - start_dump.sh
+  notify: enable and restart dump
+
+- name: copy dump systemd service
+  copy: src=dump/dump.service dest=/etc/systemd/system/dump.service
+  notify: enable and restart dump
+
+- name: copy connectmon systemd service
+  copy: src=connectmon/connectmon.service dest=/etc/systemd/system/connectmon.service
+  notify: enable and restart connectmon
+
+- name: copy connectmon service
+  copy:
+    src: connectmon/connectmon.py
+    dest: /home/connectmon/connectmon.py
+    owner: connectmon
+    group: connectmon
+    mode: 0755
+  notify: enable and restart connectmon
