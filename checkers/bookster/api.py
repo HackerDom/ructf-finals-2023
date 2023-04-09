@@ -65,9 +65,10 @@ class Api:
     def get_book(self, uid: str):
         return self.send_request(f"/api/books/{uid}", "get")
 
-    def create_book(self, title, text, video_local_file, send_video_filename):
-
-        video_file = open(video_local_file, 'rb')
+    def create_book(self, title, text, video_local_file, send_video_filename, is_video_filename=True):
+        video_file = video_local_file
+        if is_video_filename:
+            video_file = open(video_local_file, 'rb')
         files = [
             ('video', (send_video_filename, video_file, 'video/octet-stream')),
             ('text', ('bookster_book.txt', text, 'text/plain'))

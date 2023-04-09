@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <va-card tag="div">
-      <va-card-title>Регистрация</va-card-title>
+      <va-card-title>Registration</va-card-title>
       <va-card-content>
         <va-form tag="form" ref="form" style="width: 250px;" @submit.prevent="onSubmit" @validation="validation = $event">
           <p class="error" v-if="error">{{error}}</p>
@@ -9,30 +9,30 @@
               v-model="email"
               label="Email"
               type="email"
-              :rules="[(value) => (value && value.length > 0) || 'Введите email',  (value) => String(value).toLowerCase().match(/^[\w-.]+@([\w-]+\.)+[a-z]{2,5}$/) || 'Не валидный email']"
+              :rules="[(value) => (value && value.length > 0) || 'Enter email',  (value) => String(value).toLowerCase().match(/^[\w-.]+@([\w-]+\.)+[a-z]{2,5}$/) || 'Invalid email']"
           />
           <va-input
               v-model="login"
               class="mt-3"
-              label="Логин"
-              :rules="[(value) => (value && value.length > 0) || 'Введите логин',]"
+              label="Login"
+              :rules="[(value) => (value && value.length > 0) || 'Enter login',]"
           />
           <va-input
               v-model="password"
               class="mt-3"
-              label="Пароль"
+              label="Password"
               type="password"
-              :rules="[(value) => (value && value.length > 8) || 'Слишком короткий пароль']"
+              :rules="[(value) => (value && value.length > 8) || 'Password too short']"
           />
           <div class="container">
             <va-button
                 type="submit"
                 class="mt-3"
             >
-              Регистрация
+              Register
             </va-button>
 
-            <router-link to="/login" class="link-small">Войти</router-link>
+            <router-link to="/login" class="link-small">Sign In</router-link>
           </div>
 
         </va-form>

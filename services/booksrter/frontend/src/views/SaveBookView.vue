@@ -2,35 +2,35 @@
   <div class="container">
     <va-card>
       <va-card-title>
-        <h2>Сохранить книгу</h2>
+        <h2>Save book</h2>
       </va-card-title>
       <va-card-content >
         <va-form ref="form" tag="form" @submit.prevent="onSubmit" style="max-width: 500px;">
           <va-input
               v-model="title"
-              label="Название"
+              label="Title"
               style="width: 100%"
-              :rules="[(value) => (value && value.length > 0) || 'Введите название']"
+              :rules="[(value) => (value && value.length > 0) || 'Enter title']"
           />
           <va-list-label class="ml-3" style="text-align: left;">
-            Книга
+            Book
           </va-list-label>
           <va-file-upload
               v-model="text"
               type="single"
-              :upload-button-text="'Выбрать книгу'"
+              :upload-button-text="'Attach book'"
               dropzone
               file-types="txt"
           />
           <va-list-label class="ml-3" style="text-align: left;">
-            Видео с реакцией
+            Short video reaction
           </va-list-label>
           <va-file-upload
               v-model="file"
               type="single"
-              :upload-button-text="'Выбрать видео'"
+              :upload-button-text="'Attach video'"
               dropzone
-              file-types="mp4,avi,webm"
+              file-types="mp4,avi,webm,mov,mkv,flv,wmv,m3u"
           />
 
           <div class="container">

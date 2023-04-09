@@ -13,11 +13,11 @@
     </template>
 
     <template #right>
-      <va-navbar-item><router-link v-if="token !== null" to="/books" class="link">Мои книги</router-link></va-navbar-item>
-      <va-navbar-item><router-link  to="/book/save" class="link">Сохранить книгу</router-link></va-navbar-item>
-      <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Вход</router-link></va-navbar-item>
-      <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Регистрация</router-link></va-navbar-item>
-      <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Выйти</va-navbar-item>
+      <va-navbar-item><router-link v-if="token !== null" to="/books" class="link">My books</router-link></va-navbar-item>
+      <va-navbar-item><router-link  to="/book/save" class="link">Save the book</router-link></va-navbar-item>
+      <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Sign In</router-link></va-navbar-item>
+      <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Register</router-link></va-navbar-item>
+      <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Logout</va-navbar-item>
     </template>
     <div class="upper">
       ICE VAULT
