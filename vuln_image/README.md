@@ -14,6 +14,7 @@
 ## Add new service in CI
 
 1. Commit service sources in master brunch
+1. Add service name in [generate_workflow.py](https://github.com/HackerDom/ructf-finals-2023/blob/f9f23675160c61c9c6479fac014484d918553f47/.github/workflows/generate_workflows.py#L7)
 1. Run `generate_workflow.py` script
   ```shell
   cd .github/workflows && ./generate_workflows.py && cd -
