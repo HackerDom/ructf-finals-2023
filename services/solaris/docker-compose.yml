@@ -1,0 +1,62 @@
+version: '2.2'
+
+services:
+  nginx:
+    image: nginx:alpine
+    cpus: 1
+    pids_limit: 1024
+    mem_limit: 1G
+    memswap_limit: 1G
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    ports:
+      - '17173:8080'
+    volumes:
+      - ./frontend:/var/www/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - internal
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    build: php-fpm
+    cpus: 1
+    pids_limit: 1024
+    mem_limit: 1G
+    memswap_limit: 1G
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    volumes:
+      - ./src:/tmp/src:ro
+      - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+      - ./storage:/tmp/storage:rw
+    networks:
+      - internal
+
+  cleaner:
+    build: cleaner
+    cpus: 1
+    pids_limit: 256
+    mem_limit: 256M
+    memswap_limit: 256M
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    volumes:
+      - ./storage:/tmp/storage:rw
+
+networks:
+  internal:
+    driver: bridge
