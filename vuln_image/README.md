@@ -20,6 +20,10 @@
   ```
 1. Commit changes
 
+## Fail fast | best effort on service build
+
+Use `docker-compose build` for fail fast mode and `docker-compose build || true` for best effort in [service build](https://github.com/HackerDom/ructf-finals-2023/blob/d310ee35ae48326951e6f617efcbb8d2ea0385b8/vuln_image/image.pkr.hcl#L104).
+
 ## Build image with CI
 
 Run `Rebuild image` [workflow](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/rebuild_image.yml)
