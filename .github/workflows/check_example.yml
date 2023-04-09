@@ -15,7 +15,17 @@ on:
         required: false
         default: "no"
 jobs:
-  check_example:
+  check_service_example:
+    name: Check service example
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/example/before_image_build.sh ]; then (cd ./services/example && ./before_image_build.sh); fi
+    - name: Setup example
+      run: (cd ./services/example && docker-compose pull && docker-compose build && docker-compose up --build -d)
+  check_checker_example:
     name: Check example
     runs-on: ubuntu-20.04
     steps:
@@ -33,14 +43,30 @@ jobs:
       run: if [ -f checkers/example/requirements.txt ]; then python -m pip install -r checkers/example/requirements.txt; fi
     - name: Test checker on service
       run: (cd ./checkers/example && ./example.checker.py TEST 127.0.0.1)
+  check_sploit_example:
+    name: Check example
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/example/before_image_build.sh ]; then (cd ./services/example && ./before_image_build.sh); fi
+    - name: Setup example
+      run: (cd ./services/example && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Setup checker libraries
+      run: if [ -f checkers/example/requirements.txt ]; then python -m pip install -r checkers/example/requirements.txt; fi
     - name: Setup sploit libraries
       run: if [ -f sploits/example/requirements.txt ]; then python -m pip install -r sploits/example/requirements.txt; fi
     - name: Test sploit on service
       run: (./tools/check-sploit.py example)
   update_example:
     name: Deploy service using ansible to first teams
-    needs: check_example
-    runs-on: deployer
+    needs: [check_service_example, check_checker_example, check_sploit_example]
+    runs-on: self-hosted
     if: ${{ false }} # disable on game just in case
     steps:
     #- name: install ansible
