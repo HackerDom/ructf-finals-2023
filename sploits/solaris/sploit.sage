@@ -8,8 +8,10 @@ import dataclasses
 import requests
 
 
-IP = sys.argv[1] if len(sys.argv) > 1 else 'localhost'
+IP = sys.argv[1] if len(sys.argv) > 1 else None
 PORT = 17173
+
+FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else None
 
 
 @dataclasses.dataclass
@@ -99,10 +101,14 @@ def attack(keyspace, ciphertext):
 
 
 def main():
-    # flag_id = 'username|ciphertext_id'
-    flag_id = 'UvtDiu0Zu8d4DU5W|e9fce3eb799c5ba1e17e241f3c18dcad'
+    if IP is None:
+        raise Exception('pass ip as 1st argument')
 
-    username, ciphertext_id = flag_id.split('|')
+    if FLAG_ID is None:
+        raise Exception('pass flag_id as 2nd argument')
+
+    # FLAG_ID: 'username|ciphertext_id'
+    username, ciphertext_id = FLAG_ID.split('|')
 
     keyspace = get_keyspace(username)
     ciphertext = get_ciphertext(ciphertext_id)
