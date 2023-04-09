@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     FLAGS_minloglevel = 0;
 
     auto options = ReadOptionsFromArgs(argc, argv);
-    if (options == nullptr) {
+        if (options == nullptr) {
         return 1;
     }
 
@@ -62,6 +62,7 @@ int main(int argc, char **argv) {
         LOG(INFO) << Format("<== %d headers{%s} body{%s}", res.status, printHeaders(res.headers).c_str(), res.body.c_str());
     });
 
+    /*
     svr.Post("/api/compiler", [storage](const httplib::Request &request, httplib::Response &response) {
         if (request.get_header_value("Content-Type") != "application/json") {
             response.status = 400;
@@ -200,7 +201,7 @@ int main(int argc, char **argv) {
         response.status = 200;
         response.set_content(j.dump(), "application/json");
         return;
-    });
+    });*/
 
     LOG(INFO) << "Starting listening, use CTRL-C to close...";
 

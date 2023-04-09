@@ -38,7 +38,7 @@ fs::path GetTempUniquePath(const std::string &suffix) {
         auto name = randomString() + suffix;
         auto path = fs::temp_directory_path() / name;
 
-        if (!fs::is_regular_file(path)) {
+        if (!fs::is_regular_file(path) && !fs::is_directory(path)) {
             return path;
         }
 

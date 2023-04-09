@@ -2,63 +2,48 @@
 #include <filesystem>
 
 #include <gtest/gtest.h>
-#include <glog/logging.h>
 
 #include <utils/defer/defer.h>
+#include <utils/files/files.h>
 #include <utils/strings/strings.h>
 
 #include <storage/storage.h>
 
 TEST(Storage, WriteRead) {
-    auto storage = Storage(std::filesystem::temp_directory_path());
+    auto path = GetTempUniquePath("");
+    Defer remover([path] { std::filesystem::remove_all(path); });
 
-    std::vector<uint8_t> code{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    std::string description = "this Is my awesome description";
+    constexpr auto kCount = 100;
+    std::vector<std::vector<uint8_t>> codes;
+    std::vector<std::string> descriptions;
+    for (auto i = 0; i < kCount; ++i) {
+        codes.emplace_back(i);
+        for (auto &k : codes.back()) {
+            k = i;
+        }
+        descriptions.push_back(Format("description-%d", i));
+    }
 
-    auto r = storage.SaveNotExecuted(code, description);
-    EXPECT_EQ(r->Status, Storage::Success);
-    ASSERT_EQ(r->Error, "");
-    ASSERT_NE(r->Token, "");
+    auto storage = Storage(path);
+    std::vector<std::string> tokens;
 
-    LOG(INFO) << Format("generated token: %s", r->Token.c_str());
+    ASSERT_EQ(codes.size(), descriptions.size());
+    for (auto i = 0; i < kCount; ++i) {
+        auto r = storage.Save(codes[i], descriptions[i]);
+        EXPECT_EQ(r->Status, Storage::Success);
+        ASSERT_EQ(r->Error, "");
+        ASSERT_NE(r->Token, "");
+        tokens.push_back(r->Token);
+    }
 
-    auto g = storage.Get(r->Token);
-    EXPECT_EQ(g->Status, Storage::Success);
-    ASSERT_EQ(g->Error, "");
-    ASSERT_EQ(g->Description, description);
-    ASSERT_EQ(g->Code, code);
-    ASSERT_FALSE(g->IsExecuted);
-
-    std::string err;
-    EXPECT_EQ(storage.Remove(r->Token, err), Storage::Success);
-    ASSERT_EQ(err, "");
-}
-
-TEST(Storage, WriteReadUpdateRead) {
-    auto storage = Storage(std::filesystem::temp_directory_path());
-
-    std::vector<uint8_t> code{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    std::string description = "this Is my awesome description";
-
-    auto r = storage.SaveNotExecuted(code, description);
-    EXPECT_EQ(r->Status, Storage::Success);
-    ASSERT_EQ(r->Error, "");
-    ASSERT_NE(r->Token, "");
-
-    LOG(INFO) << Format("generated token: %s", r->Token.c_str());
-
-    std::string err;
-    ASSERT_EQ(storage.UpdateValue(r->Token, 1337.1337, err), Storage::Success);
-    ASSERT_EQ(err, "");
-
-    auto g = storage.Get(r->Token);
-    EXPECT_EQ(g->Status, Storage::Success);
-    ASSERT_EQ(g->Error, "");
-    ASSERT_EQ(g->Description, description);
-    ASSERT_EQ(g->Code, code);
-    ASSERT_TRUE(std::abs(g->Value - 1337.1337) < 1e-6);
-    ASSERT_TRUE(g->IsExecuted);
-
-    EXPECT_EQ(storage.Remove(r->Token, err), Storage::Success);
-    ASSERT_EQ(err, "");
+    for (auto i = 0; i < kCount; ++i) {
+        auto g = storage.Get(tokens[i]);
+        EXPECT_EQ(g->Status, Storage::Success);
+        ASSERT_EQ(g->Error, "");
+        ASSERT_EQ(g->Description, descriptions[i]);
+        ASSERT_EQ(g->Code.size(), i);
+        for (const auto &k: g->Code) {
+            ASSERT_EQ(k, i);
+        }
+    }
 }
