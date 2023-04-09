@@ -7,16 +7,16 @@
 #include <options/options.h>
 
 std::shared_ptr<ServerOptions> ReadOptionsFromArgs(int argc, char **argv) {
-    std::string configPath;
+    std::string workersCount;
 
     int opt;
-    while ((opt = getopt(argc, argv, "hc:")) != -1) {
+    while ((opt = getopt(argc, argv, "hw:")) != -1) {
         switch (opt) {
-            case 'c':
-                configPath = std::string{optarg};
+            case 'w':
+                workersCount = std::string{optarg};
                 break;
             case 'h':
-                LOG(INFO) << Format("usage: %s -c <config file path>", argv[0]);
+                LOG(INFO) << Format("usage: %s -w <workers count>", argv[0]);
                 return nullptr;
             case '?':
                 LOG(ERROR) << "error parsing arguments";
@@ -27,14 +27,14 @@ std::shared_ptr<ServerOptions> ReadOptionsFromArgs(int argc, char **argv) {
         }
     }
 
-    if (configPath.empty()) {
-        LOG(ERROR) << "use -c to specify config path";
+    if (workersCount.empty()) {
+        LOG(ERROR) << "use -w to specify workers count";
         return nullptr;
     }
 
     auto options = std::make_shared<ServerOptions>();
 
-    options->ConfigPath = configPath;
+    options->WorkersCount = std::stoi(workersCount);
 
     return options;
 }

@@ -10,6 +10,7 @@ class Storage {
 public:
     enum OperationStatus {
         Success,
+        InvalidToken,
         Error
     };
 

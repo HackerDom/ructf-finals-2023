@@ -108,9 +108,12 @@ Storage::Save(const std::vector<uint8_t> &code, std::string_view description) {
 }
 
 std::shared_ptr<Storage::GetResult> Storage::Get(std::string_view token) {
+    if (token.size() != kTokenLength) {
+        return std::make_shared<GetResult>(GetResult{InvalidToken, "invalid token"});
+    }
     auto path = GetPathByToken(token);
     if (!std::filesystem::is_regular_file(path)) {
-        return std::make_shared<GetResult>(GetResult{Error, "invalid token"});
+        return std::make_shared<GetResult>(GetResult{InvalidToken, "invalid token"});
     }
 
     int fd = open(path.c_str(), O_RDONLY);

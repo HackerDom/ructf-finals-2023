@@ -35,7 +35,7 @@ public:
     [[nodiscard]] std::shared_ptr<ExecuteResult> Execute(const std::vector<uint8_t> &code);
 
 private:
-    static constexpr std::size_t kPagesPerExecutor = 5;
+    static constexpr std::size_t kPagesPerExecutor = 100;
     static_assert(kPagesPerExecutor > 1);
 
     struct {
