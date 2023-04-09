@@ -1,10 +1,9 @@
 #pragma once
 
 #include <memory>
-#include <filesystem>
 
 struct ServerOptions {
-    std::filesystem::path ConfigPath;
+    int WorkersCount;
 };
 
 std::shared_ptr<ServerOptions> ReadOptionsFromArgs(int argc, char **argv);

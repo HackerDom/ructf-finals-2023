@@ -9,19 +9,26 @@
 #include <parser/parser.h>
 #include <compiler/compiler.h>
 #include <translator/translator.h>
-#include <config/config.h>
 #include <options/options.h>
 #include <storage/storage.h>
 #include <playground/executor.h>
 #include <utils/strings/strings.h>
 
+static constexpr std::string_view kStoragePath = "/var/dcs/data";
+
 static const std::string kTokenHeader = "X-BCS-Token";
 
 httplib::Server svr;
 
-void sigintHandler(int) {
+static void sigintHandler(int) {
     LOG(INFO) << "Closing server...";
     svr.stop();
+}
+
+static std::string doubleToString(double v) {
+    std::ostringstream ss;
+    ss << std::setprecision(30) << v;
+    return ss.str();
 }
 
 int main(int argc, char **argv) {
@@ -35,18 +42,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    LOG(INFO) << "Config path: " << options->ConfigPath;
+    LOG(INFO) << "workers count: " << options->WorkersCount;
 
-    std::ifstream configFile(options->ConfigPath);
-    nlohmann::json configJson = nlohmann::json::parse(configFile);
-    LOG(INFO) << "Using config: " << configJson;
-    configFile.close();
+    auto executor = std::make_shared<Executor>(options->WorkersCount);
+    auto storage = std::make_shared<Storage>(kStoragePath);
 
-    auto config = std::make_shared<Config>(configJson);
-    auto executor = std::make_shared<Executor>(config->WorkersCount);
-    auto storage = std::make_shared<Storage>(config->StoragePath);
-
-    svr.new_task_queue = [config]() { return new httplib::ThreadPool(config->WorkersCount); };
+    svr.new_task_queue = [options]() { return new httplib::ThreadPool(options->WorkersCount); };
 
     svr.set_logger([](const httplib::Request &req, const httplib::Response &res) {
         auto printHeaders = [](const httplib::Headers &h) {
@@ -62,8 +63,7 @@ int main(int argc, char **argv) {
         LOG(INFO) << Format("<== %d headers{%s} body{%s}", res.status, printHeaders(res.headers).c_str(), res.body.c_str());
     });
 
-    /*
-    svr.Post("/api/compiler", [storage](const httplib::Request &request, httplib::Response &response) {
+    svr.Post("/api/compute", [storage](const httplib::Request &request, httplib::Response &response) {
         if (request.get_header_value("Content-Type") != "application/json") {
             response.status = 400;
             response.set_content("invalid content type", "text/plain");
@@ -110,15 +110,10 @@ int main(int argc, char **argv) {
             LOG(ERROR) << "translation failed: " << translated.ErrorMessage;
             return;
         }
-        auto s = storage->SaveNotExecuted(*translated.Translated, j["description"].get<std::string_view>());
+        auto s = storage->Save(*translated.Translated, j["description"].get<std::string_view>());
         if (s->Status == Storage::OperationStatus::Error) {
             LOG(ERROR) << s->Error;
             response.status = 500;
-            return;
-        }
-        if (s->Status == Storage::OperationStatus::NeedRetry) {
-            LOG(WARNING) << "need retry at record creation " << s->Error;
-            response.status = 503;
             return;
         }
 
@@ -127,87 +122,99 @@ int main(int argc, char **argv) {
         return;
     });
 
-    svr.Post("/api/playground", [executor, storage](const httplib::Request &request, httplib::Response &response) {
+    svr.Get("/api/compute", [executor, storage](const httplib::Request &request, httplib::Response &response) {
         auto token = request.get_header_value(kTokenHeader);
         if (token.empty()) {
             response.status = 400;
-            response.set_content("expected token", "text/plain");
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "token expected"}
+            };
+            response.set_content(j.dump(), "application/json");
             return;
         }
         auto record = storage->Get(token);
+        if (record->Status == Storage::OperationStatus::InvalidToken) {
+            response.status = 400;
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "invalid token"}
+            };
+            response.set_content(j.dump(), "application/json");
+            return;
+        }
         if (record->Status == Storage::OperationStatus::Error) {
             LOG(ERROR) << record->Error;
             response.status = 500;
-            return;
-        }
-        if (record->Status == Storage::OperationStatus::NeedRetry) {
-            LOG(WARNING) << "collision by token " << token;
-            response.status = 503;
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "intenral error"}
+            };
+            response.set_content(j.dump(), "application/json");
             return;
         }
         auto execute = executor->Execute(record->Code);
         if (execute->Status == Executor::ExecuteResult::NO_FREE_EXECUTORS) {
-            LOG(WARNING) << "no free executors left";
+            LOG(ERROR) << "no free executors left";
             response.status = 503;
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "executors busy"}
+            };
+            response.set_content(j.dump(), "application/json");
             return;
         }
-        if (execute->Status == Executor::ExecuteResult::CRASH || execute->Status == Executor::ExecuteResult::TIMEOUT) {
+        if (execute->Status == Executor::ExecuteResult::TIMEOUT || execute->Status == Executor::ExecuteResult::CRASH) {
             LOG(WARNING) << execute->ErrorMessage;
             response.status = 200;
-            response.set_content("program timeout or crash", "text/plain");
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "program timeout or crash"}
+            };
+            response.set_content(j.dump(), "application/json");
             return;
         }
         if (execute->Status == Executor::ExecuteResult::START_ERROR) {
             LOG(ERROR) << execute->ErrorMessage;
             response.status = 500;
-            return;
-        }
-        std::string err;
-        if (!storage->UpdateValue(token, execute->Value, err)) {
-            LOG(ERROR) << "cant save result: " << err;
-            response.status = 500;
-            return;
-        }
-    });
-
-    svr.Get("/api/playground", [storage](const httplib::Request &request, httplib::Response &response) {
-        auto token = request.get_header_value(kTokenHeader);
-        if (token.empty()) {
-            response.status = 400;
-            response.set_content("expected token", "text/plain");
-            return;
-        }
-        auto result = storage->Get(token);
-        if (result->Status == Storage::OperationStatus::NeedRetry) {
-            LOG(WARNING) << "collision by token " << token;
-            response.status = 503;
-            return;
-        }
-        if (result->Status == Storage::OperationStatus::Error) {
-            LOG(ERROR) << result->Error;
-            response.status = 500;
+            nlohmann::json j{
+                {"status", "error"},
+                {"message", "internal error"}
+            };
+            response.set_content(j.dump(), "application/json");
             return;
         }
 
         nlohmann::json j{
-                {"is_executed", result->IsExecuted}
+                {"status", "success"},
+                {"description", record->Description},
+                {"computed_value", doubleToString(execute->Value)}
         };
-        if (result->IsExecuted) {
-            std::ostringstream ss;
-            ss << std::setprecision(30) << result->Value;
-            j["value"] = ss.str();
-        }
 
         response.status = 200;
         response.set_content(j.dump(), "application/json");
-        return;
-    });*/
+    });
+
+    svr.set_error_handler([](const auto& req, auto& res) {});
+
+    svr.set_exception_handler([](const auto& req, auto& res, std::exception_ptr ep) {
+        try {
+            std::rethrow_exception(ep);
+        } catch (std::exception &e) {
+            LOG(ERROR) << "unhandled std::exception in " << req.path << ": " << e.what();
+        } catch (...) {
+            LOG(ERROR) << "unhandled exception in " << req.path;
+        }
+        res.set_content("internal server error", "text/html");
+        res.status = 500;
+    });
 
     LOG(INFO) << "Starting listening, use CTRL-C to close...";
 
     std::signal(SIGINT, sigintHandler);
+    std::signal(SIGTERM, sigintHandler);
 
-    svr.listen(config->ServerAddress, config->ServerPort);
+    svr.listen("0.0.0.0", 7654);
 
     return 0;
 }

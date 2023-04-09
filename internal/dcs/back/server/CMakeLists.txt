@@ -11,7 +11,6 @@ set(SOURCES
 add_executable(dcsserver
         src/main.cpp
         src/options/options.cpp
-        src/config/config.cpp
         ${SOURCES}
         ${HEADERS}
         )
