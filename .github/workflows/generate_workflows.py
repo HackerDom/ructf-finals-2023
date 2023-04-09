@@ -36,7 +36,7 @@ jobs:
     - name: Setup {service}
       run: (cd ./services/{service} && docker-compose pull && docker-compose build && docker-compose up --build -d)
   check_checker_{service}:
-    name: Check {service}
+    name: Check checker {service}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repo
@@ -54,7 +54,7 @@ jobs:
     - name: Test checker on service
       run: (cd ./checkers/{service} && ./{service}.checker.py TEST 127.0.0.1)
   check_sploit_{service}:
-    name: Check {service}
+    name: Check sploit {service}
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repo
