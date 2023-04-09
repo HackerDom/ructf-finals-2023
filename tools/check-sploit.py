@@ -24,6 +24,9 @@ for f in os.listdir(f"sploits/{SERVICE_NAME}"):
   if m:
     vulns.append(m.group(1))
 
+if len(vulns) == 0:
+  raise Exception("No sploits found")
+
 for vuln in vulns:
   print(f"Checking sploit on '{vuln}' vuln")
   p = subprocess.Popen([f'./{SERVICE_NAME}.checker.py', 'PUT', '127.0.0.1', flag_id, test_flag, vuln], cwd=f"checkers/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
