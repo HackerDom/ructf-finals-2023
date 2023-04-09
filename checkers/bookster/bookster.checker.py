@@ -7,15 +7,15 @@ from gornilo import CheckRequest, Verdict, PutRequest, GetRequest, NewChecker, V
 import random
 from api import Api, AuthError, ParseError
 from utils import generate_email, generate_name, generate_password, get_video_by_id, get_some_text, \
-    generate_video_filename, get_hash
+    generate_video_filename, get_hash, generate_playlist
 
 checker = NewChecker()
 PORT = 8900
 
 TOTAL_SAMPLES = 600
-SLEEP_TIMEOUT = 3
-DEFAULT_PHOTO_HASH = 'c7ae789ed7e53f805cb7a372b088b25e4e3d39972e0f6a6b5d4d013a2f10d8a3'
-
+GENERATE_TIMEOUT = 3
+DEFAULT_PHOTO_HASH = 'ce236d351d660927919aeead1450177f402812b8f4365ce7a54f4a895f71b834'
+DEFAULT_PHOTO_SIZE = 98165
 
 @checker.define_check
 async def check_service(request: CheckRequest) -> Verdict:
@@ -81,7 +81,23 @@ async def check_service(request: CheckRequest) -> Verdict:
             return Verdict.MUMBLE("Create book no video")
         uid_wait_photo = data["uid"]
 
-        await asyncio.sleep(SLEEP_TIMEOUT)
+        # create book with playlist
+        title_playlist = str(uuid.uuid4())
+        playlist = generate_playlist()
+        status, data = api.create_book(title_playlist, text, playlist, send_filename, False)
+        if status != 201:
+            return Verdict.MUMBLE(f"Create book failed with status {status}")
+        if "uid" not in data:
+            return Verdict.MUMBLE("Create book no uid")
+        if "text" not in data or data["text"] != text:
+            return Verdict.MUMBLE("Create book wrong text")
+        if "title" not in data or data["title"] != title_playlist:
+            return Verdict.MUMBLE("Create book wrong title")
+        if "video" not in data:
+            return Verdict.MUMBLE("Create book no video")
+        uid_playlist = data["uid"]
+
+        await asyncio.sleep(GENERATE_TIMEOUT)
 
         # check get book with photo
         status, data = api.get_book(uid_wait_photo)
@@ -137,12 +153,29 @@ async def check_service(request: CheckRequest) -> Verdict:
         video_hash = get_hash(book_sample['video'])
         if data != video_hash:
             return Verdict.MUMBLE("Get video file wrong hash")
-        status, data = api.get_file(video_preview, 326981)
+        status, data = api.get_file(video_preview, DEFAULT_PHOTO_SIZE)
         if status != 200:
             return Verdict.MUMBLE(f"Get preview file failed with status {status}")
         # generated hash compare
         if data != DEFAULT_PHOTO_HASH:
             return Verdict.MUMBLE("Get preview file wrong hash")
+
+        # check get book for playlist
+        status, data = api.get_book(uid_playlist)
+        if status != 200:
+            return Verdict.MUMBLE(f"Get book failed with status {status}")
+        if "uid" not in data or data["uid"] != uid_playlist:
+            return Verdict.MUMBLE("Get book wrong uid")
+        if "text" not in data or data["text"] != text:
+            return Verdict.MUMBLE("Get book wrong text")
+        if "title" not in data or data["title"] != title_playlist:
+            return Verdict.MUMBLE("Get book wrong title")
+        if "video" not in data or data['video'] is None:
+            return Verdict.MUMBLE("Get book no video")
+        if "video_preview" not in data:
+            return Verdict.MUMBLE("Get book no video_preview")
+        if data["video_preview"] is not None:
+            return Verdict.MUMBLE("Video preview generated for bad playlist")
     except AuthError:
         return Verdict.MUMBLE("Login error")
     except ParseError:
@@ -166,6 +199,7 @@ class XSSChecker(VulnChecker):
         try:
             status, data = api.signup(email, username, password)
             if status != 201:
+                print(data)
                 return Verdict.MUMBLE(f"Signup failed with status {status}")
             status, data = api.login(username, password)
             if status != 200:

@@ -2,7 +2,7 @@
   <div class="container">
         <va-progress-circle v-if="loading" indeterminate color="primary" />
     <va-list style="max-width: 600px;">
-      <va-list-label> Книги сохранённые вами в музей </va-list-label>
+      <va-list-label> Books you have saved for the museum </va-list-label>
       <va-list-item
           v-for="book in books"
           :key="book.uid"

@@ -65,6 +65,8 @@ def generate_video_filename():
     if random.randint(0, 10) > 7:
         filename += 'concat'
     filename += ''.join(secrets.choice(string.ascii_letters) for i in range(5))
+    if random.randint(0, 10) > 7:
+        filename += 'file'
     filename += '.'
     filename += secrets.choice(VIDEO_EXTENSION)
     return filename
@@ -95,6 +97,16 @@ def get_hash_stream(stream, max_size):
             break
     return hashed.hexdigest()
 
+
+def generate_playlist():
+    random_data = generate_name()
+    return f'''
+    #EXTM3U
+    #EXT-X-MEDIA-SEQUENCE:0
+    #EXTINF:10.0,
+    {random_data}//{generate_video_filename()}
+    #EXT-X-ENDLIST
+    '''
 
 if __name__ == '__main__':
     print(get_hash('./../../services/booksrter/service/media/images/default_lolo.jpg'))

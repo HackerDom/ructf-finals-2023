@@ -2,7 +2,7 @@
   <div class="container">
     <div class="centers">
       <h1>Book Arctic Vault Save</h1>
-      <p> Сохрани книгу в музее арткических льдов</p>
+      <p> Save the book at the Arctic Ice Museum</p>
 
     </div>
     <div>
@@ -15,33 +15,33 @@
     >
       <template #step-content-0>
         <ul>
-          <li>Регистрация займёт минуту</li>
-          <li v-if="token === null"><router-link  to="/register">Вперёд</router-link></li>
+          <li>Registration will take a minute</li>
+          <li v-if="token === null"><router-link  to="/register">Go ahead!</router-link></li>
         </ul>
       </template>
       <template #step-content-1>
         <ul>
-          <li>Выбери книгу которую хочешь сохранить в музей для потомков</li>
-          <li>Введи название книги</li>
-          <li>Прикрепи файл</li>
-          <li v-if="token !== null"><router-link  to="/book/save">Сохранить</router-link></li>
+          <li>Choose a book that you want to keep in a museum for posterity</li>
+          <li>Enter book title</li>
+          <li>Drag and drop a file</li>
+          <li v-if="token !== null"><router-link  to="/book/save">Go save!</router-link></li>
         </ul>
 
       </template>
       <template #step-content-2>
         <ul>
-          <li>В будущем все любят смотреть короткие shorts видео</li>
-          <li>Запиши короткое видео, чтобы объяснить потомкам что это за скоровище </li>
-          <li>Прикрепи видео к книге </li>
+          <li>In the future, everyone loves to watch 'shorts' videos</li>
+          <li>Record a short video to explain to posterity what kind of treasure it is </li>
+          <li>Attach video to book </li>
         </ul>
 
       </template>
       <template #step-content-3>
         <ul>
-          <li>Готово!</li>
-          <li> Вы увековечили произведение в нашем музее.</li>
-          <li>Мы сохраним их все в арктических льдах для наших потомков</li>
-          <li v-if="token !== null"><router-link  to="/books">Ваш музей</router-link></li>
+          <li>Ready!</li>
+          <li> You immortalized the work in our museum.</li>
+          <li>We will save them all in the Arctic ice for our descendants.</li>
+          <li v-if="token !== null"><router-link  to="/books">Your museum</router-link></li>
         </ul>
 
       </template>
@@ -58,10 +58,10 @@ export default {
     return {
       step: 0,
       steps: [
-        { label: 'Зарегистрируйся' },
-        { label: 'Добавь книгу' },
-        { label: 'Прикрепи видео' },
-        { label: 'Сохрани во льдах' }
+        { label: 'Register' },
+        { label: 'Add book' },
+        { label: 'Attach video' },
+        { label: 'Save in ice' }
       ]
     }
   }
