@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import dataclasses
+from typing import Optional, Iterable
 
 import requests
 
@@ -18,60 +19,67 @@ FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else None
 class Keyspace:
     n: int
     m: int
-    modulo: int
+    modulus: int
 
 
-def parse_ciphertext(content):
-    obj = json.loads(content)
+class Client:
+    def __init__(self, ip: str, port: int) -> None:
+        self.url = f'http://{ip}:{port}'
 
-    matrix = []
+    def get_keyspace(self, username: str) -> Optional[Keyspace]:
+        url = f'{self.url}/api/storage/keyspace'
+        params = {
+            'username': username,
+        }
 
-    for element in obj:
-        row = []
+        resp = requests.get(url, params = params)
 
-        for value in element:
-            row.append(int(value, 10))
+        if resp.status_code != 200:
+            return None
 
-        matrix.append(row)
+        return self.parse_keyspace(resp.text)
 
-    return Matrix(matrix)
+    def get_ciphertext(self, ciphertext_id: str) -> Optional[Matrix]:
+        url = f'http://{IP}:{PORT}/api/storage/ciphertext'
+        params = {
+            'id': ciphertext_id,
+        }
+
+        resp = requests.get(url, params = params)
+
+        if resp.status_code != 200:
+            return None
+
+        return self.parse_ciphertext(resp.text)
+    
+    def parse_keyspace(self, content: str) -> Keyspace:
+        parts = re.findall(r'\d+', content)
+
+        n = int(parts[0])
+        m = int(parts[1])
+        modulus = int(parts[2])
+
+        return Keyspace(n, m, modulus)
+    
+    def parse_ciphertext(self, content: str) -> Matrix:
+        obj = json.loads(content)
+
+        matrix = []
+
+        for element in obj:
+            row = []
+
+            for value in element:
+                row.append(int(value, 10))
+
+            matrix.append(row)
+
+        return Matrix(matrix)
 
 
-def parse_keyspace(content):
-    parts = re.findall(r'\d+', content)
-
-    n = int(parts[0])
-    m = int(parts[1])
-    modulo = int(parts[2])
-
-    return Keyspace(n, m, modulo)
-
-
-def get_keyspace(username):
-    url = f'http://{IP}:{PORT}/api/storage/keyspace'
-    params = {
-        'username': username,
-    }
-
-    resp = requests.get(url, params = params)
-
-    return parse_keyspace(resp.text)
-
-
-def get_ciphertext(ciphertext_id):
-    url = f'http://{IP}:{PORT}/api/storage/ciphertext'
-    params = {
-        'id': ciphertext_id,
-    }
-
-    resp = requests.get(url, params = params)
-
-    return parse_ciphertext(resp.text)
-
-
-def attack(keyspace, ciphertext):
+def attack(keyspace: Keyspace, ciphertext: Matrix) -> Iterable[bytes]:
     d = keyspace.n
-    N = keyspace.modulo
+    N = keyspace.modulus
 
     R = Zmod(N)
     MS = MatrixSpace(R, d, d)
@@ -100,7 +108,7 @@ def attack(keyspace, ciphertext):
             yield int(root).to_bytes(1024, 'big').strip(b'\x00')
 
 
-def main():
+def main() -> None:
     if IP is None:
         raise Exception('pass ip as 1st argument')
 
@@ -110,8 +118,15 @@ def main():
     # FLAG_ID: 'username|ciphertext_id'
     username, ciphertext_id = FLAG_ID.split('|')
 
-    keyspace = get_keyspace(username)
-    ciphertext = get_ciphertext(ciphertext_id)
+    client = Client(IP, PORT)
+
+    keyspace = client.get_keyspace(username)
+    if keyspace is None:
+        raise Exception('failed to get keyspace')
+
+    ciphertext = client.get_ciphertext(ciphertext_id)
+    if ciphertext is None:
+        raise Exception('failed to get ciphertext')
 
     for flag in attack(keyspace, ciphertext):
         print(flag)
