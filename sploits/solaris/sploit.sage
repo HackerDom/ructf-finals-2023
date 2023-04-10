@@ -40,7 +40,7 @@ class Client:
         return self.parse_keyspace(resp.text)
 
     def get_ciphertext(self, ciphertext_id: str) -> Optional[Matrix]:
-        url = f'http://{IP}:{PORT}/api/storage/ciphertext'
+        url = f'{self.url}/api/storage/ciphertext'
         params = {
             'id': ciphertext_id,
         }
