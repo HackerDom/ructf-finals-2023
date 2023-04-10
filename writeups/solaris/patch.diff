@@ -1,0 +1,13 @@
+diff --git a/services/solaris/src/Controllers/Utils.php b/services/solaris/src/Controllers/Utils.php
+index 96b771f0..cec14b9c 100644
+--- a/services/solaris/src/Controllers/Utils.php
++++ b/services/solaris/src/Controllers/Utils.php
+@@ -41,7 +41,7 @@ function validate_id(string $id): void
+ 
+ function generate_key(): Key
+ {
+-    $parameters = Parameters::generate(1024, 2, 6, 4);
++    $parameters = Parameters::generate(512, 2, 6, 4);
+ 
+     return Key::generate($parameters);
+ }
