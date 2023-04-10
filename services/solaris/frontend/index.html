@@ -2,9 +2,37 @@
 <html land="en">
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="/static/styles.css">
         <title>solaris</title>
     </head>
     <body>
-        <p>hello, world</p>
+        <div id="loader"></div>
+        <div id="background" class="background-wrapper" hidden>
+            <video id="outer-video" preload="auto" loop muted>
+                <source src="/static/background.webm" type="video/webm">
+                Video not supported
+            </video>
+            <video id="inner-video" preload="auto" loop muted>
+                <source src="/static/background.webm" type="video/webm">
+                Video not supported
+            </video>
+        </div>
+        <div id="content" class="content-wrapper" hidden>
+            <div id="auth-box" class="box">
+                <textarea id="username" placeholder="username" maxlength="32" spellcheck="false"></textarea>
+                <textarea id="password" placeholder="password" maxlength="32" spellcheck="false"></textarea>
+                <button id="register-button">register</button>
+                <button id="login-button">login</button>
+            </div>
+            <div id="main-box" class="box">
+                <textarea id="plaintext" placeholder="plaintext" maxlength="32" spellcheck="false"></textarea>
+                <button id="encrypt-button">encrypt</button>
+                <textarea id="ciphertext-id" placeholder="ciphertext id" maxlength="32" spellcheck="false"></textarea>
+                <button id="decrypt-button">decrypt</button>
+                <button id="logout-button">logout</button>
+            </div>
+        </div>
+        <script src="/static/visual.js"></script>
+        <script src="/static/scripts.js"></script>
     </body>
 </html>

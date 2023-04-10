@@ -1,0 +1,133 @@
+:root {
+    --black: #1f1f1f;
+    --white: #f3f3f3;
+    --ratio: calc(1280 / 534);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: var(--black);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 2vmin;
+}
+
+#loader {
+    position: fixed;
+    border: 1vmin solid var(--black);
+    border-top: 1vmin solid var(--white);
+    border-radius: 50%;
+    width: 5vmax;
+    height: 5vmax;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.background-wrapper {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+#outer-video {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -20;
+    opacity: 50%;
+}
+
+#inner-video {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: -10;
+}
+
+video::-webkit-media-controls {
+    display: none !important;
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-wrapper-horizontal {
+    width: 100vw;
+    height: calc(1 / var(--ratio) * 100vw);
+}
+
+.content-wrapper-vertical {
+    width: calc(var(--ratio) * 100vh);
+    height: 100vh;
+}
+
+.box {
+    position: relative;
+    /* display: block; */
+    display: none;
+    top: calc(-50% + 15ch);
+    left: calc(50% - 20ch);
+    background: var(--black);
+    padding: 1ch;
+}
+
+.box textarea {
+    display: block;
+    width: 32ch;
+    height: 4ch;
+    line-height: 4ch;
+    margin: 0.5ch;
+    color: var(--white);
+    background: var(--black);
+    resize: none;
+    outline: none;
+    overflow: hidden;
+    font-size: inherit;
+}
+
+@keyframes border {
+    0% { border: 0.1ch solid var(--white) }
+    100% { border: 0; }
+}
+
+.box button {
+    display: block;
+    width: 32ch;
+    height: 4ch;
+    margin: 0.5ch;
+    color: var(--white);
+    background: var(--black);
+    border: 0.1ch solid var(--white);
+    cursor: pointer;
+    resize: none;
+    outline: none;
+    font-size: inherit;
+}
+
+.box button:hover {
+    color: var(--black);
+    background: var(--white);
+}
