@@ -24,39 +24,39 @@ Declare operation `MASK(x)`:
 
 3. Return `M`
 
-Declare operation `UNMASK(X)`:
+Declare operation `UNMASK(M)`:
 
-1. Return top-left element of matrix `X`
+1. Return `m` as top-left element of matrix `M`
 
 Let's say we have to encrypt a message `m`. Encryption and decryption operations:
 
 ```
-Enc(m) = A^-1 * MASK(m) * A = 
-     = Ak^-1 * ... * A2^-1 * A1^-1 * MASK(m) * A1 * A2 * ... * Ak
+C = Enc(m) = A^-1 * MASK(m) * A = 
+           = Ak^-1 * ... * A2^-1 * A1^-1 * MASK(m) * A1 * A2 * ... * Ak
 
-Dec(M) = UNMASK(A * M * A^-1) = 
-     = UNMASK(A1 * A2 * ... * Ak * M * Ak^-1 * ... * A2^-1 * A1^-1)
+m = Dec(C) = UNMASK(A * C * A^-1) = 
+           = UNMASK(A1 * A2 * ... * Ak * C * Ak^-1 * ... * A2^-1 * A1^-1)
 ```
 
 ## Vulnerability
 
-Suppose we want to decrypt ciphertext `M` and recover plaintext `m`.
+Suppose we want to decrypt ciphertext `C` and recover plaintext `m`.
 
-1. Take a [trace](https://en.wikipedia.org/wiki/Trace_(linear_algebra)) of matrix `M` as a sum of main diagonal using [similarity invariance](https://en.wikipedia.org/wiki/Similarity_invariance)
+1. Take a [trace](https://en.wikipedia.org/wiki/Trace_(linear_algebra)) of matrix `C` as a sum of main diagonal using [similarity invariance](https://en.wikipedia.org/wiki/Similarity_invariance)
 
 ```
-t1 = trace(M) = m + r1 + r2 + ... + r{n-1}
+t1 = trace(C) = m + r1 + r2 + ... + r{n-1}
 ```
 
 We have a single equation of `n` variables, where `n` is the dimension of the matrix. Since we have `n` variables, we need at least `n` equations to solve the system.
 
-2. Take traces of matrices `M^2, M^3, ..., M^n`, where `^` is a exponentiation operation
+2. Take traces of matrices `C^2, C^3, ..., C^n`, where `^` is a exponentiation operation
 
 ```
-t2 = trace(M^2) = m^2 + r1^2 + r2^2 + ... + r{n_1}^2
-t3 = trace(M^3) = m^3 + r1^3 + r2^3 + ... + r{n_1}^3
+t2 = trace(C^2) = m^2 + r1^2 + r2^2 + ... + r{n_1}^2
+t3 = trace(C^3) = m^3 + r1^3 + r2^3 + ... + r{n_1}^3
 ...
-tn = trace(M^n) = m^n + r1^n + r2^n + ... + r{n_1}^n
+tn = trace(C^n) = m^n + r1^n + r2^n + ... + r{n_1}^n
 ```
 
 Now we have the system of `n` variables and `n` equations. Let's look at the polynomial form:
