@@ -26,28 +26,30 @@ async function do_register(username, password) {
     const url = `/api/user/register?username=${username}&password=${password}`;
 
     const response = await fetch(url, { method: 'POST' });
-    const text = await response.text();
+    const text = (await response.text()).trim();
 
     if (response.status === 201) {
         return true;
     }
 
-    alert(`failed to register: ${text.trim()}`);
+    alert(`failed to register: ${text}`);
 
     return false;
 }
 
-async function do_login(username, password) {
+async function do_login(username, password, silent = false) {
     const url = `/api/user/login?username=${username}&password=${password}`;
 
     const response = await fetch(url, { method: 'POST' });
-    const text = await response.text();
+    const text = (await response.text()).trim();
 
     if (response.status === 200) {
         return true;
     }
 
-    alert(`failed to login: ${text.trim()}`);
+    if (!silent) {
+        alert(`failed to login: ${text}`);
+    }
 
     return false;
 }
@@ -56,13 +58,13 @@ async function do_encrypt(username, password, plaintext) {
     const url = `/api/crypto/encrypt?username=${username}&password=${password}`;
 
     const response = await fetch(url, { method: 'POST', body: plaintext });
-    const text = await response.text();
+    const text = (await response.text()).trim();
 
     if (response.status === 201) {
-        return text.trim();
+        return text;
     }
 
-    alert(`failed to encrypt: ${text.trim()}`);
+    alert(`failed to encrypt: ${text}`);
 
     return false;
 }
@@ -71,24 +73,24 @@ async function do_decrypt(username, password, ciphertext_id) {
     const url = `/api/storage/ciphertext?id=${ciphertext_id}`;
 
     const response = await fetch(url, { method: 'GET' });
-    const text = await response.text();
+    const text = (await response.text()).trim();
 
     if (response.status === 200) {
         const url = `/api/crypto/decrypt?username=${username}&password=${password}`;
 
-        const response = await fetch(url, { method: 'POST', body: text.trim() });
-        const plaintext = await response.text();
+        const response = await fetch(url, { method: 'POST', body: text });
+        const plaintext = (await response.text()).trim();
 
         if (response.status === 200) {
-            return plaintext.trim();
+            return plaintext;
         }
 
-        alert(`failed to decrypt: ${plaintext.trim()}`);
+        alert(`failed to decrypt: ${plaintext}`);
 
         return false;
     }
 
-    alert(`failed to get ciphertext: ${text.trim()}`);
+    alert(`failed to get ciphertext: ${text}`);
 
     return false;
 }
@@ -193,7 +195,7 @@ async function main() {
         return;
     }
 
-    const result = await do_login(username, password);
+    const result = await do_login(username, password, true);
 
     if (result) {
         hide(authBox);
@@ -201,15 +203,20 @@ async function main() {
     } else {
         localStorage.removeItem('username');
         localStorage.removeItem('password');
+
+        hide(mainBox);
+        show(authBox);
     }
 }
 
-setInterval(function() {
+const waitLoader = function() {
     const loader = document.getElementById('loader');
 
     if (loader.hidden) {
         return main();
     }
     
-    setInterval(this, 500);
-}, 500);
+    setTimeout(waitLoader, 100);
+};
+
+waitLoader();
