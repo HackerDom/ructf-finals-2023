@@ -16,7 +16,7 @@ Prepare parameters:
 
 4. Use `N` as a public key and `A` as a private key
 
-Declare operation `MASK(x)`:
+Declare operation `MASK(m)`:
 
 1. Select `r = (r1, r2, ..., r{n-1})` as random elements from `R`
 
