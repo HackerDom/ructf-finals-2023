@@ -109,5 +109,5 @@ def generate_playlist():
     '''
 
 if __name__ == '__main__':
-    print(get_hash('./../../services/booksrter/service/media/images/default_lolo.jpg'))
-    print(os.path.getsize('./../../services/booksrter/service/media/images/default_lolo.jpg'))
+    print(get_hash('../../services/bookster/service/media/images/default_lolo.jpg'))
+    print(os.path.getsize('../../services/bookster/service/media/images/default_lolo.jpg'))
