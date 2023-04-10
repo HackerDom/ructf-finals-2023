@@ -15,22 +15,6 @@ outerVideo.onloadeddata = function() {
     VIDEO_STATUS |= 0b10;
 };
 
-const tryRun = function() {
-    if (VIDEO_STATUS & 0b11 === 0b11) {
-        innerVideo.play();
-        outerVideo.play();
-
-        loader.hidden = true;
-
-        background.hidden = false;
-        content.hidden = false;
-
-        return;
-    }
-
-    setTimeout(tryRun, 10);
-};
-
 const setContentWrapper = function() {
     const ratio = 1280 / 534;
 
@@ -44,7 +28,25 @@ const setContentWrapper = function() {
     }
 };
 
-setTimeout(tryRun, 500);
-
 window.addEventListener('resize', setContentWrapper);
 setContentWrapper();
+
+const updateStatus = function() {
+    if (VIDEO_STATUS & 0b11 === 0b11) {
+        innerVideo.play();
+        outerVideo.play();
+
+        setTimeout(function() {
+            loader.hidden = true;
+
+            background.hidden = false;
+            content.hidden = false;
+        }, 500);
+
+        return;
+    }
+
+    setTimeout(updateStatus, 100);
+};
+
+updateStatus();
