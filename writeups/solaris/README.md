@@ -42,7 +42,7 @@ Dec(M) = UNMASK(A * M * A^-1) =
 
 Suppose we want to decrypt ciphertext `M` and recover plaintext `m`.
 
-1. Take a [trace](https://en.wikipedia.org/wiki/Trace_(linear_algebra)) of matrix `M` as a sum of main diagonal
+1. Take a [trace](https://en.wikipedia.org/wiki/Trace_(linear_algebra)) of matrix `M` as a sum of main diagonal using [similarity invariance](https://en.wikipedia.org/wiki/Similarity_invariance)
 
 ```
 t1 = trace(M) = m + r1 + r2 + ... + r{n-1}
