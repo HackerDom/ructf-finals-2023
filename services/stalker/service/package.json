@@ -1,0 +1,22 @@
+{
+  "name": "bebrus",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint src --fix",
+    "start": "bun src/index.ts"
+  },
+  "dependencies": {
+    "hono": "^3.0.5",
+    "jose": "^4.13.1",
+    "mariadb": "^2.1.0",
+    "sequelize": "^6.29.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "bun-types": "^0.5.8",
+    "eslint": "^8.36.0",
+    "typescript": "^5.0.2"
+  }
+}
