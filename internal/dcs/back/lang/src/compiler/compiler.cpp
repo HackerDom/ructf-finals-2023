@@ -110,8 +110,7 @@ private:
     static constexpr std::string_view kMulSdXmm1Xmm0    = "mulsd   %xmm1,%xmm0";
     static constexpr std::string_view kDivSdXmm1Xmm0    = "divsd   %xmm1,%xmm0";
     static constexpr const char *kMovSdAddrXmm0Fmt      = "movsd   %s(%%rip),%%xmm0"; // ex: movsd pi(%rip),%xmm0
-    static constexpr const char *kLeaAddrRaxFmt         = "lea     %s(%%rip),%%rax"; // ex: lea f(%rip),%rax
-    static constexpr std::string_view kCallRax          = "call    *%rax";
+    static constexpr const char *kCallAddrFmt           = "call    %s";
     static constexpr std::string_view kComiSdXmm1Xmm0   = "comisd  %xmm1,%xmm0";
     static constexpr const char *kJaFmt                 = "ja %s";
     static constexpr const char *kJaeFmt                = "jae %s";
@@ -748,8 +747,7 @@ bool CompilerWithContext::emitFunctionCall(std::ostream &out, const std::shared_
         }
     }
 
-    out << kTab << Format(kLeaAddrRaxFmt, call->Id->Name.c_str()) << std::endl;
-    out << kTab << kCallRax << std::endl;
+    out << kTab << Format(kCallAddrFmt, call->Id->Name.c_str()) << std::endl;
 
     return true;
 }
@@ -1038,7 +1036,12 @@ CompilerWithContext::EmitResult CompilerWithContext::emitConstants() {
     std::stringstream result;
 
     for (const auto &it : constantNameToContext) {
-        result << it.first << ": .double " << std::setprecision(30) << it.second->definitionNode->Value->Value << std::endl;
+        union {
+            double v;
+            uint64_t i;
+        } k{};
+        k.v = it.second->definitionNode->Value->Value;
+        result << it.first << ": .quad " << "0x" << std::hex << k.i << std::endl;
     }
 
     result << ".sign_bit: .quad 0x8000000000000000" << std::endl;

@@ -37,7 +37,7 @@ private:
     std::mt19937 randomGenerator;
     std::uniform_int_distribution<std::mt19937::result_type> distributionOfRandomGenerator;
 
-    static constexpr int kTokenLength = 16;
+    static constexpr int kTokenLength = 32;
     static constexpr int kTokenGenerateMaxAttempts = 3;
     static constexpr std::string_view kTokenAlphabet = "qwertyuiopasdfghjklzxcvbnm1234567890";
     std::string GenerateToken();

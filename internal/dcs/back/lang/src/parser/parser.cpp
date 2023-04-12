@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 
 #include <utils/strings/strings.h>
 
@@ -529,10 +530,12 @@ Parsed<ConstantValueNode> ParserWithContext::readConstantValueNode() {
     }
 
     std::string s{currentToken().value};
-    std::size_t p;
-    auto d = std::stod(s, &p);
+    std::stringstream ss;
+    ss << s;
+    double d;
+    ss >> d;
 
-    if (p != s.size()) {
+    if (ss.fail()) {
         return {nullptr, Format("can't read double from '%s'", s.c_str())};
     }
 
