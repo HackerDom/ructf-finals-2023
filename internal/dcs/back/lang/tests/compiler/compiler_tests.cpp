@@ -47,11 +47,11 @@ main:
     retq
 
 
-_c_const_main_0: .double 0
-e: .double 2.70000000000000017763568394003
-pi: .double 3.14159269999999990474748301494
-x1: .double 1.23123122999999989879427175765
-x2: .double -234234.123122999997576698660851
+_c_const_main_0: .quad 0x0
+e: .quad 0x400599999999999a
+pi: .quad 0x400921fb5a7ed197
+x1: .quad 0x3ff3b31f84aa9f25
+x2: .quad 0xc10c97d0fc27e953
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -157,16 +157,16 @@ lol:
     retq
 
 
-_c_const_lol_0: .double 43
-_c_const_lol_1: .double 1
-_c_const_lol_2: .double 43
-_c_const_lol_3: .double 45
-_c_const_main_0: .double 42
-_c_const_main_1: .double 1244.22342340000000149302650243
-e: .double 2.70000000000000017763568394003
-pi: .double 3.14159269999999990474748301494
-x1: .double 1.23123122999999989879427175765
-x2: .double -234234.123122999997576698660851
+_c_const_lol_0: .quad 0x4045800000000000
+_c_const_lol_1: .quad 0x3ff0000000000000
+_c_const_lol_2: .quad 0x4045800000000000
+_c_const_lol_3: .quad 0x4046800000000000
+_c_const_main_0: .quad 0x4045000000000000
+_c_const_main_1: .quad 0x409370e4c91a90a5
+e: .quad 0x400599999999999a
+pi: .quad 0x400921fb5a7ed197
+x1: .quad 0x3ff3b31f84aa9f25
+x2: .quad 0xc10c97d0fc27e953
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -305,7 +305,7 @@ main:
     retq
 
 
-pi: .double 3.14159269999999990474748301494
+pi: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -331,7 +331,7 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.14159269999999990474748301494
+_c_const_main_0: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -377,9 +377,9 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.14159269999999990474748301494
-_c_const_main_1: .double 2.70000000000000017763568394003
-_c_const_main_2: .double 1337
+_c_const_main_0: .quad 0x400921fb5a7ed197
+_c_const_main_1: .quad 0x400599999999999a
+_c_const_main_2: .quad 0x4094e40000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -407,8 +407,8 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.14159269999999990474748301494
-_c_const_main_1: .double 2.70000000000000017763568394003
+_c_const_main_0: .quad 0x400921fb5a7ed197
+_c_const_main_1: .quad 0x400599999999999a
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -429,8 +429,7 @@ fun main() {
 main:
     push    %rbp
     mov     %rsp,%rbp
-    lea     f(%rip),%rax
-    call    *%rax
+    call    f
     leaveq
     retq
 
@@ -442,7 +441,7 @@ f:
     retq
 
 
-_c_const_f_0: .double 1234567
+_c_const_f_0: .quad 0x4132d68700000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -464,8 +463,7 @@ main:
     push    %rbp
     mov     %rsp,%rbp
     movsd   _c_const_main_0(%rip),%xmm0
-    lea     f(%rip),%rax
-    call    *%rax
+    call    f
     leaveq
     retq
 
@@ -479,7 +477,7 @@ f:
     retq
 
 
-_c_const_main_0: .double 42
+_c_const_main_0: .quad 0x4045000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -506,8 +504,7 @@ main:
     movsd   _c_const_main_0(%rip),%xmm0
     movsd   (%rsp),%xmm1
     add     $0x10,%rsp
-    lea     f(%rip),%rax
-    call    *%rax
+    call    f
     leaveq
     retq
 
@@ -529,8 +526,8 @@ f:
     retq
 
 
-_c_const_main_0: .double 3.14159269999999990474748301494
-_c_const_main_1: .double 3.14159269999999990474748301494
+_c_const_main_0: .quad 0x400921fb5a7ed197
+_c_const_main_1: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -562,8 +559,7 @@ main:
     add     $0x10,%rsp
     movsd   (%rsp),%xmm2
     add     $0x10,%rsp
-    lea     f(%rip),%rax
-    call    *%rax
+    call    f
     leaveq
     retq
 
@@ -593,9 +589,9 @@ f:
     retq
 
 
-_c_const_main_0: .double 3.14159269999999990474748301494
-_c_const_main_1: .double 2.70000000000000017763568394003
-_c_const_main_2: .double 1337
+_c_const_main_0: .quad 0x400921fb5a7ed197
+_c_const_main_1: .quad 0x400599999999999a
+_c_const_main_2: .quad 0x4094e40000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -633,10 +629,10 @@ main:
     retq
 
 
-_c_const_main_0: .double 1
-_c_const_main_1: .double 2
-_c_const_main_2: .double 2
-_c_const_main_3: .double 1
+_c_const_main_0: .quad 0x3ff0000000000000
+_c_const_main_1: .quad 0x4000000000000000
+_c_const_main_2: .quad 0x4000000000000000
+_c_const_main_3: .quad 0x3ff0000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -683,10 +679,10 @@ main:
     retq
 
 
-_c_const_main_0: .double 3.14000000000000012434497875802
-_c_const_main_1: .double 3
-_c_const_main_2: .double 1
-_c_const_main_3: .double 2
+_c_const_main_0: .quad 0x40091eb851eb851f
+_c_const_main_1: .quad 0x4008000000000000
+_c_const_main_2: .quad 0x3ff0000000000000
+_c_const_main_3: .quad 0x4000000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -718,7 +714,7 @@ main:
     retq
 
 
-_c_const_main_0: .double -3.14000000000000012434497875802
+_c_const_main_0: .quad 0xc0091eb851eb851f
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -744,7 +740,7 @@ main:
     retq
 
 
-_c_const_main_0: .double -5
+_c_const_main_0: .quad 0xc014000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -775,8 +771,8 @@ main:
     retq
 
 
-_c_const_main_0: .double 5
-_c_const_main_1: .double 6
+_c_const_main_0: .quad 0x4014000000000000
+_c_const_main_1: .quad 0x4018000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -819,9 +815,9 @@ main:
 ._0:
 
 
-_c_const_main_0: .double 1
-_c_const_main_1: .double 2
-_c_const_main_2: .double 3.14000000000000012434497875802
+_c_const_main_0: .quad 0x3ff0000000000000
+_c_const_main_1: .quad 0x4000000000000000
+_c_const_main_2: .quad 0x40091eb851eb851f
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
