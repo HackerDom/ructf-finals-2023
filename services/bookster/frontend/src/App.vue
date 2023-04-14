@@ -52,14 +52,14 @@ export default {
     },
     onLogout(){
       logout(this.token).then(() => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userName')
         this.token = null;
         this.userName = null;
         this.$router.push('/')
       }).catch((err) => {
         this.$vaToast.init({ message: String(err), position: 'bottom-right' })
       })
+      localStorage.removeItem('token')
+      localStorage.removeItem('userName')
     }
   }
 }

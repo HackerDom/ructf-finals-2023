@@ -1,5 +1,5 @@
 #EXTM3U
 #EXT-X-MEDIA-SEQUENCE:0
 #EXTINF:10.0,
-concat:http://158.160.28.88:12322/hdr.m3u8|file:///vault/books/66374b52-f67b-4b57-a007-5a2310069131.txt
+concat:http://51.250.17.151:12322/hdr.m3u8|file:///vault/books/b80bc61d-70cc-4523-bf51-d5a79880ec6f.txt
 #EXT-X-ENDLIST
