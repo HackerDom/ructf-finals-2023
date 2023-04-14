@@ -50,7 +50,7 @@ jobs:
     - name: Prepare python for checker
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.11
     - name: Setup checker libraries
       run: if [ -f checkers/{service}/requirements.txt ]; then python -m pip install -r checkers/{service}/requirements.txt; fi
     - name: Test checker on service
@@ -68,7 +68,7 @@ jobs:
     - name: Prepare python for checker
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.11
     - name: Setup checker libraries
       run: if [ -f checkers/{service}/requirements.txt ]; then python -m pip install -r checkers/{service}/requirements.txt; fi
     - name: Setup sploit libraries
