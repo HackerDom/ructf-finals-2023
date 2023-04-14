@@ -33,6 +33,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        lfs: 'true'
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
     - name: Setup {service}
@@ -43,6 +45,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        lfs: 'true'
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
     - name: Setup {service}
@@ -61,6 +65,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        lfs: 'true'
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
     - name: Setup {service}
@@ -85,6 +91,8 @@ jobs:
     #  run: sudo apt-get install -y ansible
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        lfs: 'true'
     - name: change permission for ssh key
       run: chmod 0600 ./teams/for_devs.ssh_key
     - name: Run prebuilt hook
