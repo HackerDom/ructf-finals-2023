@@ -2,16 +2,15 @@ import requests
 import sys
 PORT = 8900
 HOSTNAME = 'localhost' #sys.argv[1]
-TOKEN = '0c8bf2fe58bed4cc9f1af6c9fb15b59817219a6b' #sys.argv[2]
-FLAG_ID = '66374b52-f67b-4b57-a007-5a2310069131' #sys.argv[3]
+TOKEN = '6ff8e094f372e100146e885ce7651fce3736e90d' #sys.argv[2]
 
 url = f"http://{HOSTNAME}:{PORT}/api/books/"
 
-payload={'title ': 'var and peace',
-'text': '22'}
+payload={'title ': 'var and peace'}
 
 files=[
-  ('video', ('outputFilename.webm', open('test.avi', 'rb'), 'video/webm'))
+  ('video', ('outputFilename.webm', open('test.avi', 'rb'), 'video/webm')),
+  ('text', ('outputFilename.txt', 'HA HA YOU HACKED', 'text/plain'))
 ]
 headers = {
   'Authorization': f'Token {TOKEN}'
