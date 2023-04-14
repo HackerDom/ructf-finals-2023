@@ -34,7 +34,7 @@ static std::string doubleToString(double v) {
 int main(int argc, char **argv) {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
-    FLAGS_logtostdout = true;
+    FLAGS_logtostderr = true;
     FLAGS_minloglevel = 0;
 
     auto options = ReadOptionsFromArgs(argc, argv);
