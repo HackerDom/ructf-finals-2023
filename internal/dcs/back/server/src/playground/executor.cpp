@@ -120,6 +120,7 @@ std::shared_ptr<Executor::ExecuteResult> Executor::Execute(const std::vector<uin
         return result;
     }
 
+    std::memset(executable, 0, executableSize);
     std::memcpy(executable, code.data(), code.size());
 
     if (mprotect(executable, executableSize, PROT_READ | PROT_EXEC) != 0) {
