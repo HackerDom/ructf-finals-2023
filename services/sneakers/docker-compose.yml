@@ -1,0 +1,21 @@
+version: '2.2'
+services:
+  psycho_clinic:
+
+    image: sneakers
+    cpus: 1
+    mem_limit: 3G
+    memswap_limit: 3G
+    pids_limit: 8192
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - "7777:7777"
+    volumes:
+      - data:/app/data
+
+    restart: always
+          
+volumes:
+    data:
