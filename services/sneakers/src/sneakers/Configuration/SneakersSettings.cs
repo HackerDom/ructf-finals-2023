@@ -8,7 +8,7 @@ namespace sneakers.Configuration
         private static readonly string appPrefix = Environment.CurrentDirectory;
         public static readonly string AppDataPrefix = Path.Combine(appPrefix, "data");
         public static readonly string StorageDataPrefix = Path.Combine(AppDataPrefix, "storage");
-        public static string ImageDataPath = Path.Combine(appPrefix, "Images", "img");
+        public static readonly string ImageDataPath = Path.Combine(appPrefix, "img");
 
         public string ArtistsDataPath = Path.Combine(AppDataPrefix, StorageDataPrefix, "artists_data");
         public string SneakersDataPath = Path.Combine(AppDataPrefix, StorageDataPrefix, "sneakers_data");

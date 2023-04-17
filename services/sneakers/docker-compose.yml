@@ -1,6 +1,6 @@
 version: '2.2'
 services:
-  psycho_clinic:
+  sneakers:
 
     image: sneakers
     cpus: 1
@@ -14,8 +14,10 @@ services:
      - "7777:7777"
     volumes:
       - data:/app/data
+      - img:/app/img
 
     restart: always
           
 volumes:
     data:
+    img:

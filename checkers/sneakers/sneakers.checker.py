@@ -189,11 +189,12 @@ class SneakersChecker(VulnChecker):
 
 
 if __name__ == '__main__':
-    # checker.run()
+    checker.run()
 
-    from gornilo.models.action_names import GET, PUT, CHECK
-
-    STATIC_FLAG_ID = ""
-    #    checker.run(PUT, "localhost", "flag_id", "FLAG", 1)
-    # checker.run(GET, "localhost", STATIC_FLAG_ID, "FLAG", 1)
-    checker.run(CHECK, "localhost", "flag_id", "FLAG", 1)
+    #from gornilo.models.action_names import GET, PUT, CHECK
+    #HOST = "localhost"
+    #FLAG = "FLAG"
+    #STATIC_FLAG_ID = ""
+    #checker.run(PUT, HOST, "flag_id", FLAG, 1)
+    #checker.run(GET, HOST, STATIC_FLAG_ID, FLAG, 1)
+    #checker.run(CHECK, HOST, "flag_id", FLAG, 1)
