@@ -29,7 +29,7 @@ def generate_email():
 def generate_password():
     alphabet = string.ascii_letters + string.digits
     password = ''.join(secrets.choice(alphabet) for i in range(40))
-    return password + str(uuid.uuid4())
+    return str(uuid.uuid4()) + password + str(uuid.uuid4())
 
 
 def generate_name():
