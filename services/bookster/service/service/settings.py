@@ -1,11 +1,25 @@
+import json
 import os
 
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET', 'chang-me-ctf')
+secret_path = os.path.join(BASE_DIR, 'db', "secret.json")
+
+if os.path.exists(secret_path):
+    with open(secret_path, 'r') as f:
+        secrets = json.load(f)
+else:
+    secrets = {
+        "DJANGO_SECRET": get_random_secret_key()
+    }
+    with open(secret_path, 'w') as f:
+        json.dump(secrets, f)
+
+SECRET_KEY = secrets.get('DJANGO_SECRET', 'chang-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
