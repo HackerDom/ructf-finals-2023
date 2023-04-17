@@ -7,6 +7,10 @@ WORKDIR /app
 
 RUN dotnet restore && dotnet publish -c Release -o publish
 
+WORKDIR /src
+
+COPY ./src/sneakers/img /app/img
+
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
 WORKDIR /app

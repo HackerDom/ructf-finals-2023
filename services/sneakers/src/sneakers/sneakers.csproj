@@ -15,4 +15,8 @@
         <PackageReference Include="Vostok.Commons.Time" Version="0.1.4" />
         <PackageReference Include="Vostok.Hosting" Version="0.3.62" />
     </ItemGroup>
+
+    <ItemGroup>
+        <Content Remove="img\content.json" />
+    </ItemGroup>
 </Project>
