@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+        <PackageReference Include="Vostok.Applications.AspNetCore" Version="0.3.16" />
+        <PackageReference Include="Vostok.Commons.Threading" Version="0.1.4" />
+        <PackageReference Include="Vostok.Commons.Time" Version="0.1.4" />
+        <PackageReference Include="Vostok.Hosting" Version="0.3.62" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Remove="img\content.json" />
+    </ItemGroup>
+</Project>
