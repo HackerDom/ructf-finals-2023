@@ -1,0 +1,91 @@
+
+name: Check sneakers
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'services/sneakers/**'
+      - 'checkers/sneakers/**'
+      - 'sploits/sneakers/**'
+  workflow_dispatch:
+    inputs:
+      cleanup_before_deploy:
+        description: 'Stops and fully removes service (with volumes!) before deploying again. Type "yes" to do it.'
+        required: false
+        default: "no"
+jobs:
+  check_service_sneakers:
+    name: Check service sneakers
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        lfs: 'true'
+    - name: Run prebuilt hook
+      run: if [ -f services/sneakers/before_image_build.sh ]; then (cd ./services/sneakers && ./before_image_build.sh); fi
+    - name: Setup sneakers
+      run: (cd ./services/sneakers && docker-compose pull && docker-compose build && docker-compose up --build -d)
+  check_checker_sneakers:
+    name: Check checker sneakers
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        lfs: 'true'
+    - name: Run prebuilt hook
+      run: if [ -f services/sneakers/before_image_build.sh ]; then (cd ./services/sneakers && ./before_image_build.sh); fi
+    - name: Setup sneakers
+      run: (cd ./services/sneakers && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/sneakers/requirements.txt ]; then python -m pip install -r checkers/sneakers/requirements.txt; fi
+    - name: Test checker on service
+      run: (cd ./checkers/sneakers && ./sneakers.checker.py TEST 127.0.0.1)
+  check_sploit_sneakers:
+    name: Check sploit sneakers
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        lfs: 'true'
+    - name: Run prebuilt hook
+      run: if [ -f services/sneakers/before_image_build.sh ]; then (cd ./services/sneakers && ./before_image_build.sh); fi
+    - name: Setup sneakers
+      run: (cd ./services/sneakers && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/sneakers/requirements.txt ]; then python -m pip install -r checkers/sneakers/requirements.txt; fi
+    - name: Setup sploit libraries
+      run: if [ -f sploits/sneakers/requirements.txt ]; then python -m pip install -r sploits/sneakers/requirements.txt; fi
+    - name: Test sploit on service
+      run: (./tools/check-sploit.py sneakers)
+  update_sneakers:
+    name: Deploy service using ansible to first teams
+    needs: [check_service_sneakers, check_checker_sneakers, check_sploit_sneakers]
+    runs-on: self-hosted
+    if: ${{ false }} # disable on game just in case
+    steps:
+    #- name: install ansible
+    #  run: sudo apt-get install -y ansible
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        lfs: 'true'
+    - name: change permission for ssh key
+      run: chmod 0600 ./teams/for_devs.ssh_key
+    - name: Run prebuilt hook
+      run: if [ -f services/sneakers/before_image_build.sh ]; then (cd ./services/sneakers && sudo ./before_image_build.sh); fi
+    - name: update checkers
+      run: cd ./ansible && ansible-playbook cs-checkers.yml
+    - name: deploy sneakers
+      run: cd ./ansible && ansible-playbook --extra-vars cleanup_service=${{ github.event.inputs.cleanup_before_deploy }} -t sneakers -l sneakers deploy-services.yml

@@ -56,7 +56,10 @@ build {
       "apt-get install -y -q haveged",
 
       # Add users for services
+      "useradd -m -s /bin/bash bookster",
       "useradd -m -s /bin/bash example",
+      "useradd -m -s /bin/bash sneakers",
+      "useradd -m -s /bin/bash solaris",
     ]
   }
 
@@ -92,19 +95,43 @@ build {
 
   # Copy services
   provisioner "file" {
+    source = "../services/bookster/"
+    destination = "/home/bookster/"
+  }
+  provisioner "file" {
     source = "../services/example/"
     destination = "/home/example/"
+  }
+  provisioner "file" {
+    source = "../services/sneakers/"
+    destination = "/home/sneakers/"
+  }
+  provisioner "file" {
+    source = "../services/solaris/"
+    destination = "/home/solaris/"
   }
 
 
   # Build and run services for the first time
   provisioner "shell" {
     inline = [
+      "cd ~bookster",
+      "docker-compose build || true",
+
       "cd ~example",
-      "docker-compose build",
+      "docker-compose build || true",
+
+      "cd ~sneakers",
+      "docker-compose build || true",
+
+      "cd ~solaris",
+      "docker-compose build || true",
 
       "systemctl daemon-reload",
+      "systemctl enable ructf-service@bookster",
       "systemctl enable ructf-service@example",
+      "systemctl enable ructf-service@a",
+      "systemctl enable ructf-service@solaris",
     ]
   }
 
