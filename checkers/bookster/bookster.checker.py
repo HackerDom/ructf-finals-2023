@@ -34,6 +34,7 @@ async def check_service(request: CheckRequest) -> Verdict:
         # register check
         status, data = api.signup(email, username, password)
         if status != 201:
+            print(email, username, password)
             print(data)
             return Verdict.MUMBLE(f"Signup failed with status {status}")
         if "username" not in data or data["username"] != username:
