@@ -4,7 +4,9 @@ using SHA
 using Base64
 
 
-get_secret(username, salt) = Base64.base64encode(sha256(username * salt))
+function get_secret(username, salt)
+    return Base64.base64encode(sha256(username * salt))
+end
 
 
 function create_session(conn::Redis.RedisConnection, username)
@@ -14,7 +16,9 @@ function create_session(conn::Redis.RedisConnection, username)
 end
 
 
-delete_session(conn::Redis.RedisConnection, username) = Redis.del(conn, username)
+function delete_session(conn::Redis.RedisConnection, username)
+    return Redis.del(conn, username)
+end
 
 
 function validate_session(conn::Redis.RedisConnection, username, secret)

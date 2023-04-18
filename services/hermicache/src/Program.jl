@@ -170,7 +170,7 @@ function with_required_params(handler, required_params)
         end
 
         try
-            return handler(c, param_dict)
+           return handler(c, param_dict)
         catch handler_processing_e
             Plug.Loggers.print_message("Error: ", handler_processing_e)
             Base.show_backtrace(stderr, backtrace())
@@ -251,6 +251,13 @@ function compute_handler(c::RestController, username, param_dict)
 end
 
 
+function sandbox_handler(c::RestController)
+    println(CACHE)
+    println(CACHE_STAT)
+    println(EXCLUDE)
+end
+
+
 routes() do
     post("/register/", RestController, with_body_validator(register_handler, get_validator("user_pair.json")))
     post("/login/", RestController, with_body_validator(login_handler, get_validator("user_pair.json")))
@@ -259,13 +266,13 @@ routes() do
     get("/field/:field_uuid/", RestController, with_auth(get_field_handler))
     get("/compute/", RestController, with_required_params(with_auth(compute_handler), ["field_uuid", "arg"]))
 
-#     get("/sandbox/", RestController, sandbox_handler)
+    get("/sandbox/", RestController, sandbox_handler)
 
     plug(Plug.Parsers, [:json])
 end
 
 
-# init_cache(@__MODULE__)
+init_cache(@__MODULE__)
 
 Bukdu.start(8080)
 Base.JLOptions().isinteractive == 0 && wait()

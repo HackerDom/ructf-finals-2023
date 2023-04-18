@@ -1,7 +1,5 @@
 using CodeTracking
 using DataStructures
-using Redis
-
 
 function get_name_to_symbols()
     res = Dict()
@@ -12,28 +10,24 @@ function get_name_to_symbols()
 end
 
 
-cache_rc = Redis.RedisConnection(host="localhost", port=6379, password="", db=2)
-cache_stat_rc = Redis.RedisConnection(host="localhost", port=6379, password="", db=3)
-
-
+CACHE = Dict()
+CACHE_STAT = DefaultDict(1)
 EXCLUDE = Set()
 
 
 function get_using_cache_lines(func_name::String, arg_names)
     return [
-        "cache_args = [\"$(isempty(arg_names) ? "" : "\$($(join(arg_names, ")\", \"\$(")))\"]")",
+        "cache_args = $(isempty(arg_names) ? "" : "[\"\$($(join(arg_names, ")\", \"\$(")))\"]")",
         "if any(map((x) -> length(x) > 50, cache_args))",
         "    push!(EXCLUDE, \"$(func_name)\")",
         "end",
         "if \"$(func_name)\" in EXCLUDE",
         "    return _inner(" * join(arg_names, ", ") * ")",
         "end",
-#         "cache_key = \"$(func_name)_$(isempty(arg_names) ? "" : "\$($(join(arg_names, ")_\$(")))")\"",
         "cache_key = \"$(func_name)_\" * join(cache_args, \"_\")",
         "cache_key = length(cache_key) > 50 ? cache_key[1:50] : cache_key",
-        "r_value = Redis.get(cache_rc, cache_key)",
-        "if r_value != nothing",
-        "    return r_value",
+        "if haskey(CACHE, cache_key)",
+        "    return CACHE[cache_key]",
         "end",
     ]
 end
@@ -42,11 +36,9 @@ end
 function get_filling_cache_lines(arg_names)
     return [
         "res = _inner(" * join(arg_names, ", ") * ")",
-        "stat_value_raw = Redis.get(cache_stat_rc, cache_key)",
-        "new_stat_value = stat_value_raw == nothing ? 1 : parse(Int64, stat_value_raw) + 1",
-        "Redis.set(cache_stat_rc, cache_key, new_stat_value, \"EX\", 60)",
-        "if new_stat_value >= 3",
-        "    Redis.set(cache_rc, cache_key, \"EX\", 60)",
+        "CACHE_STAT[cache_key] += 1",
+        "if CACHE_STAT[cache_key] >= 3",
+        "    CACHE[cache_key] = res",
         "end",
     ]
 end
@@ -66,7 +58,6 @@ end
 
 
 function patch_function(func)
-    println(func)
     evaled_func = eval(func)
     func_methods = methods(evaled_func)
 
@@ -83,9 +74,8 @@ function patch_function(func)
 
     sig_field = getfield(func_method.sig, 3)
     sig_field = Tuple(sig_field[2:length(sig_field)])
-    println(sig_field)
 
-    lines = split(code_string(eval(func), sig_field), "\n")
+    lines = split(CodeTracking.code_string(eval(func), sig_field), "\n")
 
     signature_lines = [lines[1]]
     inner_body = lines[2:length(lines)]
@@ -105,7 +95,6 @@ function patch_function(func)
     ]
 
     code = join(main_definition, "\n")
-    println(code)
     eval(Meta.parse(code))
 end
 
@@ -124,15 +113,10 @@ function init_cache(m_name)
     for func in names(m_name)
         func_name = string(func)
 
-        try
-            evaled_func = eval(func)
-            is_func = isa(evaled_func, Function)
-            if is_func
-                println(func)
-#                 patch_function(func_name)
-            end
-        catch e
-            println(e)
+        evaled_func = eval(func)
+        is_func = isa(evaled_func, Function)
+        if is_func
+            patch_function(func_name)
         end
     end
 end
