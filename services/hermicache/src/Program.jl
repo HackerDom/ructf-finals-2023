@@ -5,6 +5,7 @@ using JSONSchema
 
 
 include("Compute.jl")
+include("Config.jl")
 include("Storage.jl")
 include("Cache.jl")
 include("SessionManager.jl")
@@ -14,8 +15,11 @@ struct RestController <: ApplicationController
 end
 
 
-session_rc = Redis.RedisConnection(host="localhost", port=6379, password="", db=0)
-storage_rc = Redis.RedisConnection(host="localhost", port=6379, password="", db=0)
+config = get_config()
+
+
+session_rc = Redis.RedisConnection(host=config.redis_host, port=6379, password="", db=0)
+storage_rc = Redis.RedisConnection(host=config.redis_host, port=6379, password="", db=0)
 
 
 function code_and_message(c::RestController, code, text)
@@ -274,5 +278,5 @@ end
 
 init_cache(@__MODULE__)
 
-Bukdu.start(8080)
+Bukdu.start(config.port, host=config.host)
 Base.JLOptions().isinteractive == 0 && wait()
