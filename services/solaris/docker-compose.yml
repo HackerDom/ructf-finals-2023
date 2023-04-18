@@ -38,7 +38,7 @@ services:
     volumes:
       - ./src:/tmp/src:ro
       - ./php-fpm/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
-      - ./storage:/tmp/storage:rw
+      - storage:/tmp/storage:rw
     networks:
       - internal
 
@@ -55,10 +55,11 @@ services:
     restart: unless-stopped
     stop_grace_period: 3s
     volumes:
-      - ./storage:/tmp/storage:rw
-    depends_on:
-      - php-fpm
+      - storage:/tmp/storage:rw
 
 networks:
   internal:
     driver: bridge
+
+volumes:
+  storage:
