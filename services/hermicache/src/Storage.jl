@@ -49,6 +49,7 @@ end
 function create_field(conn::Redis.RedisConnection, field_record)
     field_uuid = UUIDs.uuid4().value
     Redis.set(conn, get_field_key(field_uuid), JSON.json(field_record))
+    Redis.rpush(conn, joinpath("username2fields", field_record["owner"]), field_uuid)
 
     return field_uuid
 end
@@ -57,4 +58,10 @@ end
 function get_field(conn::Redis.RedisConnection, uuid)
     raw_field = Redis.get(conn, get_field_key(uuid))
     return raw_field == nothing ? raw_field : JSON.parse(raw_field)
+end
+
+
+function list_fields(conn::Redis.RedisConnection, owner)
+    res = Redis.lrange(conn, joinpath("username2fields", owner), 0, -1)
+    return res == nothing ? String[] : res
 end
