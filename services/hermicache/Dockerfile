@@ -10,5 +10,5 @@ RUN julia install.jl
 
 WORKDIR /app/src
 
-ENTRYPOINT ["/usr/local/julia/bin/julia", "Program.jl"]
+ENTRYPOINT ["/usr/local/julia/bin/julia", "Server.jl"]
 
