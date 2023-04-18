@@ -4,7 +4,7 @@ services:
       context: .
     restart: always
     entrypoint: julia
-    command: Program.jl
+    command: Server.jl
     depends_on:
       - redis
     mem_limit: 1G
