@@ -247,11 +247,11 @@ def wrap_exceptions(
 
 @checker.define_vuln('flag_id is username|ciphertext_id')
 class SolarisChecker(gornilo.VulnChecker):
-    @checker.define_put
+    @staticmethod
     def put(request: gornilo.PutRequest) -> gornilo.Verdict:
         return wrap_exceptions(do_put, request)
 
-    @checker.define_get
+    @staticmethod
     def get(request: gornilo.GetRequest) -> gornilo.Verdict:
         return wrap_exceptions(do_get, request)
 
