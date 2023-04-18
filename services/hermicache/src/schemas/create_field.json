@@ -1,0 +1,50 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "palindrome"
+          ]
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "recurrent"
+          ]
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "coefficients": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}
