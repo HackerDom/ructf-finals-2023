@@ -12,12 +12,11 @@ from PIL import Image
 
 def main():
     client = Client(IP)
-    FLAG = f"{uuid4()}"
 
     # region prepare
 
     secret_artist = client.create_artist(uuid4(), "some_name")
-    barhatnye_tyagi = client.create_sneakers(FLAG, secret_artist["token"]["value"])
+    barhatnye_tyagi = client.create_sneakers(FLAG_ID, secret_artist["token"]["value"])
 
     # endregion
 
@@ -37,7 +36,7 @@ def main():
     barhatnye_tyagi_content = client.gallery_show(download_token)
 
     potential_flag = extract_description(barhatnye_tyagi_content)
-    if potential_flag == FLAG:
+    if potential_flag == FLAG_ID:
         print(f"CONGRATS! Your reached the flag: {potential_flag}")
     else:
         raise Exception("smth went wrong :(")
@@ -94,10 +93,8 @@ def iterative_main():
         print()
 
 
-IP = sys.argv[1] if len(sys.argv) > 1 else None
-FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else None
+IP = sys.argv[1] if len(sys.argv) > 1 else "localhost"
+FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else f"{uuid4()}"
 
 if __name__ == '__main__':
-    if IP is None:
-        IP = "localhost"
     iterative_main()
