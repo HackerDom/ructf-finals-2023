@@ -255,6 +255,12 @@ function compute_handler(c::RestController, username, param_dict)
 end
 
 
+function list_fields_handler(c::RestController, username)
+    fields = list_fields(storage_rc, username)
+    return render(JSON, fields)
+end
+
+
 function sandbox_handler(c::RestController)
     println(CACHE)
     println(CACHE_STAT)
@@ -269,6 +275,8 @@ routes() do
     post("/field/", RestController, with_body_validator(with_auth(create_field_handler), get_validator("create_field.json")))
     get("/field/:field_uuid/", RestController, with_auth(get_field_handler))
     get("/compute/", RestController, with_required_params(with_auth(compute_handler), ["field_uuid", "arg"]))
+
+    get("/list_fields/", RestController, with_auth(list_fields_handler))
 
     get("/sandbox/", RestController, sandbox_handler)
 
