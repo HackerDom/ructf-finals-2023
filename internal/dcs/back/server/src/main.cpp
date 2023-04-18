@@ -80,6 +80,12 @@ int main(int argc, char **argv) {
             response.set_content("no code field", "text/plain");
             return;
         }
+        auto description = j["description"].get<std::string_view>();
+        if (description.size() > 10'000) {
+            response.status = 400;
+            response.set_content("description too large", "text/plain");
+            return;
+        }
         auto text = j["code"].get<std::string_view>();
         if (text.size() > 10'000) {
             response.status = 400;
@@ -110,7 +116,7 @@ int main(int argc, char **argv) {
             LOG(ERROR) << "translation failed: " << translated.ErrorMessage;
             return;
         }
-        auto s = storage->Save(*translated.Translated, j["description"].get<std::string_view>());
+        auto s = storage->Save(*translated.Translated, description);
         if (s->Status == Storage::OperationStatus::Error) {
             LOG(ERROR) << s->Error;
             response.status = 500;
