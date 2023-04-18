@@ -28,7 +28,7 @@ if len(vulns) == 0:
   raise Exception("No sploits found")
 
 for vuln in vulns:
-  print(f"Checking sploit on '{vuln}' vuln")
+  print(f"Checking sploit on '{vuln}' vuln using flag '{test_flag}'")
   p = subprocess.Popen([f'./{SERVICE_NAME}.checker.py', 'PUT', '127.0.0.1', flag_id, test_flag, vuln], cwd=f"checkers/{SERVICE_NAME}", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   flag_data, _ = p.communicate()
   print(f"Putted flag '{flag_data}'")
