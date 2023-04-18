@@ -56,6 +56,8 @@ services:
     stop_grace_period: 3s
     volumes:
       - ./storage:/tmp/storage:rw
+    depends_on:
+      - php-fpm
 
 networks:
   internal:
