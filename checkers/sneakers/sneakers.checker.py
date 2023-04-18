@@ -18,13 +18,12 @@ checker = NewChecker()
 
 def check_reducer_color_filters(client, sneakers, ids_to_search):
     value = get_rnd_int(1, 250)
-    filter_template = "{" + f"\"ComparisonOperator\":\"Greater\", " \
-                            f"\"ChannelToCompare\":\"G\", "
-    first_filter = filter_template + f"\"Operand\":{value}" + "}"
-    second_filter = filter_template + f"\"Operand\":{value + 2}" + "}"
+
+    first_filter = {"ComparisonOperator": "Greater", "ChannelToCompare": "G", "Operand": value}
+    second_filter = {"ComparisonOperator": "Greater", "ChannelToCompare": "G", "Operand": value + 2}
     filters = [
-        {"Type": "Color", "JsonString": first_filter},
-        {"Type": "Color", "JsonString": second_filter}
+        {"Type": "Color", "JsonString": json.dumps(first_filter)},
+        {"Type": "Color", "JsonString": json.dumps(second_filter)}
     ]
 
     available_json = client.get_gallery_exhibits(filters, ids_to_search, sneakers.owner.token)
@@ -43,7 +42,7 @@ def check_reducer_color_filters(client, sneakers, ids_to_search):
 
 def check_reducer_collection_filters(client: Client, sneakers: Sneakers, ids_to_search):
     collection = sneakers.collection.capitalize().replace("velvet", "Velvet")
-    serialized_filter = "{" + f"\"Collection\":\"{collection}\"" + "}"
+    serialized_filter = json.dumps({"Collection": collection})
     filters = [
         {"Type": "Collection", "JsonString": serialized_filter},
         {"Type": "Collection", "JsonString": serialized_filter}
