@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    command: ./app
+    restart: always
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - database:/database/
+      - jwt_secret:/app/jwt_secret/
+
+volumes:
+  database:
+  jwt_secret:
