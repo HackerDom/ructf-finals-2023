@@ -63,7 +63,7 @@ class Api:
         return status, data
 
     def get_book(self, uid: str):
-        return self.send_request(f"/api/books/{uid}", "get")
+        return self.send_request(f"/api/books/{uid}/", "get")
 
     def create_book(self, title, text, video_local_file, send_video_filename, is_video_filename=True):
         video_file = video_local_file
@@ -91,6 +91,7 @@ class Api:
         return resp.status_code, resp.text
 
     def get_file(self, url, max_size=1024 * 1024 * 1024):
+        url += '/'
         try:
             parsed = urlparse(url)
             if parsed.scheme != 'http':
