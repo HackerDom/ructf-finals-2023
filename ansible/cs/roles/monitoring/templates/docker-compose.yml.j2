@@ -1,0 +1,27 @@
+version: "2.4"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - "/root/monitoring/etc/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "/root/monitoring/data/prom:/prometheus"
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    volumes:
+      - "/root/monitoring/data/grafana:/var/lib/grafana"
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    restart: unless-stopped
+    command: "-nginx.scrape-uri=http://{{ hostvars['cs-master']['private_addr'] }}/basic_status"
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://{{ pg_cs_user }}:{{ pg_cs_pass }}@{{ pg_cs_host }}:{{ pg_cs_port }}/{{ pg_cs_db }}?sslmode=disable"

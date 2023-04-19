@@ -1,0 +1,113 @@
+- name: systemd config
+  template: src=cs.web.service.j2 dest=/etc/systemd/system/cs.web.service
+  notify:
+    - reload systemd
+  tags: update
+
+- name: apt keys
+  apt_key: url=https://nginx.org/keys/nginx_signing.key
+
+- name: nginx repo source
+  apt_repository:
+    repo: deb http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx
+    filename: nginx
+    validate_certs: no
+
+- name: nginx
+  apt: name=nginx state=latest update_cache=yes
+
+- name: nginx cache catalog
+  file:
+    path: /var/cache/nginx/cs
+    state: directory
+    owner: nginx
+    group: root
+    mode: 0700
+
+- name: nginx data catalog
+  file:
+    path: /var/www
+    state: directory
+    owner: nginx
+    group: root
+    mode: 0755
+
+- name: nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+  tags: update
+
+- name: nginx remove default.conf
+  file:
+    path: /etc/nginx/conf.d/default.conf
+    state: absent
+  notify:
+    - restart nginx
+
+- name: nginx .htpasswd file
+  template:
+    src: htpasswd.j2
+    dest: /etc/nginx/.htpasswd
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+  tags: update
+
+
+- name: Install certbot
+  pip:
+    name:
+      - certbot
+      - certbot-nginx
+    executable: pip3
+  tags:
+    - nginx
+    - certbot
+
+# - name: Register certbot
+#   shell: |
+#     certbot -n register --agree-tos --email me@domain.example
+#     touch /etc/letsencrypt/.registered
+#   args:
+#     creates: /etc/letsencrypt/.registered
+#   tags:
+#     - nginx
+#     - certbot
+
+# - name: Setup cronjob for renewal
+#   cron:
+#     name: certbot-renewal
+#     job: "/bin/bash -lc '/usr/local/bin/certbot -q renew'"
+#     minute: "0"
+#     hour: "14"
+#   tags:
+#     - nginx
+#     - certbot
+
+# # - name: 'Get certificate'
+# #   command: '/usr/local/bin/certbot -n --nginx certonly -d {{ cs_base_url }}'
+# #   args:
+# #     creates: '/etc/letsencrypt/live/{{ cs_base_url }}'
+# #   ignore_errors: true
+# #   tags:
+# #     - nginx
+# #     - certbot
+
+- name: nginx cs config
+  template:
+    src: cs.nginx.conf.j2
+    dest: /etc/nginx/conf.d/cs.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+  tags: update
