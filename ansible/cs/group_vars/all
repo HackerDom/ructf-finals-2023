@@ -64,6 +64,7 @@ services: |
   {name => 'solaris', path => 'checkers/solaris/solaris.checker.py', timeout => 30, tcp_port => 17173},
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
   {name => 'sneakers', path => 'checkers/sneakers/sneakers.checker.py', timeout => 30, tcp_port => 7777},
+  {name => 'hermicache', path => 'checkers/hermicache/hermicache.checker.py', timeout => 30, tcp_port => 8080},
 
 queues: |
   {}
