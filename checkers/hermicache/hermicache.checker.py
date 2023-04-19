@@ -95,6 +95,7 @@ async def check_service(request: CheckRequest) -> Verdict:
 
         cookies = make_register_request(request.hostname, username, password)
         palindrome_field = generators.gen_palindrome_field()
+        print(f"palindrome_field: {palindrome_field}")
 
         uuid = make_create_field_request(request.hostname, cookies, palindrome_field)
 
@@ -113,6 +114,8 @@ async def check_service(request: CheckRequest) -> Verdict:
             return ec.verdict
 
         recurrent_field = generators.gen_recurrent_field()
+        print(f"recurrent_field: {recurrent_field}")
+
         uuid = make_create_field_request(request.hostname, cookies, recurrent_field)
         if not isinstance(uuid, (str, int)):
             print(f"invalid field uuid: {type(uuid)}, {uuid}")
