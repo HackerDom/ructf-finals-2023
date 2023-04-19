@@ -15,8 +15,8 @@ output "vpn-public-ip" {
 }
 
 
-resource "local_file" "cs_ansible_inventory" {
-  filename = "../ansible/cs/inventory.cfg"
+resource "local_file" "ansible_inventory" {
+  filename = "../ansible/inventory.cfg"
   content  = <<-EOF
 [master]
 cs-master ansible_host=${digitalocean_droplet.cs-master.ipv4_address} private_addr=${digitalocean_droplet.cs-master.ipv4_address_private}
@@ -39,13 +39,11 @@ flags
 db
 checkers
 monitoring
-EOF
-}
 
-resource "local_file" "vpn_ansible_inventory" {
-  filename = "../ansible/vpn/inventory.cfg"
-  content  = <<-EOF
 [vpn]
 vpn.a ansible_host=${digitalocean_droplet.vpn.ipv4_address}
+
+[cloud_master]
+cloud.a ansible_host=${digitalocean_droplet.cloud-test.ipv4_address}
 EOF
 }
