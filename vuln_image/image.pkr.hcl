@@ -58,6 +58,7 @@ build {
       # Add users for services
       "useradd -m -s /bin/bash bookster",
       "useradd -m -s /bin/bash example",
+      "useradd -m -s /bin/bash hermicache",
       "useradd -m -s /bin/bash sneakers",
       "useradd -m -s /bin/bash solaris",
     ]
@@ -103,6 +104,10 @@ build {
     destination = "/home/example/"
   }
   provisioner "file" {
+    source = "../services/hermicache/"
+    destination = "/home/hermicache/"
+  }
+  provisioner "file" {
     source = "../services/sneakers/"
     destination = "/home/sneakers/"
   }
@@ -121,6 +126,9 @@ build {
       "cd ~example",
       "docker-compose build || true",
 
+      "cd ~hermicache",
+      "docker-compose build || true",
+
       "cd ~sneakers",
       "docker-compose build || true",
 
@@ -130,7 +138,8 @@ build {
       "systemctl daemon-reload",
       "systemctl enable ructf-service@bookster",
       "systemctl enable ructf-service@example",
-      "systemctl enable ructf-service@a",
+      "systemctl enable ructf-service@hermicache",
+      "systemctl enable ructf-service@sneakers",
       "systemctl enable ructf-service@solaris",
     ]
   }
