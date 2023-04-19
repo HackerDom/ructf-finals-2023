@@ -3,9 +3,9 @@
   - name: Download bookster static
     ansible.builtin.get_url:
       url: https://bookster-staff.ams3.digitaloceanspaces.com/data.zip
-      dest: /home/cs/checksystem/checkers/bookster
+      dest: "{{ cs_dir }}/checkers/bookster"
 
   - name: Extract bookster static
     ansible.builtin.unarchive:
-      src: /home/cs/checksystem/checkers/bookster/data.zip
-      dest: /home/cs/checksystem/checkers/bookster
+      src: "{{ cs_dir }}/checkers/bookster/data.zip"
+      dest: "{{ cs_dir }}/checkers/bookster"
