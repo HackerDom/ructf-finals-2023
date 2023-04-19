@@ -1,0 +1,11 @@
+- hosts: checkers
+  tasks:
+  - name: Download bookster static
+    ansible.builtin.get_url:
+      url: https://bookster-staff.ams3.digitaloceanspaces.com/data.zip
+      dest: /home/cs/checksystem/checkers/bookster
+
+  - name: Extract bookster static
+    ansible.builtin.unarchive:
+      src: /home/cs/checksystem/checkers/bookster/data.zip
+      dest: /home/cs/checksystem/checkers/bookster
