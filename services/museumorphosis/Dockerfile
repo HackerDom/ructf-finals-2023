@@ -1,4 +1,5 @@
 FROM golang:1.20-alpine as builder
+LABEL stage=builder
 
 RUN apk add build-base # for sqlite3 build
 
