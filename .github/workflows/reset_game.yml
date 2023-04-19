@@ -10,6 +10,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+    - name: fix ssh-key permissions
+      run: (cd ansible/cs && chmod 600 .keys/cs_key)
     - name: stop cs
       run: (cd ansible/cs && ansible-playbook --private-key .keys/cs_key cs-stop.yml)
     - name: reset cs
