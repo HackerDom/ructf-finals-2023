@@ -11,4 +11,4 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
     - name: deploy checkers
-      run: cd ansible && ansible-playbook checkers.yaml -i ci.inventory.cfg --extra-vars "cs_user=cs cs_dir=/home/cs/checksystem"
+      run: (cd ansible/cs && ansible-playbook --private-key .keys/cs_key cs-checkers.yml)
