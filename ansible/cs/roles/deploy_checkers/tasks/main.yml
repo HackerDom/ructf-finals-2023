@@ -1,0 +1,27 @@
+- name: sync catalog
+  synchronize: src="../../../../checkers" dest="{{cs_dir}}"
+  tags: sync
+
+- name: checkers owner
+  file:
+    path: "{{cs_dir}}/checkers"
+    owner: "{{cs_user}}"
+    group: "{{cs_user}}"
+    recurse: yes
+  tags: sync
+
+- name: install sys deps
+  apt:
+    name:
+      - g++
+      - make
+      - libboost-all-dev
+      - python3.8
+      - python3-pip
+      - python3.8-dev
+      - python3-setuptools
+      - libssl-dev
+    install_recommends: no
+
+- name: python deps
+  command: python3.8 -m pip install requests pycrypto pillow aiohttp numpy gornilo pwntools pycryptodome protobuf
