@@ -49,6 +49,8 @@ jobs:
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
     - name: Setup {service}
       run: (cd ./services/{service} && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
     - name: Prepare python for checker
       uses: actions/setup-python@v2
       with:
@@ -67,6 +69,8 @@ jobs:
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
     - name: Setup {service}
       run: (cd ./services/{service} && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
     - name: Prepare python for checker
       uses: actions/setup-python@v2
       with:
