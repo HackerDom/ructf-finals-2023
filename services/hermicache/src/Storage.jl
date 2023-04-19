@@ -63,5 +63,5 @@ end
 
 function list_fields(conn::Redis.RedisConnection, owner)
     res = Redis.lrange(conn, joinpath("username2fields", owner), 0, -1)
-    return res == nothing ? String[] : res
+    return res == nothing ? Uint128[] : map((x) -> parse(UInt128, x), res)
 end

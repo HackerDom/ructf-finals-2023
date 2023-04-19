@@ -18,14 +18,14 @@ EXCLUDE = Set()
 function get_using_cache_lines(func_name::String, arg_names)
     return [
         "cache_args = $(isempty(arg_names) ? "" : "[\"\$($(join(arg_names, ")\", \"\$(")))\"]")",
-        "if any(map((x) -> length(x) > 50, cache_args))",
+        "if any(map((x) -> length(x) > 90, cache_args))",
         "    push!(EXCLUDE, \"$(func_name)\")",
         "end",
         "if \"$(func_name)\" in EXCLUDE",
         "    return _inner(" * join(arg_names, ", ") * ")",
         "end",
         "cache_key = \"$(func_name)_\" * join(cache_args, \"_\")",
-        "cache_key = length(cache_key) > 50 ? cache_key[1:50] : cache_key",
+        "cache_key = length(cache_key) > 90 ? cache_key[1:90] : cache_key",
         "if haskey(CACHE, cache_key)",
         "    return CACHE[cache_key]",
         "end",
@@ -35,10 +35,10 @@ end
 
 function get_filling_cache_lines(arg_names)
     return [
-        "res = _inner(" * join(arg_names, ", ") * ")",
+        "cache_result = _inner(" * join(arg_names, ", ") * ")",
         "CACHE_STAT[cache_key] += 1",
         "if CACHE_STAT[cache_key] >= 3",
-        "    CACHE[cache_key] = res",
+        "    CACHE[cache_key] = cache_result",
         "end",
     ]
 end
@@ -46,7 +46,7 @@ end
 
 function get_return_lines()
     return [
-        "    return res",
+        "    return cache_result",
         "end"
     ]
 end

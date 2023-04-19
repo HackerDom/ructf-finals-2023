@@ -225,7 +225,7 @@ function compute_handler(c::RestController, username, param_dict)
     end
 
     if field["type"] == "palindrome"
-        res = get_longest_palindrome(field["content"])
+        res = get_longest_palindrome(field["content"], 1, length(field["content"]))
         return render(JSON, Dict(
             "res"=>res
         ))
@@ -240,7 +240,7 @@ function compute_handler(c::RestController, username, param_dict)
 
         try
             index = parse(Int64, arg)
-            res = compute_recurrence_relation_formula(field["content"]["coefficients"], base_dict, index)
+            res = compute_rec(field["content"]["coefficients"], base_dict, index, 0)
             if res == nothing
                 return code_and_message(c, 400, "recursion limit exceeded")
             end

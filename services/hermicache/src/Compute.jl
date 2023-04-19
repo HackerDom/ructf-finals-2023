@@ -1,7 +1,9 @@
 MAX_DEEP = 100
+BIG_MODULUS = 1000000007
 
+function compute_rec(coefficients, base_values, index, deep)
+    res::Int128 = 0
 
-function compute_recurrence_relation_formula(coefficients, base_values, index, deep=0)
     if deep >= MAX_DEEP
         return nothing
     end
@@ -10,22 +12,23 @@ function compute_recurrence_relation_formula(coefficients, base_values, index, d
         return base_values[index]
     end
 
-    res = 0
     for i in 1:(length(coefficients) - 1)
-        coef_res = compute_recurrence_relation_formula(coefficients, base_values, index - i, deep + 1)
+        coef_res = compute_rec(coefficients, base_values, index - i, deep + 1)
         if coef_res == nothing
             return nothing
         end
         res += coefficients[i] * coef_res
+        res %= BIG_MODULUS
     end
 
     res += coefficients[length(coefficients)]
+    res %= BIG_MODULUS
 
-    return res
+    return res > 0 ? res : res + BIG_MODULUS
 end
 
 
-function get_longest_palindrome(s, i=1, j=length(s))
+function get_longest_palindrome(s, i, j)
     if i == j
         return 1
     end
