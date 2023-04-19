@@ -1,0 +1,15 @@
+- hosts: checkers
+  tasks:
+    - name: stop checkers
+      systemd: name="cs.worker-checkers@{{ item }}" state=stopped
+      with_sequence: count={{ cs_worker_instance }}
+
+- hosts: checkers
+  roles:
+    - deploy_checkers
+
+- hosts: checkers
+  tasks:
+    - name: start checkers
+      systemd: name="cs.worker-checkers@{{ item }}" state=started
+      with_sequence: count={{ cs_worker_instance }}
