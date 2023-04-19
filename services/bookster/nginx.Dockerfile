@@ -1,4 +1,5 @@
 FROM node:18.2.0-alpine as build
+LABEL stage=builder
 WORKDIR /frontend
 ENV PATH /frontend/node_modules/.bin:$PATH
 COPY ./frontend/package.json /frontend/package.json

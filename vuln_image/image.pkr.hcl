@@ -148,4 +148,13 @@ build {
   provisioner "shell" {
     script = "digital_ocean_specific_setup.sh"
   }
+
+  # cleanup after multistage build
+  provisioner "shell" {
+    inline = [
+      "docker image prune --filter label=stage=builder -f",
+      # remove all image after build completed
+      "docker image rm python:3.10-slim node:18.2.0-alpine nginx:1.16.0-alpine julia:1.8.5-alpine3.17 golang:1.20-alpine alpine:3.14 mcr.microsoft.com/dotnet/sdk:7.0 mcr.microsoft.com/dotnet/aspnet:7.0 php:8-fpm-alpine alpine:latest",
+    ]
+  }
 }
