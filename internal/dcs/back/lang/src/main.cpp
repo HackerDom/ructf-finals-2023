@@ -11,7 +11,11 @@
 #include <compiler/compiler.h>
 #include <translator/translator.h>
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        std::cout 
+    }
+
     std::string text;
     std::string line;
 

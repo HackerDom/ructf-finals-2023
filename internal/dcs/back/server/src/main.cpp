@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
             response.status = 500;
             nlohmann::json j{
                 {"status", "error"},
-                {"message", "intenral error"}
+                {"message", "internal error"}
             };
             response.set_content(j.dump(), "application/json");
             return;
@@ -175,6 +175,7 @@ int main(int argc, char **argv) {
             response.status = 200;
             nlohmann::json j{
                 {"status", "error"},
+                {"description", record->Description},
                 {"message", "program timeout or crash"}
             };
             response.set_content(j.dump(), "application/json");
