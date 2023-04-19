@@ -8,7 +8,8 @@ SERVICES = [
   'example',
   'bookster',
   'solaris',
-  'sneakers',
+  # 'sneakers',
+  'hermicache',
  ]
 
 TEMPLATE = '''
