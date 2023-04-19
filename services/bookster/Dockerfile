@@ -12,7 +12,6 @@ RUN apt update -y && \
     touch /service/db/db.sqlite3 && \
     mkdir -p /service/media/videos
 
-
 RUN cd /opt &&  \
     wget https://bookster-staff.ams3.digitaloceanspaces.com/ffmpegctf218.tar.gz  && \
     tar xvf ffmpegctf218.tar.gz && \
