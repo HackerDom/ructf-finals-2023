@@ -116,6 +116,9 @@ async def check_service(request: CheckRequest) -> Verdict:
         if "video_preview" not in data:
             return Verdict.MUMBLE("Get book no video_preview")
         if data["video_preview"] is None:
+            print(book_sample['video'])
+            with open(book_sample['video'], 'rb') as f:
+                print(f.read()[:600])
             return Verdict.MUMBLE("Video preview not generated")
         video_preview = data["video_preview"]
         status, data = api.get_file(data["video"], os.path.getsize(book_sample['video']))
