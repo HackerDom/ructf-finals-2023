@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(server)
 
-set(HEADERS include/storage/storage.h)
+set(HEADERS include/storage/storage.h include/playground/executor.h)
 
 set(SOURCES
         src/storage/storage.cpp
@@ -16,6 +16,10 @@ add_executable(dcsserver
         )
 target_link_libraries(dcsserver pthread glog::glog httplib lang common)
 target_include_directories(dcsserver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_executable(dcs_test_generator ${HEADERS} ${SOURCES} src/test_generator/main.cpp)
+target_include_directories(dcs_test_generator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(dcs_test_generator pthread glog::glog common lang)
 
 add_executable(dcsserver_tests
         tests/main.cpp

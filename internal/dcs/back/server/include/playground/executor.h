@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <mutex>
+#include <atomic>
 #include <stdexcept>
 
 class ExecutorError : public std::runtime_error {

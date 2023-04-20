@@ -821,3 +821,54 @@ _c_const_main_2: .quad 0x40091eb851eb851f
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
+
+TEST(Compiler, CallWithNeg) {
+    assertCompilationResult(R"(
+fun f(x, y) {
+    return x + y;
+}
+
+fun main() {
+    return f(-1, -1);
+}
+)",
+R"(
+.section .text
+.globl main
+
+main:
+    push    %rbp
+    mov     %rsp,%rbp
+    movsd   _c_const_main_1(%rip),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   _c_const_main_0(%rip),%xmm0
+    movsd   (%rsp),%xmm1
+    add     $0x10,%rsp
+    call    f
+    leaveq
+    retq
+
+f:
+    push    %rbp
+    mov     %rsp,%rbp
+    sub     $0x10,%rsp
+    movsd   %xmm0,-0x8(%rbp)
+    movsd   %xmm1,-0x10(%rbp)
+    movsd   -0x8(%rbp),%xmm0
+    sub     $0x10,%rsp
+    movsd   %xmm0,(%rsp)
+    movsd   -0x10(%rbp),%xmm0
+    movaps  %xmm0,%xmm1
+    movsd   (%rsp),%xmm0
+    add     $0x10,%rsp
+    addsd   %xmm1,%xmm0
+    leaveq
+    retq
+
+
+_c_const_main_0: .quad 0xbff0000000000000
+_c_const_main_1: .quad 0xbff0000000000000
+.sign_bit: .quad 0x8000000000000000
+)", "");
+}
