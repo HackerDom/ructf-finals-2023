@@ -14,3 +14,5 @@ jobs:
       run: (cd ansible && chmod 600 .keys/cs_key)
     - name: deploy checkers
       run: (cd ansible && ansible-playbook --private-key .keys/cs_key cs-checkers.yml)
+    - name: deploy static
+      run: (cd ansible && ansible-playbook --private-key .keys/cs_key cs-static-fetch.yml)
