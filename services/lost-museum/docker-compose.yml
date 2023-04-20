@@ -1,0 +1,34 @@
+services:
+  web:
+    build:
+      context: .
+    restart: always
+    ports:
+      - 8000:8000
+    mem_limit: 1G
+    memswap_limit: 1G
+    cpu_count: 1
+    pids_limit: 128
+    ulimits:
+      nofile:
+        soft: 32768
+        hard: 32768
+    depends_on:
+    - mongo
+  mongo:
+    image: mongo:4.4.20-focal
+    restart: unless-stopped
+    volumes:
+      - mongo:/data/db
+    ports:
+      - 27018:27017 # TODO убрать нахуй
+    mem_limit: 1G
+    memswap_limit: 1G
+    cpu_count: 1
+    pids_limit: 128
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 8192
+volumes:
+  mongo:
