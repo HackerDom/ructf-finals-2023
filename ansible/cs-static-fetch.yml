@@ -4,9 +4,8 @@
     ansible.builtin.get_url:
       url: https://bookster-staff.ams3.digitaloceanspaces.com/data.tar
       dest: "{{ cs_dir }}/checkers/bookster/"
-      owner: cs
-      group: cs
-      # mode: 0777
+      owner: "{{ cs_user }}"
+      group: "{{ cs_user }}"
   - name: Extract bookster static
     ansible.builtin.unarchive:
       remote_src: true
