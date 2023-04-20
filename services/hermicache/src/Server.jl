@@ -169,7 +169,7 @@ function with_required_params(handler, required_params)
         param_dict = HTTP.queryparams(HTTP.URI(c.conn.request.target))
         for required_param in required_params
             if !haskey(param_dict, required_param)
-                return code_and_message(400, "invalid params")
+                return code_and_message(c, 400, "invalid params")
             end
         end
 
@@ -261,10 +261,29 @@ function list_fields_handler(c::RestController, username)
 end
 
 
-function sandbox_handler(c::RestController)
-    println(CACHE)
-    println(CACHE_STAT)
-    println(EXCLUDE)
+function sandbox_handler(c::RestController, param_dict)
+    s = param_dict["s"]
+
+    println("CACHE")
+    for (key, value) in CACHE
+        if occursin(s, key)
+            println(key, " ", value)
+        end
+    end
+
+    println("CACHE_STAT")
+    for (key, value) in CACHE_STAT
+        if occursin(s, key)
+            println(key, " ", value)
+        end
+    end
+
+    println("EXCLUDE")
+    for key in EXCLUDE
+        if occursin(s, key)
+            println(key)
+        end
+    end
 end
 
 
@@ -278,7 +297,7 @@ routes() do
 
     get("/list_fields/", RestController, with_auth(list_fields_handler))
 
-    get("/sandbox/", RestController, sandbox_handler)
+    get("/sandbox/", RestController, with_required_params(sandbox_handler, ["s"]))
 
     plug(Plug.Parsers, [:json])
 end
