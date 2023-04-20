@@ -121,10 +121,8 @@ func (r *Repository) GetExhibitList(museumId uuid.UUID, search string) ([]*inter
 	defer rows.Close()
 
 	var res []*internal.Exhibit
-	fmt.Println("aCACACccacacC")
 	for rows.Next() {
 		exhibit := &internal.Exhibit{}
-		fmt.Println("123")
 		if err = rows.Scan(&exhibit.Id, &exhibit.Title, &exhibit.Description, &exhibit.Metadata); err != nil {
 			return nil, fmt.Errorf("error while scan exhibit: %w", err)
 		}
