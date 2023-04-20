@@ -71,8 +71,7 @@ class DCSClient:
                 f'unexpected status code: {rsp.status_code}')
 
         if TOKEN_HEADER_NAME not in rsp.headers:
-            raise DCSProtocolError(
-                f'unexpected status code: {rsp.status_code}')
+            raise DCSProtocolError('invalid headers')
         token = rsp.headers[TOKEN_HEADER_NAME]
 
         self._session.headers.update({TOKEN_HEADER_NAME: token})
