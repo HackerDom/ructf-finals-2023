@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: deploy checkers
       run: cd ansible && ansible-playbook checkers.yaml -i ci.inventory.cfg --extra-vars "cs_user=cs cs_dir=/home/cs/checksystem"

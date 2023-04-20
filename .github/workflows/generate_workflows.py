@@ -32,7 +32,7 @@ jobs:
     name: Check service {service}
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
@@ -42,7 +42,7 @@ jobs:
     name: Check checker {service}
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
@@ -60,7 +60,7 @@ jobs:
     name: Check sploit {service}
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: Run prebuilt hook
       run: if [ -f services/{service}/before_image_build.sh ]; then (cd ./services/{service} && ./before_image_build.sh); fi
@@ -84,7 +84,7 @@ jobs:
     steps:
     #- name: install ansible
     #  run: sudo apt-get install -y ansible
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: change permission for ssh key
       run: chmod 0600 ./teams/for_devs.ssh_key
