@@ -56,9 +56,9 @@ cs_checkers_hostname_cb: |
   sub { my ($team, $service) = @_; $team->{host} }
 
 teams: |
-  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3' },
-  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3' },
-  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3' },
+  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3', token = 'CLOUD_30_71c6f563728f4a3c5c3b3e552b3c1b42' },
+  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3', token = 'CLOUD_31_e0e55a06234f80c657a8cb88e47ce271' },
+  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3', token = 'CLOUD_32_55f7ad10fd803daa6c0fa862009d0eca' },
 
 services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
