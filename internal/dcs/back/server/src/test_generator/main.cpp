@@ -184,7 +184,7 @@ std::string generateOperand(const std::vector<std::string> &vars) {
 }
 
 std::string generateExpression(const std::vector<std::string> &vars, int depth) {
-    if (depth >= 30) {
+    if (depth >= 15) {
         return generateOperand(vars);
     }
 
@@ -266,21 +266,21 @@ fun main() {
 }
 
 std::string generateTestText() {
-//    auto num = distByte(rng) % 7;
-//
-//    if (num == 0) {
-//        return generateTestFibonacci();
-//    } else if (num == 1) {
-//        return generateTestFactorial();
-//    } else if (num == 2) {
-//        return generateTestStackOverflow();
-//    } else if (num == 3) {
-//        return generateTestSimilarToSploit();
-//    } else if (num == 4 || num == 5) {
-//        return generateTestVariableExpression();
-//    } else if (num == 6) {
+    auto num = distByte(rng) % 7;
+
+    if (num == 0) {
+        return generateTestFibonacci();
+    } else if (num == 1) {
+        return generateTestFactorial();
+    } else if (num == 2) {
+        return generateTestStackOverflow();
+    } else if (num == 3) {
+        return generateTestSimilarToSploit();
+    } else if (num == 4 || num == 5) {
+        return generateTestVariableExpression();
+    } else if (num == 6) {
         return generateTestWithCompilationError();
-//    }
+    }
 
     throw std::runtime_error("invalid test case");
 }
