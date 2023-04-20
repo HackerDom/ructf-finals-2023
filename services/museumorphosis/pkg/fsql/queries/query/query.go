@@ -39,7 +39,6 @@ func (r *result) Next(dest []driver.Value) error {
 }
 
 func QueryInDatabase(path, query, dbId string) (driver.Rows, error) {
-	fmt.Println(query, dbId)
 	dbPath := filepath.Join(path, dbId)
 	if _, err := os.Stat(dbPath); errors.Is(err, os.ErrNotExist) {
 		return nil, sql.ErrNoRows
