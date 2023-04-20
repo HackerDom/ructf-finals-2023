@@ -11,6 +11,19 @@ resource "digitalocean_droplet" "cs-master" {
     data.digitalocean_ssh_key.bay.id,
     data.digitalocean_ssh_key.vaspahomov.id
   ]
+  connection {
+    host        = self.ipv4_address
+    user        = "root"
+    type        = "ssh"
+    private_key = file(var.pvt_key)
+    timeout     = "5m"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "ip route replace 10.80.0.0/14 via ${digitalocean_droplet.vpn.ipv4_address_private} mtu 1450 advmss 1410",
+      "ip route replace 10.60.0.0/14 via ${digitalocean_droplet.vpn.ipv4_address_private} mtu 1450 advmss 1410"
+    ]
+  }
 }
 
 resource "digitalocean_droplet" "cs-checker" {
@@ -26,4 +39,17 @@ resource "digitalocean_droplet" "cs-checker" {
     data.digitalocean_ssh_key.bay.id,
     data.digitalocean_ssh_key.vaspahomov.id
   ]
+  connection {
+    host        = self.ipv4_address
+    user        = "root"
+    type        = "ssh"
+    private_key = file(var.pvt_key)
+    timeout     = "5m"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "ip route replace 10.80.0.0/14 via ${digitalocean_droplet.vpn.ipv4_address_private} mtu 1450 advmss 1410",
+      "ip route replace 10.60.0.0/14 via ${digitalocean_droplet.vpn.ipv4_address_private} mtu 1450 advmss 1410"
+    ]
+  }
 }

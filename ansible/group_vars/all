@@ -65,6 +65,7 @@ services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
   {name => 'sneakers', path => 'checkers/sneakers/sneakers.checker.py', timeout => 30, tcp_port => 7777},
   {name => 'hermicache', path => 'checkers/hermicache/hermicache.checker.py', timeout => 30, tcp_port => 8080},
+  {name => 'museumorphosis', path => 'checkers/museumorphosis/museumorphosis.checker.py', timeout => 30, tcp_port => 6969},
 
 queues: |
   {}
