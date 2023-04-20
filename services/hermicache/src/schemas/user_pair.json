@@ -9,7 +9,7 @@
     "password": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 50
+      "maxLength": 100
     }
   },
   "required": ["username", "password"],

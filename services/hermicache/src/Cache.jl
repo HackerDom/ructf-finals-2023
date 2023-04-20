@@ -1,5 +1,8 @@
 using CodeTracking
 using DataStructures
+using ExpiringCaches
+using Dates
+
 
 function get_name_to_symbols()
     res = Dict()
@@ -10,8 +13,8 @@ function get_name_to_symbols()
 end
 
 
-CACHE = Dict()
-CACHE_STAT = DefaultDict(1)
+CACHE = ExpiringCaches.Cache{Tuple{String}, Any}(Dates.Second(60))
+CACHE_STAT = ExpiringCaches.Cache{Tuple{String}, Any}(Dates.Second(60))
 EXCLUDE = Set()
 
 
@@ -26,8 +29,8 @@ function get_using_cache_lines(func_name::String, arg_names)
         "end",
         "cache_key = \"$(func_name)_\" * join(cache_args, \"_\")",
         "cache_key = length(cache_key) > 90 ? cache_key[1:90] : cache_key",
-        "if haskey(CACHE, cache_key)",
-        "    return CACHE[cache_key]",
+        "if ExpiringCaches.haskey(CACHE, (cache_key,))",
+        "    return ExpiringCaches.get!(CACHE, (cache_key,), nothing)",
         "end",
     ]
 end
@@ -36,9 +39,9 @@ end
 function get_filling_cache_lines(arg_names)
     return [
         "cache_result = _inner(" * join(arg_names, ", ") * ")",
-        "CACHE_STAT[cache_key] += 1",
-        "if CACHE_STAT[cache_key] >= 3",
-        "    CACHE[cache_key] = cache_result",
+        "ExpiringCaches.setindex!(CACHE_STAT, ExpiringCaches.get!(CACHE_STAT, (cache_key,), 1) + 1, (cache_key,))",
+        "if ExpiringCaches.get!(CACHE_STAT, (cache_key,), 1) >= 3",
+        "    ExpiringCaches.setindex!(CACHE, cache_result, (cache_key,))",
         "end",
     ]
 end
