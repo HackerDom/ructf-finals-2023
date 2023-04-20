@@ -6,6 +6,7 @@
 
 - hosts: checkers
   roles:
+    - update_cs_config
     - deploy_checkers
 
 - hosts: checkers
