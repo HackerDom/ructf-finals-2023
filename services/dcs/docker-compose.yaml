@@ -1,0 +1,48 @@
+version: '2.2'
+
+services:
+  nginx:
+    image: nginx:alpine
+    cpus: 1
+    pids_limit: 1024
+    mem_limit: 1G
+    memswap_limit: 1G
+    ulimits:
+      nofile:
+        soft: 12000
+        hard: 12000
+    restart: always
+    stop_grace_period: 3s
+    ports:
+      - '7654:7654'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./front:/var/www:ro
+    networks:
+      - internal
+    depends_on:
+        - back
+
+  back:
+    build: ./back
+    cpus: 2
+    pids_limit: 1024
+    mem_limit: 1G
+    ulimits:
+      nofile:
+        soft: 12000
+        hard: 12000
+    restart: always
+    stop_grace_period: 1s
+    volumes:
+      - dcsserver-data:/var/dcs/data
+    networks:
+      - internal
+
+volumes:
+  dcsserver-data:
+
+networks:
+  internal:
+    driver: bridge
+
