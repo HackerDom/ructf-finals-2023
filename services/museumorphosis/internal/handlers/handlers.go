@@ -119,7 +119,12 @@ func (h *Handlers) CreateExhibit(w http.ResponseWriter, r *http.Request) {
 	}
 	exhibit, err := h.service.CreateExhibit(museumId, data)
 	if err != nil {
-		utils.ResponseServerError(w, err)
+		switch err {
+		case internal.NotFoundError:
+			utils.ResponseError(w, http.StatusNotFound, err)
+		default:
+			utils.ResponseServerError(w, err)
+		}
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit))
@@ -144,6 +149,7 @@ func (h *Handlers) GetExhibit(w http.ResponseWriter, r *http.Request) {
 		default:
 			utils.ResponseServerError(w, err)
 		}
+		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit))
 }
