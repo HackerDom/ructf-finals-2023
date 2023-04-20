@@ -2,6 +2,34 @@ using Bukdu
 using HTTP
 using Redis
 using JSONSchema
+using DataStructures
+
+
+reentrant_lock = ReentrantLock()
+
+function Redis_set(conn, key, value)
+    lock(reentrant_lock) do
+        Redis.set(conn, key, value)
+    end
+end
+
+function Redis_get(conn, key)
+    lock(reentrant_lock) do
+        return Redis.get(conn, key)
+    end
+end
+
+function Redis_rpush(conn, key, value)
+    lock(reentrant_lock) do
+        Redis.rpush(conn, key, value)
+    end
+end
+
+function Redis_lrange(conn, key, l, r)
+    lock(reentrant_lock) do
+        Redis.lrange(conn, key, l, r)
+    end
+end
 
 
 include("Compute.jl")
@@ -261,32 +289,6 @@ function list_fields_handler(c::RestController, username)
 end
 
 
-function sandbox_handler(c::RestController, param_dict)
-    s = param_dict["s"]
-
-    println("CACHE")
-    for (key, value) in CACHE
-        if occursin(s, key)
-            println(key, " ", value)
-        end
-    end
-
-    println("CACHE_STAT")
-    for (key, value) in CACHE_STAT
-        if occursin(s, key)
-            println(key, " ", value)
-        end
-    end
-
-    println("EXCLUDE")
-    for key in EXCLUDE
-        if occursin(s, key)
-            println(key)
-        end
-    end
-end
-
-
 routes() do
     post("/register/", RestController, with_body_validator(register_handler, get_validator("user_pair.json")))
     post("/login/", RestController, with_body_validator(login_handler, get_validator("user_pair.json")))
@@ -296,8 +298,6 @@ routes() do
     get("/compute/", RestController, with_required_params(with_auth(compute_handler), ["field_uuid", "arg"]))
 
     get("/list_fields/", RestController, with_auth(list_fields_handler))
-
-    get("/sandbox/", RestController, with_required_params(sandbox_handler, ["s"]))
 
     plug(Plug.Parsers, [:json])
 end
