@@ -16,7 +16,7 @@
 
 static constexpr std::string_view kStoragePath = "/var/dcs/data";
 
-static const std::string kTokenHeader = "X-BCS-Token";
+static const std::string kTokenHeader = "X-DCS-Token";
 
 httplib::Server svr;
 
@@ -95,19 +95,19 @@ int main(int argc, char **argv) {
         auto tokens = TokenizeString(text);
         if (!tokens.Success) {
             response.status = 400;
-            response.set_content(tokens.ErrorMessage, "text/plain");
+            response.set_content(Format("compilation error: %s", tokens.ErrorMessage.c_str()), "text/plain");
             return;
         }
         auto parsed = ParseTokens(tokens.Tokens);
         if (!parsed.Success) {
             response.status = 400;
-            response.set_content(parsed.ErrorMessage, "text/plain");
+            response.set_content(Format("compilation error: %s", parsed.ErrorMessage.c_str()), "text/plain");
             return;
         }
         auto compiled = CompileToAssembly(parsed.ProgramNode);
         if (!compiled.Success) {
             response.status = 400;
-            response.set_content(compiled.ErrorMessage, "text/plain");
+            response.set_content(Format("compilation error: %s", compiled.ErrorMessage.c_str()), "text/plain");
             return;
         }
         auto translated = TranslateAssembly(compiled.AssemblyCode);
