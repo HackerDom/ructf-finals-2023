@@ -47,15 +47,6 @@
   when: "g.stdout.find('No local changes') == -1"
   tags: update
 
-- name: cs config
-  template:
-    src: c_s.conf.j2
-    dest: "{{ cs_dir }}/c_s.conf"
-    owner: "{{ cs_user }}"
-    group: "{{ cs_user }}"
-    mode: 0644
-  tags: update
-
 - name: perl modules
   command: cpanm -n --installdeps {{ cs_dir }}
   register: r
