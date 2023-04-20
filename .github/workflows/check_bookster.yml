@@ -19,7 +19,7 @@ jobs:
     name: Check service bookster
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: Run prebuilt hook
       run: if [ -f services/bookster/before_image_build.sh ]; then (cd ./services/bookster && ./before_image_build.sh); fi
@@ -29,7 +29,7 @@ jobs:
     name: Check checker bookster
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
       with:
         lfs: 'true'
@@ -51,7 +51,7 @@ jobs:
     name: Check sploit bookster
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: Run prebuilt hook
       run: if [ -f services/bookster/before_image_build.sh ]; then (cd ./services/bookster && ./before_image_build.sh); fi
@@ -77,7 +77,7 @@ jobs:
     steps:
     #- name: install ansible
     #  run: sudo apt-get install -y ansible
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: change permission for ssh key
       run: chmod 0600 ./teams/for_devs.ssh_key
