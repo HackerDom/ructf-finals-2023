@@ -25,7 +25,7 @@ export default new Sequelize({
 
     omitNull: true,
     typeValidation: true,
-    // logging: false,
+    logging: false,
 
     define: { engine: 'MyISAM' },
 });
