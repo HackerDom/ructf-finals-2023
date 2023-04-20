@@ -1,13 +1,14 @@
 import { Users } from '@root/services';
+import { parseJson } from '@root/utils';
 
 import { ServiceRouter } from './router';
 
 const router = new ServiceRouter();
 
 router.withErrorHandler();
-router.withAuthCookie();
+router.withAuthToken();
 
-router.get('/profile/:name', async (ctx) => {
+router.all('/profile/:name', async (ctx) => {
     const { name } = ctx.req.param();
 
     return ctx.jsonT(
@@ -16,7 +17,7 @@ router.get('/profile/:name', async (ctx) => {
 });
 
 router.post('/register', async (ctx) => {
-    const { name, password } = await ctx.req.json();
+    const { name, password } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
         await Users.register(ctx.env, { name, password }),
@@ -24,7 +25,7 @@ router.post('/register', async (ctx) => {
 });
 
 router.post('/login', async (ctx) => {
-    const { name, password } = await ctx.req.json();
+    const { name, password } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
         await Users.login(ctx.env, { name, password }),

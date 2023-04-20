@@ -3,10 +3,10 @@ import crypto from 'crypto';
 
 import { unwrapError } from './unwrap';
 
-const salt = 'salt1234';
-const pepper = 'pepper9876';
-
 export function createHash(text: string): string {
+    const salt = 'salt1234';
+    const pepper = 'pepper9876';
+
     return Bun.sha(salt + text + pepper, 'hex');
 }
 
@@ -39,6 +39,42 @@ export async function validateToken(token: string, key: string): Promise<string 
     }
 
     return null;
+}
+
+export async function parseJson<T = any>(stream: ReadableStream<Uint8Array> | null): Promise<T> {
+    if (stream === null) {
+        return {} as T;
+    }
+
+    try {
+        return Bun.readableStreamToJSON(stream);
+    } catch (error: unknown) {
+        throw new Error('failed to parse json', { cause: error });
+    }
+}
+
+export async function loadPrivateKey(): Promise<string> {
+    const keyPath = '/tmp/secrets/key.txt';
+
+    const file = Bun.file(keyPath);
+
+    if (file.size === 0) {
+        const key = crypto.randomBytes(16).toString('hex');
+
+        const length = await Bun.write(file, key);
+
+        if (length < key.length) {
+            throw new Error('failed to write private key');
+        }
+    }
+
+    const key = await Bun.readableStreamToText(file.stream());
+
+    if (key.length === 0) {
+        throw new Error('failed to read private key');
+    }
+
+    return key;
 }
 
 export {

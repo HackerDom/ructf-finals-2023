@@ -2,7 +2,6 @@ import { UniqueConstraintError } from 'sequelize';
 
 import {
     AlreadyExistsError,
-    InvalidArgumentError,
     LoginRequiredError,
     NoteNotFoundError,
     OwnerMismatchError,
@@ -12,42 +11,26 @@ import {
 } from '@root/services/errors';
 import { Note, User } from '@root/database/models';
 
-import { type Context, type Message, type Method } from './index';
-
-type GetNoteRequest = {
-    title: string;
-};
-type GetNoteResponse = {
-    title: string;
-    visible: boolean;
-    content?: string;
-    viewers?: string[];
-    owner: string;
-};
-
-type CreateNoteRequest = {
-    title: string;
-    visible: boolean;
-    content: string;
-};
-type CreateNoteResponse = Message;
-
-type ShareNoteRequest = {
-    title: string;
-    viewer: string;
-};
-type ShareNoteResponse = Message;
-
-type DenyNoteRequest = {
-    title: string;
-    viewer: string;
-};
-type DenyNoteResponse = Message;
-
-type DestroyNoteRequest = {
-    title: string;
-};
-type DestroyNoteResponse = Message;
+import {
+    type CreateNoteRequest,
+    type CreateNoteResponse,
+    type DenyNoteRequest,
+    type DenyNoteResponse,
+    type DestroyNoteRequest,
+    type DestroyNoteResponse,
+    type GetNoteRequest,
+    type GetNoteResponse,
+    type ShareNoteRequest,
+    type ShareNoteResponse,
+} from './messages';
+import {
+    isCreateNoteRequest,
+    isDenyNoteRequest,
+    isDestroyNoteRequest,
+    isGetNoteRequest,
+    isShareNoteRequest,
+} from './validators';
+import { type Context, type Method } from './index';
 
 type NotesService = {
     get: Method<GetNoteRequest, GetNoteResponse>;
@@ -59,8 +42,8 @@ type NotesService = {
 
 const Notes: NotesService = {
     async get(ctx: Context, req: GetNoteRequest): Promise<GetNoteResponse> {
-        if (typeof req.title !== 'string') {
-            throw new InvalidArgumentError('\'title\' should be string');
+        if (!isGetNoteRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         const note = await Note.findOne({
@@ -98,16 +81,8 @@ const Notes: NotesService = {
     },
 
     async create(ctx: Context, req: CreateNoteRequest): Promise<CreateNoteResponse> {
-        if (typeof req.title !== 'string') {
-            throw new InvalidArgumentError('\'title\' should be string');
-        }
-
-        if (typeof req.visible !== 'boolean') {
-            throw new InvalidArgumentError('\'visible\' should be boolean');
-        }
-
-        if (typeof req.content !== 'string') {
-            throw new InvalidArgumentError('\'content\' should be string');
+        if (!isCreateNoteRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         if (ctx.user === null) {
@@ -140,12 +115,8 @@ const Notes: NotesService = {
     },
 
     async share(ctx: Context, req: ShareNoteRequest): Promise<ShareNoteResponse> {
-        if (typeof req.title !== 'string') {
-            throw new InvalidArgumentError('\'title\' should be string');
-        }
-
-        if (typeof req.viewer !== 'string') {
-            throw new InvalidArgumentError('\'viewer\' should be string');
+        if (!isShareNoteRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         if (ctx.user === null) {
@@ -166,7 +137,7 @@ const Notes: NotesService = {
             throw new UserNotFoundError('viewer not found');
         }
 
-        if (viewer.name !== note.owner.name) {
+        if (viewer.name !== ctx.user.name) {
             await note.addViewer(viewer);
         }
 
@@ -174,12 +145,8 @@ const Notes: NotesService = {
     },
 
     async deny(ctx: Context, req: DenyNoteRequest): Promise<DenyNoteResponse> {
-        if (typeof req.title !== 'string') {
-            throw new InvalidArgumentError('\'title\' should be string');
-        }
-
-        if (typeof req.viewer !== 'string') {
-            throw new InvalidArgumentError('\'viewer\' should be string');
+        if (!isDenyNoteRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         if (ctx.user === null) {
@@ -208,8 +175,8 @@ const Notes: NotesService = {
     },
 
     async destroy(ctx: Context, req: DestroyNoteRequest): Promise<DestroyNoteResponse> {
-        if (typeof req.title !== 'string') {
-            throw new InvalidArgumentError('\'title\' should be string');
+        if (!isDestroyNoteRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         if (ctx.user === null) {
@@ -224,7 +191,7 @@ const Notes: NotesService = {
             throw new OwnerMismatchError('you should own this note');
         }
 
-        await ctx.user.removeNote(note);
+        await note.destroy();
 
         return {};
     },

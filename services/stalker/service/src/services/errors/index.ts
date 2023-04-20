@@ -18,7 +18,6 @@ class NotFoundError extends BaseError { protected code = 404; }
 class ConflictError extends BaseError { protected code = 409; }
 class InternalServerError extends BaseError { protected code = 500; }
 
-export class InvalidArgumentError extends BadRequestError { }
 export class ValidationError extends BadRequestError { }
 export class LoginRequiredError extends UnauthorizedError { }
 export class InvalidCredentialsError extends UnauthorizedError { }

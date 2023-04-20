@@ -1,13 +1,14 @@
 import { Notes } from '@root/services';
+import { parseJson } from '@root/utils';
 
 import { ServiceRouter } from './router';
 
 const router = new ServiceRouter();
 
 router.withErrorHandler();
-router.withAuthCookie();
+router.withAuthToken();
 
-router.get('/:title', async (ctx) => {
+router.all('/:title', async (ctx) => {
     const { title } = ctx.req.param();
 
     return ctx.jsonT(
@@ -16,7 +17,7 @@ router.get('/:title', async (ctx) => {
 });
 
 router.post('/', async ctx => {
-    const { title, visible, content } = await ctx.req.json();
+    const { title, visible, content } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
         await Notes.create(ctx.env, { title, visible, content }),
@@ -25,7 +26,7 @@ router.post('/', async ctx => {
 
 router.post('/:title/share', async ctx => {
     const { title } = ctx.req.param();
-    const { viewer } = await ctx.req.json();
+    const { viewer } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
         await Notes.share(ctx.env, { title, viewer }),
@@ -34,7 +35,7 @@ router.post('/:title/share', async ctx => {
 
 router.post('/:title/deny', async ctx => {
     const { title } = ctx.req.param();
-    const { viewer } = await ctx.req.json();
+    const { viewer } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
         await Notes.deny(ctx.env, { title, viewer }),
