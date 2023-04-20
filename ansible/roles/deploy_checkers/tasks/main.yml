@@ -30,3 +30,7 @@
     recurse: yes
   tags: sync
 
+- name: install requirements
+  shell: |
+    cd {{cs_dir}}/checkers
+    ./install_checker_requirements.sh
