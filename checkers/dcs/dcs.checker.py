@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.11
+
 import gornilo
 import dataclasses
 import json
