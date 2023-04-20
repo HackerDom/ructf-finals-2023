@@ -24,7 +24,7 @@ services:
         - back
 
   back:
-    build: back
+    build: ./back
     cpus: 2
     pids_limit: 1024
     mem_limit: 1G

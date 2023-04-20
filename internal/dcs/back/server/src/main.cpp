@@ -60,7 +60,6 @@ int main(int argc, char **argv) {
             return ss.str();
         };
         LOG(INFO) << Format("==> %s %s headers{%s} body{%s}", req.method.c_str(), req.path.c_str(), printHeaders(req.headers).c_str(), req.body.c_str());
-        LOG(INFO) << Format("<== %d headers{%s} body{%s}", res.status, printHeaders(res.headers).c_str(), res.body.c_str());
     });
 
     svr.Post("/api/compute", [storage](const httplib::Request &request, httplib::Response &response) {
