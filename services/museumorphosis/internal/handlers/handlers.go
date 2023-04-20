@@ -131,7 +131,7 @@ func (h *Handlers) GetExhibit(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseError(w, http.StatusUnprocessableEntity, errors.New("id must be uuid"))
 		return
 	}
-	exhibitId, err := uuid.Parse(mux.Vars(r)["eid"])
+	exhibitId, err := uuid.Parse(mux.Vars(r)["id"])
 	if err != nil {
 		utils.ResponseError(w, http.StatusUnprocessableEntity, errors.New("id must be uuid"))
 		return
