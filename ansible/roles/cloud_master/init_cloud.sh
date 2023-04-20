@@ -2,17 +2,28 @@
 
 cd "$(dirname "$0")"
 
-if [[ $# != 2 ]]; then
-    echo "Usage: init.sh <domain> <number_of_teams>"
+if [[ $# != 3 ]]; then
+    echo "Usage: init_cloud.sh <domain> <number_of_teams> <number_of_services>"
     exit 1
 fi
 
 DOMAIN="$1"
 NUMBER_OF_TEAMS="$2"
+NUMBER_OF_SERVICES="$3"
 
 if [[ ! $DOMAIN =~ ^[0-9a-z.-]+$ ]]; then
   echo "Bad domain"
   exit 1
+fi
+
+if [[ ! $NUMBER_OF_TEAMS =~ ^[0-9]+$ ]]; then
+   echo "Bad number of teams"
+   exit 1
+fi
+
+if [[ ! $NUMBER_OF_SERVICES =~ ^[0-9]+$ ]]; then
+   echo "Bad number of services"
+   exit 1
 fi
 
 if ! which openvpn > /dev/null; then
@@ -61,6 +72,10 @@ sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/gen_rootpasswds_prod.py
 sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/gen_team_tokens_prod.py
 sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/init_teams_prod.py
 sed -E -i "s/for i in \{1\.\.[0-9]+\}/for i in \{1\.\.$((NUMBER_OF_TEAMS-1))\}/" gen/create_team_net_certs_prod.sh
+
+echo "Patching number of services"
+sed -E -i "s/S = [0-9]+/S = ${NUMBER_OF_SERVICES}/" gen/gen_rootpasswds_prod.py
+sed -E -i "s/S = [0-9]+/S = ${NUMBER_OF_SERVICES}/" gen/init_teams_prod.py
 
 echo "Copying ../vpn/gen/client_prod to gen/openvpn_team_main_net_client_prod"
 rsync -a ../vpn/gen/client_prod/ gen/openvpn_team_main_net_client_prod

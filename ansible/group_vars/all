@@ -5,7 +5,7 @@ cs_scoreboard_dir: /home/cs/ctf-scoreboard-client
 pg_cs_user: cs
 pg_cs_pass: S0m3S3cre7
 pg_cs_db: cs
-pg_cs_host: 10.10.10.3
+pg_cs_host: 10.10.10.4
 pg_cs_port: 5432
 pg_max_connections: 1024
 pg_shared_buffers: 1GB
@@ -33,7 +33,7 @@ cs_nginx_auth_user: root
 cs_nginx_auth_password: $apr1$LTFfWtS.$rSkRqtASVyYbnjxeFLdV4.
 
 
-cs_base_url: http://159.223.228.137/
+cs_base_url: http://164.92.214.128/
 cs_admin_auth: root:RuCTF2023_S3cretP@ss
 cs_ctf_name: RuCTF Finals 2023
 cs_flags_secret: t4DAg7UdWRSm7f3j
@@ -56,9 +56,9 @@ cs_checkers_hostname_cb: |
   sub { my ($team, $service) = @_; $team->{host} }
 
 teams: |
-  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_71c6f563728f4a3c5c3b3e552b3c1b42' },
-  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3', token => 'CLOUD_31_e0e55a06234f80c657a8cb88e47ce271' },
-  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3', token => 'CLOUD_32_55f7ad10fd803daa6c0fa862009d0eca' },
+  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28' },
+  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3', token => 'CLOUD_31_4b74c7f1fa5b69cfcd7268c4962bbffb' },
+  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3', token => 'CLOUD_32_95da288b4298c2a1eb2218cb55d9b2c1' },
 
 services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},

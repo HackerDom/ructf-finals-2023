@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 
 if [[ $# != 2 ]]; then
-    echo "Usage: init.sh <domain> <number_of_teams>"
+    echo "Usage: init_vpn.sh <domain> <number_of_teams>"
     exit 1
 fi
 
@@ -13,6 +13,11 @@ NUMBER_OF_TEAMS="$2"
 if [[ ! $DOMAIN =~ ^[0-9a-z.-]+$ ]]; then
   echo "Bad domain"
   exit 1
+fi
+
+if [[ ! $NUMBER_OF_TEAMS =~ ^[0-9]+$ ]]; then
+   echo "Bad number of teams"
+   exit 1
 fi
 
 if ! which openvpn > /dev/null; then
