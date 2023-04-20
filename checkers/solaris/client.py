@@ -23,7 +23,9 @@ class Response:
 def http_request(
         method: str, url: str, params: Dict[str, str], body: bytes,
 ) -> Response:
-    session = gornilo.http_clients.requests_with_retries()
+    session = gornilo.http_clients.requests_with_retries(
+        status_forcelist=(500, 502),
+    )
 
     response = session.request(
         method = method,
