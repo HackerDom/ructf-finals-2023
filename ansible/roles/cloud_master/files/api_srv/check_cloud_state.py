@@ -167,7 +167,7 @@ def get_do_image_local_ips_and_tags_by_cloud(cloud_names):
                 ip = vm["networks"]["v4"][1]["ip_address"]
                 if not ip.startswith("10.6"):
                     # take next
-                    ip = vm['networks']['v4'][1]['ip_address']
+                    ip = vm['networks']['v4'][2]['ip_address']
 
                 last_octet = int(ip.split(".")[-1])
                 if last_octet != service_num:
