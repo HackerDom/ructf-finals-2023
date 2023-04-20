@@ -39,7 +39,7 @@ private:
 
     static constexpr int kTokenLength = 32;
     static constexpr int kTokenGenerateMaxAttempts = 3;
-    static constexpr std::string_view kTokenAlphabet = "qwertyuiopasdfghjklzxcvbnm1234567890";
+    static constexpr std::string_view kTokenAlphabet = "1234567890abcdef";
     std::string GenerateToken();
     int GenerateUniqueToken(std::string &out);
     std::filesystem::path GetPathByToken(std::string_view token);

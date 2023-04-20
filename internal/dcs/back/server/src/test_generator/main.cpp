@@ -75,22 +75,22 @@ std::string generateName() {
     return name;
 }
 
-std::string executeText(std::string_view text) {
+std::pair<std::string, std::string> executeText(std::string_view text) {
     auto tokens = TokenizeString(text);
     if (!tokens.Success) {
-        return Format("compilation error: %s", tokens.ErrorMessage.c_str());
+        return std::make_pair(Format("compilation error: %s", tokens.ErrorMessage.c_str()), "");
     }
     auto ast = ParseTokens(tokens.Tokens);
     if (!ast.Success) {
-        return Format("compilation error: %s", ast.ErrorMessage.c_str());
+        return std::make_pair(Format("compilation error: %s", ast.ErrorMessage.c_str()), "");
     }
     auto compiled = CompileToAssembly(ast.ProgramNode);
     if (!compiled.Success) {
-        return Format("compilation error: %s", compiled.ErrorMessage.c_str());
+        return std::make_pair(Format("compilation error: %s", compiled.ErrorMessage.c_str()), "");
     }
     auto translated = TranslateAssembly(compiled.AssemblyCode);
     if (!translated.Success) {
-        return Format("compilation error: %s", translated.ErrorMessage.c_str());
+        return std::make_pair(Format("compilation error: %s", translated.ErrorMessage.c_str()), "");
     }
 
     Executor executor(1);
@@ -100,9 +100,9 @@ std::string executeText(std::string_view text) {
     if (result->Status == Executor::ExecuteResult::OK) {
         std::stringstream ss;
         ss << std::setprecision(30) << result->Value;
-        return ss.str();
+        return std::make_pair("", ss.str());
     } else if (result->Status == Executor::ExecuteResult::CRASH || result->Status == Executor::ExecuteResult::TIMEOUT) {
-        return "timeout or crash";
+        return std::make_pair("", "program timeout or crash");
     }
 
     throw std::runtime_error(Format("invalid status: %d", result->Status));
@@ -184,7 +184,7 @@ std::string generateOperand(const std::vector<std::string> &vars) {
 }
 
 std::string generateExpression(const std::vector<std::string> &vars, int depth) {
-    if (depth >= 15) {
+    if (depth >= 10) {
         return generateOperand(vars);
     }
 
@@ -265,7 +265,7 @@ fun main() {
     throw std::runtime_error("generateTestWithCompilationError");
 }
 
-std::string generateTestText() {
+std::string generateTestText(bool isGet) {
     auto num = distByte(rng) % 7;
 
     if (num == 0) {
@@ -279,17 +279,38 @@ std::string generateTestText() {
     } else if (num == 4 || num == 5) {
         return generateTestVariableExpression();
     } else if (num == 6) {
+        if (isGet) {
+            return generateTestVariableExpression();
+        }
         return generateTestWithCompilationError();
     }
 
     throw std::runtime_error("invalid test case");
 }
 
-int main() {
-    auto text = generateTestText();
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        std::cout << "expected argument for mode: get|check" << std::endl;
+        return 1;
+    }
+
+    bool isGet;
+
+    if (std::strcmp(argv[1], "get") == 0) {
+        isGet = true;
+    } else if (std::strcmp(argv[1], "check") == 0) {
+        isGet = false;
+    } else {
+        std::cout << "unknown mode: " << argv[1] << std::endl;
+        return 1;
+    }
+
+    auto text = generateTestText(isGet);
+    auto [error, result] = executeText(text);
     nlohmann::json j({
                              {"code",   text},
-                             {"result", executeText(text)},
+                             {"result", result},
+                             {"error", error},
                      });
 
     std::cout << j.dump() << std::endl;
