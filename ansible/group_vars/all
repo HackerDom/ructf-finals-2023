@@ -40,7 +40,7 @@ cs_flags_secret: t4DAg7UdWRSm7f3j
 cs_round_length: 60
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
-cs_time: "['2023-04-18 07:30:00', '2023-04-21 09:59:59']"
+cs_time: "['2023-04-18 07:30:00', '2023-04-22 09:59:59']"
 
 cs_scoring: |
     start_flag_price => 10,
