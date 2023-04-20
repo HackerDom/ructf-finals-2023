@@ -22,14 +22,28 @@ class GetResult:
     description: str
 
 
-class ProtocolError(Exception):
+class DCSProtocolError(Exception):
     pass
+
+
+class DCSValidationError(Exception):
+    pass
+
+
+def check_token(token: str):
+    if len(token) != 32:
+        raise DCSValidationError('invalid token format')
+
+    for c in token:
+        if c not in '1234567890abcdef':
+            raise DCSValidationError('invalid token format')
 
 
 class DCSClient:
     def __init__(self, host: str, port: int, token: str = None):
         self._addr = f'http://{host}:{port}'
-        self._session = gornilo.http_clients.requests_with_retries(status_forcelist=(400, 404, 500, 502, 503))
+        self._session = gornilo.http_clients.requests_with_retries(
+            status_forcelist=(400, 404, 500, 502, 503))
 
         if token is not None:
             self._session.headers.update({TOKEN_HEADER_NAME: token})
@@ -53,10 +67,12 @@ class DCSClient:
             return CreateResult(f'{rsp.content.decode("utf-8")}', '')
 
         if rsp.status_code != 201:
-            raise ProtocolError(f'unexpected status code: {rsp.status_code}')
+            raise DCSProtocolError(
+                f'unexpected status code: {rsp.status_code}')
 
         if TOKEN_HEADER_NAME not in rsp.headers:
-            raise ProtocolError(f'unexpected status code: {rsp.status_code}')
+            raise DCSProtocolError(
+                f'unexpected status code: {rsp.status_code}')
         token = rsp.headers[TOKEN_HEADER_NAME]
 
         self._session.headers.update({TOKEN_HEADER_NAME: token})
@@ -73,46 +89,41 @@ class DCSClient:
         rsp = self._session.get(self._route('api/compute'))
 
         if rsp.status_code != 200:
-            raise ProtocolError(f'unexpected status code: {rsp.status_code}')
+            raise DCSProtocolError(
+                f'unexpected status code: {rsp.status_code}')
 
         try:
             j = json.loads(rsp.content)
         except json.JSONDecodeError:
-            raise ProtocolError('invalid json')
+            raise DCSValidationError('invalid json')
 
         if j["status"] == "success":
             desc = j["description"]
             if desc is None:
-                raise ProtocolError('invalid json')
+                raise DCSValidationError('invalid json')
             value = j["computed_value"]
+            if len(value) > 200:
+                raise DCSValidationError('too long computed value')
             if value is None:
-                raise ProtocolError('invalid json')
+                raise DCSValidationError('invalid json')
             return GetResult('', value, desc)
 
         if j["status"] == "error":
+            desc = j["description"]
+            if desc is None:
+                raise DCSValidationError('invalid json')
             msg = j["message"]
+            if len(msg) > 300:
+                raise DCSValidationError('too long message')
             if msg is None:
-                raise ProtocolError('invalid json')
-            return GetResult(msg, '', '')
+                raise DCSValidationError('invalid json')
+            return GetResult('', msg, desc)
 
-        raise ProtocolError('invalid json')
+        raise DCSProtocolError('invalid json')
 
 
 if __name__ == '__main__':
     with DCSClient('localhost', 7654) as c:
-#        print(c.get())
-
-        print(c.create('fun main() { return 3.14; }', 'this is description'))
-        print(c.get())
-
-        print(c.create('fun main() { x = 3.14; return x; }', 'this is description'))
-        print(c.get())
-
-        print(c.create('fun main() { x = 3.14; }', 'this is description'))
-        print(c.get())
-
-        print(c.create('fun f(x) { if (x < 0) { return -x; } else { return x; } fun main() { return x(-42); }', 'this is description'))
-        print(c.get())
-
-        print(c.create('fun f(x) { if (x < 0) { return -x; } return x; } fun main() { return f(-42); }', 'this is description'))
+        print(c.create(
+            'fun f() { return 3.1415927; } fun main() { return f(); }', 'this is description'))
         print(c.get())

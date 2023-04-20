@@ -32,7 +32,7 @@ Executor::Executor(std::size_t executorsAmount) : runningInstances(0), acceptNew
     for (std::size_t i = 0; i < executorsAmount; ++i) {
         auto &u = units.u[i];
         u.free = true;
-        u.executable = reinterpret_cast<uint8_t *>(arena.ptr) + kPagesPerExecutor * i;
+        u.executable = reinterpret_cast<uint8_t *>(arena.ptr) + pageSize * kPagesPerExecutor * i;
         u.executableSize = (kPagesPerExecutor - 1) * pageSize;
         // last page will be used as storage for computed value
         u.writable = reinterpret_cast<uint8_t *>(u.executable) + u.executableSize;
@@ -114,7 +114,7 @@ std::shared_ptr<Executor::ExecuteResult> Executor::Execute(const std::vector<uin
     }
 
     if (mprotect(executable, executableSize, PROT_WRITE | PROT_READ) != 0) {
-        LOG(ERROR) << PError("mprotect");
+        LOG(ERROR) << PError("mprotect(PROT_WRITE | PROT_READ)");
         result->Status = ExecuteResult::START_ERROR;
         result->ErrorMessage = PError("mprotect(PROT_WRITE | PROT_READ)");
         return result;
@@ -124,7 +124,7 @@ std::shared_ptr<Executor::ExecuteResult> Executor::Execute(const std::vector<uin
     std::memcpy(executable, code.data(), code.size());
 
     if (mprotect(executable, executableSize, PROT_READ | PROT_EXEC) != 0) {
-        LOG(ERROR) << PError("mprotect");
+        LOG(ERROR) << PError("mprotect(PROT_READ | PROT_EXEC)");
         result->Status = ExecuteResult::START_ERROR;
         result->ErrorMessage = PError("mprotect(PROT_READ | PROT_EXEC)");
         return result;
@@ -171,7 +171,7 @@ std::shared_ptr<Executor::ExecuteResult> Executor::Execute(const std::vector<uin
         }
         if (st == pid) {
             if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-                LOG(ERROR) << "process " << pid << " finished successfully";
+                LOG(INFO) << "process " << pid << " finished successfully";
                 result->Value = (*reinterpret_cast<double*>(writable));
                 result->Status = ExecuteResult::OK;
                 return result;
