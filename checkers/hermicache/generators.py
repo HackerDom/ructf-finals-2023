@@ -35,7 +35,7 @@ def gen_base(size):
 
 
 def gen_recurrent_field():
-    size = random.randint(1, 5)
+    size = random.randint(1, 4)
 
     return {
         'type': FieldType.RECURRENT,
