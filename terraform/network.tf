@@ -6,7 +6,7 @@ resource "digitalocean_record" "cloud_a" {
   domain = digitalocean_domain.cloud.id
   type   = "A"
   name   = "@"
-  value  = "159.223.216.233"
+  value  = digitalocean_droplet.cloud.ipv4_address
   ttl    = 30
 }
 

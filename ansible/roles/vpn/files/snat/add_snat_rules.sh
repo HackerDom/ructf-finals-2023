@@ -3,7 +3,7 @@
 # this script should be run once before the game starts
 
 # check if the rules are already exists
-for num in {0..-1}; do
+for num in {0..59}; do
     ip="10.$((80 + num / 256)).$((num % 256)).1"
 
     if iptables -t nat -C POSTROUTING -o team${num} -j SNAT --to-source ${ip} &>/dev/null; then
@@ -13,7 +13,7 @@ for num in {0..-1}; do
 done
 
 
-for num in {0..-1}; do
+for num in {0..59}; do
     ip="10.$((80 + num / 256)).$((num % 256)).1"
 
     iptables -t nat -A POSTROUTING -o team${num} -j SNAT --to-source ${ip}
