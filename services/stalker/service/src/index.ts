@@ -29,7 +29,7 @@ async function init(): Promise<void> {
     await waitDatabase();
 
     try {
-        await db.sync({ force: true });
+        await db.sync();
     } catch (error) {
         throw new Error('failed to sync models', { cause: error });
     }
