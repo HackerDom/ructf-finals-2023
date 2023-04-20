@@ -180,7 +180,8 @@ Parsed<FunctionCallNode> ParserWithContext::readFunctionCallNode() {
 
     if (currentTokenIs(Token::Type::Name) ||
         currentTokenIs(Token::Type::Number) ||
-        currentTokenIs(Token::Type::LeftParen)) {
+        currentTokenIs(Token::Type::LeftParen) ||
+        currentTokenIs(Token::Type::Minus)) {
         auto expression = readExpressionNode();
         if (!expression.errorMessage.empty()) {
             return {nullptr, expression.errorMessage};

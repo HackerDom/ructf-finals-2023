@@ -1414,3 +1414,58 @@ DcsProgramNode
 )",
 "");
 }
+
+TEST(Parser, CallNeg) {
+    assertParsingByPrint(R"(
+fun f(x, y) {
+    return x + y;
+}
+
+fun main() {
+    return f(-1, -1);
+}
+)",
+R"(
+DcsProgramNode
+ ├FunctionDefinitionNode
+ │├IdNode 'f'
+ │├ArgumentsDefinitionListNode
+ ││├IdNode 'x'
+ ││└IdNode 'y'
+ │└StatementListNode
+ │ └StatementNode
+ │  └ReturnStatementNode
+ │   └ExpressionNode
+ │    └AdditiveExpressionNode
+ │     ├MultiplicativeExpressionNode
+ │     │└UnaryExpressionNode
+ │     │ └IdNode 'x'
+ │     ├SUM
+ │     └MultiplicativeExpressionNode
+ │      └UnaryExpressionNode
+ │       └IdNode 'y'
+ └FunctionDefinitionNode
+  ├IdNode 'main'
+  ├ArgumentsDefinitionListNode
+  └StatementListNode
+   └StatementNode
+    └ReturnStatementNode
+     └ExpressionNode
+      └AdditiveExpressionNode
+       └MultiplicativeExpressionNode
+        └UnaryExpressionNode
+         └FunctionCallNode
+          ├IdNode 'f'
+          ├ExpressionNode
+          │└AdditiveExpressionNode
+          │ └MultiplicativeExpressionNode
+          │  └UnaryExpressionNode
+          │   └ConstantValueNode -1.000000
+          └ExpressionNode
+           └AdditiveExpressionNode
+            └MultiplicativeExpressionNode
+             └UnaryExpressionNode
+              └ConstantValueNode -1.000000
+)",
+                         "");
+}
