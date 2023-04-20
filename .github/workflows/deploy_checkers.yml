@@ -11,6 +11,6 @@ jobs:
     - name: Checkout infra
       uses: actions/checkout@v2
     - name: fix ssh-key permissions
-      run: (cd ansible/cs && chmod 600 .keys/cs_key)
+      run: (cd ansible && chmod 600 .keys/cs_key)
     - name: deploy checkers
-      run: (cd ansible/cs && ansible-playbook --private-key .keys/cs_key cs-checkers.yml)
+      run: (cd ansible && ansible-playbook --private-key .keys/cs_key cs-checkers.yml)
