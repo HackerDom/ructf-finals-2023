@@ -59,6 +59,7 @@ build {
       "useradd -m -s /bin/bash bookster",
       "useradd -m -s /bin/bash example",
       "useradd -m -s /bin/bash hermicache",
+      "useradd -m -s /bin/bash museumorphosis",
       "useradd -m -s /bin/bash sneakers",
       "useradd -m -s /bin/bash solaris",
     ]
@@ -108,6 +109,10 @@ build {
     destination = "/home/hermicache/"
   }
   provisioner "file" {
+    source = "../services/museumorphosis/"
+    destination = "/home/museumorphosis/"
+  }
+  provisioner "file" {
     source = "../services/sneakers/"
     destination = "/home/sneakers/"
   }
@@ -129,6 +134,9 @@ build {
       "cd ~hermicache",
       "docker-compose build || true",
 
+      "cd ~museumorphosis",
+      "docker-compose build || true",
+
       "cd ~sneakers",
       "docker-compose build || true",
 
@@ -139,6 +147,7 @@ build {
       "systemctl enable ructf-service@bookster",
       "systemctl enable ructf-service@example",
       "systemctl enable ructf-service@hermicache",
+      "systemctl enable ructf-service@museumorphosis",
       "systemctl enable ructf-service@sneakers",
       "systemctl enable ructf-service@solaris",
     ]
