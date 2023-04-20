@@ -44,6 +44,6 @@ monitoring
 vpn.a ansible_host=${digitalocean_droplet.vpn.ipv4_address}
 
 [cloud_master]
-cloud.a ansible_host=${digitalocean_droplet.cloud-test.ipv4_address}
+cloud.a ansible_host=${digitalocean_droplet.cloud.ipv4_address}
 EOF
 }

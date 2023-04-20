@@ -1,6 +1,6 @@
-resource "digitalocean_droplet" "cloud-test" {
+resource "digitalocean_droplet" "cloud" {
   image  = "ubuntu-20-04-x64"
-  name   = "cloud-test"
+  name   = "cloud"
   region = var.region
   size   = "g-2vcpu-8gb"
   ssh_keys = [

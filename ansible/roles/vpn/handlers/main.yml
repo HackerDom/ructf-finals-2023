@@ -1,5 +1,5 @@
 - name: restart openvpn
-  shell: /bin/bash -c "/bin/systemctl restart openvpn@{0..-1}"
+  shell: /bin/bash -c "/bin/systemctl restart openvpn@{0..59}"
 
 - name: restart nginx
   service: name=nginx state=restarted
