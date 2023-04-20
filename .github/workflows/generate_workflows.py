@@ -6,10 +6,11 @@ services_dir = os.path.join(ctf_root, 'services')
 
 SERVICES = [
   'example',
-  'bookster',
+  # 'bookster',
   'solaris',
-  # 'sneakers',
+  'sneakers',
   'hermicache',
+  'museumorphosis',
  ]
 
 TEMPLATE = '''
