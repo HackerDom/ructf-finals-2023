@@ -2,7 +2,6 @@ import { UniqueConstraintError } from 'sequelize';
 
 import {
     AlreadyExistsError,
-    InvalidArgumentError,
     InvalidCredentialsError,
     UnexpectedError,
     UserNotFoundError,
@@ -11,31 +10,23 @@ import {
 import { User } from '@root/database/models';
 import { compareStrings, createHash } from '@root/utils';
 
-import { type Context, type Message, type Method } from './index';
-
-type RegisterUserRequest = {
-    name: string;
-    password: string;
-};
-type RegisterUserResponse = Message;
-
-type LoginUserRequest = {
-    name: string;
-    password: string;
-};
-type LoginUserResponse = Message;
-
-type LogoutUserRequest = Message;
-type LogoutUserResponse = Message;
-
-type GetUserRequest = {
-    name: string;
-};
-type GetUserResponse = {
-    name: string;
-    ownedNotes: string[];
-    sharedNotes?: string[];
-};
+import {
+    type GetUserRequest,
+    type GetUserResponse,
+    type LoginUserRequest,
+    type LoginUserResponse,
+    type LogoutUserRequest,
+    type LogoutUserResponse,
+    type RegisterUserRequest,
+    type RegisterUserResponse,
+} from './messages';
+import {
+    isGetUserRequest,
+    isLoginUserRequest,
+    isLogoutUserRequest,
+    isRegisterUserRequest,
+} from './validators';
+import { type Context, type Method } from './index';
 
 type UsersService = {
     register: Method<RegisterUserRequest, RegisterUserResponse>;
@@ -46,12 +37,8 @@ type UsersService = {
 
 const Users: UsersService = {
     async register(ctx: Context, req: RegisterUserRequest): Promise<RegisterUserResponse> {
-        if (typeof req.name !== 'string') {
-            throw new InvalidArgumentError('\'name\' should be string');
-        }
-
-        if (typeof req.password !== 'string') {
-            throw new InvalidArgumentError('\'password\' should be string');
+        if (!isRegisterUserRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         if (!(req.name.length > 0 && req.name.length < 128) || !/\w+/.test(req.name)) {
@@ -79,12 +66,8 @@ const Users: UsersService = {
     },
 
     async login(ctx: Context, req: LoginUserRequest): Promise<LoginUserResponse> {
-        if (typeof req.name !== 'string') {
-            throw new InvalidArgumentError('\'name\' should be string');
-        }
-
-        if (typeof req.password !== 'string') {
-            throw new InvalidArgumentError('\'password\' should be string');
+        if (!isLoginUserRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         const user = await User.findOne({ where: { name: req.name } });
@@ -99,14 +82,18 @@ const Users: UsersService = {
     },
 
     async logout(ctx: Context, req: LogoutUserRequest): Promise<LogoutUserResponse> {
+        if (!isLogoutUserRequest(req)) {
+            throw new ValidationError('invalid request message');
+        }
+
         ctx.user = null;
 
         return {};
     },
 
     async get(ctx: Context, req: GetUserRequest): Promise<GetUserResponse> {
-        if (typeof req.name !== 'string') {
-            throw new InvalidArgumentError('\'name\' should be string');
+        if (!isGetUserRequest(req)) {
+            throw new ValidationError('invalid request message');
         }
 
         const user = await User.findOne({ where: { name: req.name } });

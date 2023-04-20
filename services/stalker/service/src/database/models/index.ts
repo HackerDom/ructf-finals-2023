@@ -7,12 +7,14 @@ Note.belongsTo(User, { as: 'owner', foreignKey: 'ownerId' });
 
 User.belongsToMany(Note, {
     as: 'sharedNotes',
+    sourceKey: 'id',
     foreignKey: 'userId',
     otherKey: 'noteId',
     through: Viewers,
 });
 Note.belongsToMany(User, {
     as: 'viewers',
+    sourceKey: 'id',
     foreignKey: 'noteId',
     otherKey: 'userId',
     through: Viewers,

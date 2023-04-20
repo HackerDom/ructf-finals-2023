@@ -1,13 +1,13 @@
 import { Hono } from 'hono';
 
 import { errorHandler } from '@root/application/handlers';
-import { type Environment, authCookieMiddleware } from '@root/application/middlewares';
+import { type Environment, authTokenMiddleware } from '@root/application/middlewares';
+
+const TOKEN_HEADER_NAME = 'X-Token';
 
 export class ServiceRouter extends Hono<Environment> {
-    private static cookieName = 'token';
-
-    withAuthCookie(cookieName: string = ServiceRouter.cookieName): void {
-        this.use('*', authCookieMiddleware(cookieName));
+    withAuthToken(): void {
+        this.use('*', authTokenMiddleware(TOKEN_HEADER_NAME));
     }
 
     withErrorHandler(): void {

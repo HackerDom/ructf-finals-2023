@@ -4,19 +4,19 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src --fix",
-    "start": "bun src/index.ts"
+    "start": "bun run src/index.ts"
   },
   "dependencies": {
-    "hono": "^3.0.5",
-    "jose": "^4.13.1",
-    "mariadb": "^2.1.0",
-    "sequelize": "^6.29.3"
+    "hono": "^3.1.6",
+    "jose": "^4.14.0",
+    "mariadb": "^3.1.1",
+    "sequelize": "^6.31.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
     "bun-types": "^0.5.8",
-    "eslint": "^8.36.0",
-    "typescript": "^5.0.2"
+    "eslint": "^8.38.0",
+    "typescript": "^5.0.4"
   }
 }

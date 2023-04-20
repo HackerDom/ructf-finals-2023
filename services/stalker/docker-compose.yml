@@ -1,0 +1,51 @@
+version: '2.2'
+
+services:
+  bun:
+    build:
+      context: service
+    cpus: 1
+    pids_limit: 1024
+    mem_limit: 1G
+    memswap_limit: 1G
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    ports:
+      - 17171:3000
+    environment:
+      - STATIC_ROOT=/var/www/static/
+      - WORKERS_COUNT=1
+      - DATABASE_HOST=mariadb
+    volumes:
+      - secrets:/tmp/secrets:rw
+      - ./frontend:/var/www/static:ro
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10
+    cpus: 1
+    pids_limit: 512
+    mem_limit: 1G
+    memswap_limit: 1G
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
+    restart: unless-stopped
+    stop_grace_period: 3s
+    environment:
+      - MARIADB_USER=mariadb
+      - MARIADB_PASSWORD=mariadb
+      - MARIADB_DATABASE=mariadb
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+    volumes:
+      - database:/var/lib/mysql:rw
+
+volumes:
+  secrets:
+  database:

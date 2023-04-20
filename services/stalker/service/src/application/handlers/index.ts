@@ -28,7 +28,6 @@ export function errorHandler<T extends Env>(): ErrorHandler<T> {
                     message: unwrapError(error),
                 };
             } else {
-                console.log(error);
                 response = {
                     name: 'UnknownError',
                     message: unwrapError(error),
@@ -44,7 +43,7 @@ export function errorHandler<T extends Env>(): ErrorHandler<T> {
     };
 }
 
-export function staticFilesHandler<T extends Env>(root: string): Handler<T> {
+export function staticFilesHandler<T extends Env>(root: string, index = 'index.html'): Handler<T> {
     return (ctx: Context<T>) => {
         let filePath: string;
 
@@ -55,12 +54,20 @@ export function staticFilesHandler<T extends Env>(root: string): Handler<T> {
             throw new HTTPException(403, { message: '403 Access Denied' });
         }
 
+        if (filePath === root) {
+            filePath = path.join(filePath, path.sep, index);
+        }
+
         const file = Bun.file(filePath);
 
         if (file.size === 0) {
             throw new HTTPException(404, { message: '404 Not Found' });
         }
 
-        return ctx.body(file.stream(), 200);
+        try {
+            return ctx.body(file.stream(), 200);
+        } catch (error: unknown) {
+            throw new HTTPException(500, { message: '500 Internal Server Error' });
+        }
     };
 }
