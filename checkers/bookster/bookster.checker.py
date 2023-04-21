@@ -243,7 +243,7 @@ class XSSChecker(VulnChecker):
         try:
             status, data = api.get_book(request.public_flag_id)
             if status != 200:
-                return Verdict.MUMBLE(f"Get book failed with status {status}")
+                return Verdict.CORRUPT(f"Get book failed with status {status}")
             if "text" not in data or data["text"] != request.flag:
                 return Verdict.CORRUPT("Get book wrong text")
         except AuthError:
