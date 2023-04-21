@@ -207,3 +207,13 @@ func (r *Repo) GetRequestsList(ctx context.Context, username string) ([]string, 
 
 	return requests, nil
 }
+
+func (r *Repo) Clean(ctx context.Context) error {
+	_, err := r.col.UpdateMany(ctx, map[string]string{}, map[string]map[string]string{"$unset": {
+		"jokes": "", "friends": "", "friend_requests": ""}})
+	if err != nil {
+		return fmt.Errorf("error while cleaning: %w", err)
+	}
+
+	return nil
+}
