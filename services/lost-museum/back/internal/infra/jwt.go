@@ -5,12 +5,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func GenerateToken(u map[string]string, perms []string, secret string) (string, error) {
+func GenerateToken(u map[string]string, secret string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["username"] = u["username"]
-	claims["permissions"] = perms
 
 	result, err := token.SignedString([]byte(secret))
 	if err != nil {

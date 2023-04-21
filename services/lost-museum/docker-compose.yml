@@ -1,10 +1,8 @@
 services:
   web:
     build:
-      context: .
+      context: ./back
     restart: always
-    ports:
-      - 8000:8000
     mem_limit: 1G
     memswap_limit: 1G
     cpu_count: 1
@@ -22,6 +20,24 @@ services:
       - mongo:/data/db
     ports:
       - 27018:27017 # TODO убрать нахуй
+    mem_limit: 1G
+    memswap_limit: 1G
+    cpu_count: 1
+    pids_limit: 128
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 8192
+  nginx:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - 18888:80
+    depends_on:
+      - web
+      - mongo
     mem_limit: 1G
     memswap_limit: 1G
     cpu_count: 1
