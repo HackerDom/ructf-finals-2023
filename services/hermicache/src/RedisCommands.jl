@@ -4,7 +4,7 @@ using Redis
 reentrant_lock = ReentrantLock()
 
 
-expiration_time = 3
+expiration_time = 60 * 20
 
 function Redis_set(conn, key, value)
     lock(reentrant_lock) do
