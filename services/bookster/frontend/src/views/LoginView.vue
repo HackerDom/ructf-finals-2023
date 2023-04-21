@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <va-card tag="div">
-      <va-card-title>Вход</va-card-title>
+      <va-card-title>Sign In</va-card-title>
       <va-card-content>
         <va-form style="width: 250px;">
           <p class="error" v-if="error">{{error}}</p>
