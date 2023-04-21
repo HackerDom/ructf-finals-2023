@@ -5,38 +5,13 @@ using JSONSchema
 using DataStructures
 
 
-reentrant_lock = ReentrantLock()
-
-function Redis_set(conn, key, value)
-    lock(reentrant_lock) do
-        Redis.set(conn, key, value)
-    end
-end
-
-function Redis_get(conn, key)
-    lock(reentrant_lock) do
-        return Redis.get(conn, key)
-    end
-end
-
-function Redis_rpush(conn, key, value)
-    lock(reentrant_lock) do
-        Redis.rpush(conn, key, value)
-    end
-end
-
-function Redis_lrange(conn, key, l, r)
-    lock(reentrant_lock) do
-        Redis.lrange(conn, key, l, r)
-    end
-end
-
-
+include("Cache.jl")
 include("Compute.jl")
 include("Config.jl")
+include("RedisCommands.jl")
 include("Storage.jl")
-include("Cache.jl")
 include("SessionManager.jl")
+
 
 struct RestController <: ApplicationController
     conn::Conn
