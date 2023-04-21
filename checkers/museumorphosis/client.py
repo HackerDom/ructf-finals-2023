@@ -67,7 +67,7 @@ class Client:
         headers = {"token": auth_token} if auth_token else None
         abs_url = self.api_url + url
         try:
-            response = request(url=abs_url + "a", json=json_data, headers=headers)
+            response = request(url=abs_url, json=json_data, headers=headers)
         except requests.ConnectionError:
             raise raise_http_error("Connection error")
         except requests.Timeout:
