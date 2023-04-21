@@ -20,6 +20,6 @@ namespace sneakers.Configuration
         public string NeuroVelvetPattern = "neuro*";
 
         public TimeSpan StorageDumpPeriod = 10.Seconds();
-        public TimeSpan StorageClearPeriod = 1.Hours();
+        public TimeSpan StorageClearPeriod = 2.Hours();
     }
 }

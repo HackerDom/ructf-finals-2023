@@ -6,12 +6,12 @@ from utils import raise_http_error, raise_invalid_http_code_error
 
 class Client:
     def __init__(self, host, port=6969):
-        self.api_url = f"http://{host}:{port}/"
+        self.api_url = f"http://{host}:{port}/api/"
 
     def register_museum(self, name: str, password: str) -> str:
         resp = self._send_request(
             "register",
-            requests_with_retries().post,
+            requests_with_retries(status_forcelist=(500, 502)).post,
             json_data={"name": name, "password": password}
         ).json()
         return resp.get("token", "")
@@ -19,7 +19,7 @@ class Client:
     def login_museum(self, id: str, password: str) -> str:
         resp = self._send_request(
             "login",
-            requests_with_retries().post,
+            requests_with_retries(status_forcelist=(500, 502)).post,
             json_data={"id": id, "password": password}
         ).json()
 
@@ -28,19 +28,19 @@ class Client:
     def get_museum(self, id: str):
         return self._send_request(
             f"museums/{id}",
-            requests_with_retries().get,
+            requests_with_retries(status_forcelist=(500, 502)).get,
         ).json()
 
     def get_museums_list(self):
         return self._send_request(
             f"museums",
-            requests_with_retries().get,
+            requests_with_retries(status_forcelist=(500, 502)).get,
         ).json()
 
     def create_exhibit(self, title: str, description: str, metadata: str, token: str):
         return self._send_request(
             f"museum/exhibits",
-            requests_with_retries().post,
+            requests_with_retries(status_forcelist=(500, 502)).post,
             json_data={
                 "title": title,
                 "description": description,
@@ -52,14 +52,14 @@ class Client:
     def get_exhibit(self, id: str, token: str):
         return self._send_request(
             f"museum/exhibits/{id}",
-            requests_with_retries().get,
+            requests_with_retries(status_forcelist=(500, 502)).get,
             auth_token=token,
         ).json()
 
     def get_exhibit_list_by_search(self, search: str, token: str):
         return self._send_request(
             f"museum/exhibits?search={search}",
-            requests_with_retries().get,
+            requests_with_retries(status_forcelist=(500, 502)).get,
             auth_token=token,
         ).json()
 

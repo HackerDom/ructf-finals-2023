@@ -21,12 +21,19 @@ type ExhibitOut struct {
 	Metadata    string `json:"metadata"`
 }
 
-func SerializeExhibit(exhibit *internal.Exhibit) *ExhibitOut {
+func SerializeExhibit(exhibit *internal.Exhibit, isAuth bool) *ExhibitOut {
+	if isAuth {
+		return &ExhibitOut{
+			Id:          exhibit.Id,
+			Title:       exhibit.Title,
+			Description: exhibit.Description,
+			Metadata:    exhibit.Metadata,
+		}
+	}
 	return &ExhibitOut{
 		Id:          exhibit.Id,
 		Title:       exhibit.Title,
 		Description: exhibit.Description,
-		Metadata:    exhibit.Metadata,
 	}
 }
 
@@ -34,10 +41,10 @@ type ExhibitListOut struct {
 	Exhibits []*ExhibitOut `json:"exhibits"`
 }
 
-func SerializeExhibitList(exhibits []*internal.Exhibit) *ExhibitListOut {
+func SerializeExhibitList(exhibits []*internal.Exhibit, isAuth bool) *ExhibitListOut {
 	res := make([]*ExhibitOut, 0)
 	for _, exhibit := range exhibits {
-		res = append(res, SerializeExhibit(exhibit))
+		res = append(res, SerializeExhibit(exhibit, isAuth))
 	}
 	return &ExhibitListOut{Exhibits: res}
 }
