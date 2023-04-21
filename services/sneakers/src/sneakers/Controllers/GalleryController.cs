@@ -43,6 +43,7 @@ public class GalleryController : ControllerBase
             .Skip(skip)
             .Take(take)
             .Select(x => x.ToModel())
+            .Take(count: 50)
             .ToList();
 
         return new GetSneakersModel(count, result);
