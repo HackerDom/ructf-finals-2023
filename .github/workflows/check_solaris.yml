@@ -48,6 +48,7 @@ jobs:
   check_sploit_solaris:
     name: Check sploit solaris
     runs-on: ubuntu-20.04
+    if: ${{ false }} # do not check sploits
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2

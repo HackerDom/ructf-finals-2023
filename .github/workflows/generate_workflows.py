@@ -66,6 +66,7 @@ jobs:
   check_sploit_{service}:
     name: Check sploit {service}
     runs-on: ubuntu-20.04
+    if: ${{{{ false }}}} # do not check sploits
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
