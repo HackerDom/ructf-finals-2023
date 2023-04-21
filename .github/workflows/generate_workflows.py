@@ -8,8 +8,11 @@ SPLOIT = [
   # 'bookster',
   'dcs',
   'example',
+  'hermicache',
+  'lost_museum',
+  'museumorphosis',
+  'scp',
   'sneakers',
-  'lost_museum'
 ]
 
 SERVICES = [
