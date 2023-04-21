@@ -41,31 +41,49 @@ cs_round_length: 60
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
 cs_time: "['2023-04-18 07:30:00', '2023-04-22 09:59:59']"
+# cs_time: "['2023-04-22 06:00:00', '2023-04-22 08:00:00'], ['2023-04-22 09:00:00', '2023-04-22 14:00:00']"
 
 cs_scoring: |
     start_flag_price => 10,
-    heating_speed => 1/12,
-    max_flag_price => 10,
-    cooling_down => 1/2,
-    heating_flags_limit => 1000000,
-    cooling_submissions_limit => 1,
-    dying_rounds => 120,
+    heating_speed => 1/6,
+    max_flag_price => 30,
+    cooling_down => 2/3,
+    heating_flags_limit => 1200,
+    cooling_submissions_limit => 1200,
+    dying_rounds => 720,
     dying_flag_price => 10
 
 cs_checkers_hostname_cb: |
   sub { my ($team, $service) = @_; $team->{host} }
 
 teams: |
-  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28' },
-  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3', token => 'CLOUD_31_4b74c7f1fa5b69cfcd7268c4962bbffb' },
-  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3', token => 'CLOUD_32_95da288b4298c2a1eb2218cb55d9b2c1' },
+  {name => 'datapoison',          network => '10.60.2.0/24',  host => '10.60.2.3',  token => 'CLOUD_2_b2053f8bd44e49cc31e69cee1bb30e6c' },
+  {name => 'Pixels',              network => '10.60.3.0/24',  host => '10.60.3.3',  token => 'CLOUD_3_11e4a36d951a65a4fca429ac986abbac' },
+  {name => 'HgbSec',              network => '10.60.4.0/24',  host => '10.60.4.3',  token => 'CLOUD_4_c3fb4902001a9ff1dd0cf14d03d087f6' },
+  {name => 'pwnthem0le',          network => '10.60.5.0/24',  host => '10.60.5.3',  token => 'CLOUD_5_85bb4a3327f0bcf330fc2ae3da7b4615' },
+  {name => 'SharLike',            network => '10.60.6.0/24',  host => '10.60.6.3',  token => 'CLOUD_6_bccee54f7426c30ae51f76485a298e39' },
+  {name => 'SFT0',                network => '10.60.7.0/24',  host => '10.60.7.3',  token => 'CLOUD_7_cb7da05d0dbaeee799fd8b1b714c2ff3' },
+  {name => 'Team Mazala',         network => '10.60.8.0/24',  host => '10.60.8.3',  token => 'CLOUD_8_0977f6cba20e8067020ca924c554f4b6' },
+  {name => 'OneManParty',         network => '10.60.9.0/24',  host => '10.60.9.3',  token => 'CLOUD_9_c8a088e09071f040570a229e4a1d12b2' },
+  {name => '89cr3w',              network => '10.60.10.0/24', host => '10.60.10.3', token => 'CLOUD_10_37787d66cd399fee7ce457d7699482ea' },
+  {name => 'HorseSteppin',        network => '10.60.11.0/24', host => '10.60.11.3', token => 'CLOUD_11_3a48ef0f8db150769a623a7869b1ffe1' },
+  {name => 'neko_guys',           network => '10.60.12.0/24', host => '10.60.12.3', token => 'CLOUD_12_6a1579b38264f67e60bc4dc5803e0ea0' },
+  {name => 'Red Cadets',          network => '10.60.13.0/24', host => '10.60.13.3', token => 'CLOUD_13_d5a160c0ce76bbc8edbb431665eef477' },
+  {name => 'SiBears',             network => '10.60.14.0/24', host => '10.60.14.3', token => 'CLOUD_14_3e223cd92620cd7e96ea0596d5a82615' },
+  {name => 'SPACE',               network => '10.60.15.0/24', host => '10.60.15.3', token => 'CLOUD_15_de12e8fa2edac039fa2cd5344e4329b1' },
+  {name => 'd01t',                network => '10.60.16.0/24', host => '10.60.16.3', token => 'CLOUD_16_51f4b6dc6ed4322e66b5cf8c727743ae' },
+  {name => 'House Of Depression', network => '10.60.17.0/24', host => '10.60.17.3', token => 'CLOUD_17_11e5e4cc2cfc0841a2a16c909ca41a25' },
+  {name => 'Team8',               network => '10.60.18.0/24', host => '10.60.18.3', token => 'CLOUD_18_d74ddccd3cffdf58ea3a01fe677e0b12' },
+  {name => 'Wetox',               network => '10.60.19.0/24', host => '10.60.19.3', token => 'CLOUD_19_2cfef27e4131415d0cbf0709b186c4e5' },
+  {name => 'NPC',                 network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28' },
 
 services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
   {name => 'dcs', path => 'checkers/dcs/dcs.checker.py', timeout => 30, tcp_port => 7654},
   {name => 'hermicache', path => 'checkers/hermicache/hermicache.checker.py', timeout => 30, tcp_port => 8080},
+  {name => 'lost_museum', path => 'checkers/lost_museum/lost_museum.checker.py', timeout => 30, tcp_port => 18888},
   {name => 'museumorphosis', path => 'checkers/museumorphosis/museumorphosis.checker.py', timeout => 30, tcp_port => 6969},
-  {name => 'scp', path => 'checkers/sneakers/sneakers.checker.py', timeout => 30, tcp_port => 8081},
+  {name => 'scp', path => 'checkers/scp/scp.checker.py', timeout => 30, tcp_port => 8081},
   {name => 'sneakers', path => 'checkers/sneakers/sneakers.checker.py', timeout => 30, tcp_port => 7777},
   {name => 'solaris', path => 'checkers/solaris/solaris.checker.py', timeout => 30, tcp_port => 17173},
   {name => 'stalker', path => 'checkers/stalker/stalker.checker.py', timeout => 30, tcp_port => 17171},

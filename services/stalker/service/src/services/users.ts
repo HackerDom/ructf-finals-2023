@@ -8,6 +8,7 @@ import {
     ValidationError,
 } from '@root/services/errors';
 import { User } from '@root/database/models';
+import { type AppContext } from '@root/application/context';
 import { compareStrings, createHash } from '@root/utils';
 
 import {
@@ -26,7 +27,7 @@ import {
     isLogoutUserRequest,
     isRegisterUserRequest,
 } from './validators';
-import { type Context, type Method } from './index';
+import { type Method } from './index';
 
 type UsersService = {
     register: Method<RegisterUserRequest, RegisterUserResponse>;
@@ -36,7 +37,7 @@ type UsersService = {
 };
 
 const Users: UsersService = {
-    async register(ctx: Context, req: RegisterUserRequest): Promise<RegisterUserResponse> {
+    async register(ctx: AppContext, req: RegisterUserRequest): Promise<RegisterUserResponse> {
         if (!isRegisterUserRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -65,7 +66,7 @@ const Users: UsersService = {
         return {};
     },
 
-    async login(ctx: Context, req: LoginUserRequest): Promise<LoginUserResponse> {
+    async login(ctx: AppContext, req: LoginUserRequest): Promise<LoginUserResponse> {
         if (!isLoginUserRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -81,7 +82,7 @@ const Users: UsersService = {
         return {};
     },
 
-    async logout(ctx: Context, req: LogoutUserRequest): Promise<LogoutUserResponse> {
+    async logout(ctx: AppContext, req: LogoutUserRequest): Promise<LogoutUserResponse> {
         if (!isLogoutUserRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -91,7 +92,7 @@ const Users: UsersService = {
         return {};
     },
 
-    async get(ctx: Context, req: GetUserRequest): Promise<GetUserResponse> {
+    async get(ctx: AppContext, req: GetUserRequest): Promise<GetUserResponse> {
         if (!isGetUserRequest(req)) {
             throw new ValidationError('invalid request message');
         }

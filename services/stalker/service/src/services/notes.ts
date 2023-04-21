@@ -10,6 +10,7 @@ import {
     ValidationError,
 } from '@root/services/errors';
 import { Note, User } from '@root/database/models';
+import { type AppContext } from '@root/application/context';
 
 import {
     type CreateNoteRequest,
@@ -30,7 +31,7 @@ import {
     isGetNoteRequest,
     isShareNoteRequest,
 } from './validators';
-import { type Context, type Method } from './index';
+import { type Method } from './index';
 
 type NotesService = {
     get: Method<GetNoteRequest, GetNoteResponse>;
@@ -41,7 +42,7 @@ type NotesService = {
 };
 
 const Notes: NotesService = {
-    async get(ctx: Context, req: GetNoteRequest): Promise<GetNoteResponse> {
+    async get(ctx: AppContext, req: GetNoteRequest): Promise<GetNoteResponse> {
         if (!isGetNoteRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -80,7 +81,7 @@ const Notes: NotesService = {
         return response;
     },
 
-    async create(ctx: Context, req: CreateNoteRequest): Promise<CreateNoteResponse> {
+    async create(ctx: AppContext, req: CreateNoteRequest): Promise<CreateNoteResponse> {
         if (!isCreateNoteRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -114,7 +115,7 @@ const Notes: NotesService = {
         return {};
     },
 
-    async share(ctx: Context, req: ShareNoteRequest): Promise<ShareNoteResponse> {
+    async share(ctx: AppContext, req: ShareNoteRequest): Promise<ShareNoteResponse> {
         if (!isShareNoteRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -144,7 +145,7 @@ const Notes: NotesService = {
         return {};
     },
 
-    async deny(ctx: Context, req: DenyNoteRequest): Promise<DenyNoteResponse> {
+    async deny(ctx: AppContext, req: DenyNoteRequest): Promise<DenyNoteResponse> {
         if (!isDenyNoteRequest(req)) {
             throw new ValidationError('invalid request message');
         }
@@ -174,7 +175,7 @@ const Notes: NotesService = {
         return {};
     },
 
-    async destroy(ctx: Context, req: DestroyNoteRequest): Promise<DestroyNoteResponse> {
+    async destroy(ctx: AppContext, req: DestroyNoteRequest): Promise<DestroyNoteResponse> {
         if (!isDestroyNoteRequest(req)) {
             throw new ValidationError('invalid request message');
         }

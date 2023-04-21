@@ -1,5 +1,6 @@
 import { Notes } from '@root/services';
 import { parseJson } from '@root/utils';
+import { withAppContext } from '@root/application/context';
 
 import { ServiceRouter } from './router';
 
@@ -8,46 +9,46 @@ const router = new ServiceRouter();
 router.withErrorHandler();
 router.withAuthToken();
 
-router.all('/:title', async (ctx) => {
+router.get('/:title', withAppContext(async (ctx, appCtx) => {
     const { title } = ctx.req.param();
 
     return ctx.jsonT(
-        await Notes.get(ctx.env, { title }),
+        await Notes.get(appCtx, { title }),
     );
-});
+}));
 
-router.post('/', async ctx => {
+router.post('/', withAppContext(async (ctx, appCtx) => {
     const { title, visible, content } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
-        await Notes.create(ctx.env, { title, visible, content }),
+        await Notes.create(appCtx, { title, visible, content }),
     );
-});
+}));
 
-router.post('/:title/share', async ctx => {
+router.post('/:title/share', withAppContext(async (ctx, appCtx) => {
     const { title } = ctx.req.param();
     const { viewer } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
-        await Notes.share(ctx.env, { title, viewer }),
+        await Notes.share(appCtx, { title, viewer }),
     );
-});
+}));
 
-router.post('/:title/deny', async ctx => {
+router.post('/:title/deny', withAppContext(async (ctx, appCtx) => {
     const { title } = ctx.req.param();
     const { viewer } = await parseJson(ctx.req.body);
 
     return ctx.jsonT(
-        await Notes.deny(ctx.env, { title, viewer }),
+        await Notes.deny(appCtx, { title, viewer }),
     );
-});
+}));
 
-router.post('/:title/destroy', async ctx => {
+router.post('/:title/destroy', withAppContext(async (ctx, appCtx) => {
     const { title } = ctx.req.param();
 
     return ctx.jsonT(
-        await Notes.destroy(ctx.env, { title }),
+        await Notes.destroy(appCtx, { title }),
     );
-});
+}));
 
 export default router;

@@ -17,9 +17,9 @@ def raise_recently_not_found_exc(obj, actual):
     )
 
 
-def raise_http_error():
+def raise_http_error(msg: str):
     raise VerdictException(
-        Verdict.DOWN("HTTP error")
+        Verdict.DOWN(msg)
     )
 
 
