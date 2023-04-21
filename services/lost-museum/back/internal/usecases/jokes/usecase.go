@@ -39,7 +39,7 @@ func (u *UseCase) GetJoke(ctx context.Context, requester, username, theme string
 		t, themeOK := joke["theme"]
 		s, statusOK := joke["status"]
 		if themeOK && statusOK && t == theme {
-			if s == "public" || s == "private" && slices.Contains(friends, username) {
+			if s == "public" || s == "private" && slices.Contains(friends, username) || requester == username {
 				return joke, nil
 			}
 		}
