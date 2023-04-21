@@ -17,8 +17,48 @@ std::string Format(const std::string &format, Args ... args) {
     return {buf.get(), buf.get() + size - 1};
 }
 
+template<class It>
+std::string Join(It begin, It end, std::string_view delim) {
+    std::string result;
+
+    if (begin == end) {
+        return result;
+    }
+
+    result += *begin;
+    ++begin;
+    while (begin != end) {
+        result += delim;
+        result += *begin;
+        ++begin;
+    }
+
+    return result;
+}
+
+template<class It, class F>
+std::string Join(It begin, It end, F func, std::string_view delim) {
+    std::string result;
+
+    if (begin == end) {
+        return result;
+    }
+
+    result += func(*begin);
+    ++begin;
+    while (begin != end) {
+        result += delim;
+        result += func(*begin);
+        ++begin;
+    }
+
+    return result;
+}
+
 std::string GetErrnoDescription();
+
 std::string PError(const char *prefix);
+
 std::string PError(int err, const char *prefix);
 
 static inline void LTrim(std::string &s) {

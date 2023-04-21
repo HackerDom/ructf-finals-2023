@@ -7,6 +7,7 @@
 #include <glog/logging.h>
 
 #include <utils/defer/defer.h>
+#include <utils/strings/strings.h>
 
 #include <lexer/lexer.h>
 #include <parser/parser.h>
@@ -36,12 +37,15 @@ void assertProgramResult(const std::string &program, double result) {
         return;
     }
     Defer u(munmap, region, size);
-    std::memcpy(reinterpret_cast<char*>(region), translated.Translated->data(), translated.Translated->size());
+    std::memcpy(reinterpret_cast<uint8_t*>(region), translated.Translated->data(), translated.Translated->size());
     if (mprotect(region, size, PROT_EXEC | PROT_READ) < 0) {
         perror("mprotect");
         ASSERT_FALSE(true);
         return;
     }
+    auto *begin = reinterpret_cast<uint8_t*>(region);
+    auto *end = begin + translated.Translated->size();
+    LOG(INFO) << Join(begin, end, [](uint8_t v) { return Format("%02x", v); }, ", ");
     auto l = reinterpret_cast<vptr>(region);
     double r = l();
     if (std::abs(r - result) > 1e-6) {
@@ -598,6 +602,10 @@ _start:
     leaq    cmd(%rip), %rdi
     movq    $59, %rax
     syscall
+    pop     %rax
+    pop     %rax
+    pop     %rax
+    leaveq
     ret
 
 cmd:
