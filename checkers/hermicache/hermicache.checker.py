@@ -15,6 +15,17 @@ checker = NewChecker()
 PORT = 8080
 
 
+DOWN_EXCEPTIONS = {
+    requests.exceptions.ConnectTimeout,
+    requests.exceptions.ConnectionError,
+    requests.exceptions.ReadTimeout
+}
+MUMBLE_EXCEPTIONS = {
+    requests.exceptions.HTTPError
+}
+KNOWN_EXCEPTIONS = DOWN_EXCEPTIONS | MUMBLE_EXCEPTIONS
+
+
 class ErrorChecker:
     def __init__(self):
         self.verdict = Verdict.OK()
@@ -23,21 +34,18 @@ class ErrorChecker:
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        if exc_type in {
-            requests.exceptions.ConnectTimeout,
-            requests.exceptions.ConnectionError,
-            requests.exceptions.ReadTimeout
-        }:
+        if exc_type in DOWN_EXCEPTIONS:
             self.verdict = Verdict.DOWN("Service is down")
 
-        elif exc_type in {requests.exceptions.HTTPError}:
+        elif exc_type in MUMBLE_EXCEPTIONS:
             self.verdict = Verdict.MUMBLE("Incorrect http code")
 
         if exc_type:
             print(exc_type)
             print(exc_value.__dict__)
             traceback.print_tb(exc_traceback, file=sys.stdout)
-            raise exc_value
+            if exc_type not in KNOWN_EXCEPTIONS:
+                raise exc_value
 
         return True
 
