@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout repo
+    - name: Checkout infra
       uses: actions/checkout@v2
     - name: init packer
       run: cd vuln_image && packer init image.pkr.hcl
