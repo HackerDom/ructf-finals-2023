@@ -59,7 +59,7 @@ build {
       "useradd -m -s /bin/bash bookster",
       "useradd -m -s /bin/bash dcs",
       "useradd -m -s /bin/bash hermicache",
-      "useradd -m -s /bin/bash lost-museum",
+      "useradd -m -s /bin/bash lost_museum",
       "useradd -m -s /bin/bash museumorphosis",
       "useradd -m -s /bin/bash scp",
       "useradd -m -s /bin/bash sneakers",
@@ -112,8 +112,8 @@ build {
     destination = "/home/hermicache/"
   }
   provisioner "file" {
-    source = "../services/lost-museum/"
-    destination = "/home/lost-museum/"
+    source = "../services/lost_museum/"
+    destination = "/home/lost_museum/"
   }
   provisioner "file" {
     source = "../services/museumorphosis/"
@@ -149,7 +149,7 @@ build {
       "cd ~hermicache",
       "docker-compose build || true",
 
-      "cd ~lost-museum",
+      "cd ~lost_museum",
       "docker-compose build || true",
 
       "cd ~museumorphosis",
@@ -171,7 +171,7 @@ build {
       "systemctl enable ructf-service@bookster",
       "systemctl enable ructf-service@dcs",
       "systemctl enable ructf-service@hermicache",
-      "systemctl enable ructf-service@lost-museum",
+      "systemctl enable ructf-service@lost_museum",
       "systemctl enable ructf-service@museumorphosis",
       "systemctl enable ructf-service@scp",
       "systemctl enable ructf-service@sneakers",
