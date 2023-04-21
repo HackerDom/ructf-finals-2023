@@ -73,10 +73,11 @@ class MuseumorphosisChecker(VulnChecker):
     def get(request: GetRequest) -> Verdict:
         client = Client(request.hostname)
         flag = request.flag
-        flag_id = json.loads(request.flag_id)
-        museum_id, exhibit_id = request.public_flag_id.split(':')
 
         try:
+            flag_id = json.loads(request.flag_id)
+            museum_id, exhibit_id = request.public_flag_id.split(':')
+
             print(">>Get exhibit by public flag id...")
             exhibit_json = client.get_exhibit(exhibit_id, flag_id["museum_token"])
             actual_flag = exhibit_json.get("metadata", "")

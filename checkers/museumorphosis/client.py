@@ -73,5 +73,5 @@ class Client:
         if response.status_code == 200:
             return response
         verdict_msg = f"Invalid status code: {response.status_code} for url {url}"
-        msg = f"response: {response.text}\nsend: json={json_data} headers={headers}"
+        msg = f"response: {response.text[:200]}\nsend: json={json_data} headers={headers}"
         raise raise_invalid_http_code_error(verdict_msg, msg)
