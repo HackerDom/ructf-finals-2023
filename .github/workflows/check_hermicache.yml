@@ -48,7 +48,7 @@ jobs:
   check_sploit_hermicache:
     name: Check sploit hermicache
     runs-on: ubuntu-20.04
-    if: ${{ false }}
+    if: ${{ true }}
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
