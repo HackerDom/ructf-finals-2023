@@ -18,8 +18,6 @@ services:
     restart: unless-stopped
     volumes:
       - mongo:/data/db
-    ports:
-      - 27018:27017 # TODO убрать нахуй
     mem_limit: 1G
     memswap_limit: 1G
     cpu_count: 1

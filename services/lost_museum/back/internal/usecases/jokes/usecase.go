@@ -106,7 +106,7 @@ func (u *UseCase) GetThemeJokes(ctx context.Context, username, theme string) ([]
 			t, themeOK := joke["theme"]
 			_, textOK := joke["text"]
 			if statusOK && themeOK && textOK && t == theme {
-				if s == "public" || s == "private" && slices.Contains(friends, user) {
+				if s == "public" || s == "private" && slices.Contains(friends, user) || user == username {
 					res = append(res, joke)
 				}
 			}
