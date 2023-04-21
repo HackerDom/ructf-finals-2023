@@ -47,7 +47,7 @@ cs_scoring: |
     heating_speed => 1/6,
     max_flag_price => 30,
     cooling_down => 2/3,
-    heating_flags_limit => 300,
+    heating_flags_limit => 1200,
     cooling_submissions_limit => 1200,
     dying_rounds => 720,
     dying_flag_price => 10
