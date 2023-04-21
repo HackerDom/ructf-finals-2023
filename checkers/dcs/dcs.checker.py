@@ -91,9 +91,12 @@ def do_get(request: gornilo.GetRequest) -> gornilo.Verdict:
         res = c.get(flag_id.token)
         logging.info(f'get = {res}')
 
+        if res.error == 'invalid flag':
+            return gornilo.Verdict.CORRUPT('lost flag')
+
         if res.error != '':
             raise Exception(f'unexpected GET error: {res.error}')
-        
+
         if request.flag != res.description:
             return gornilo.Verdict.CORRUPT('invalid flag')
 
@@ -125,6 +128,12 @@ def do_check(request: gornilo.CheckRequest) -> gornilo.Verdict:
         res = c.get()
 
         logging.info(f'get = {res}')
+
+        if res.error == 'invalid flag':
+            return gornilo.Verdict.CORRUPT('lost flag')
+        
+        if res.error != '':
+            raise Exception(f'unexpected GET error: {res.error}')
 
         if res.description != description:
             return gornilo.Verdict.CORRUPT('invalid flag')

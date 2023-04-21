@@ -43,7 +43,7 @@ class DCSClient:
     def __init__(self, host: str, port: int, token: str = None):
         self._addr = f'http://{host}:{port}'
         self._session = gornilo.http_clients.requests_with_retries(
-            status_forcelist=(400, 404, 500, 502, 503))
+            status_forcelist=(400, 500, 502, 503))
 
         if token is not None:
             self._session.headers.update({TOKEN_HEADER_NAME: token})
@@ -86,6 +86,9 @@ class DCSClient:
             return GetResult('no token set (get before create or previous create failed?)', '', '')
 
         rsp = self._session.get(self._route('api/compute'))
+
+        if rsp.status_code == 404:
+            return GetResult('invalid token', '', '')
 
         if rsp.status_code != 200:
             raise DCSProtocolError(
