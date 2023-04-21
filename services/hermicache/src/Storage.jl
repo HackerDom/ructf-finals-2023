@@ -1,5 +1,4 @@
 using Base64
-using Redis
 using UUIDs
 using JSON
 

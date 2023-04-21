@@ -57,11 +57,13 @@ build {
 
       # Add users for services
       "useradd -m -s /bin/bash bookster",
-      "useradd -m -s /bin/bash example",
+      "useradd -m -s /bin/bash dcs",
       "useradd -m -s /bin/bash hermicache",
       "useradd -m -s /bin/bash museumorphosis",
+      "useradd -m -s /bin/bash scp",
       "useradd -m -s /bin/bash sneakers",
       "useradd -m -s /bin/bash solaris",
+      "useradd -m -s /bin/bash stalker",
     ]
   }
 
@@ -101,8 +103,8 @@ build {
     destination = "/home/bookster/"
   }
   provisioner "file" {
-    source = "../services/example/"
-    destination = "/home/example/"
+    source = "../services/dcs/"
+    destination = "/home/dcs/"
   }
   provisioner "file" {
     source = "../services/hermicache/"
@@ -113,12 +115,20 @@ build {
     destination = "/home/museumorphosis/"
   }
   provisioner "file" {
+    source = "../services/scp/"
+    destination = "/home/scp/"
+  }
+  provisioner "file" {
     source = "../services/sneakers/"
     destination = "/home/sneakers/"
   }
   provisioner "file" {
     source = "../services/solaris/"
     destination = "/home/solaris/"
+  }
+  provisioner "file" {
+    source = "../services/stalker/"
+    destination = "/home/stalker/"
   }
 
 
@@ -128,7 +138,7 @@ build {
       "cd ~bookster",
       "docker-compose build || true",
 
-      "cd ~example",
+      "cd ~dcs",
       "docker-compose build || true",
 
       "cd ~hermicache",
@@ -137,19 +147,27 @@ build {
       "cd ~museumorphosis",
       "docker-compose build || true",
 
+      "cd ~scp",
+      "docker-compose build || true",
+
       "cd ~sneakers",
       "docker-compose build || true",
 
       "cd ~solaris",
       "docker-compose build || true",
 
+      "cd ~stalker",
+      "docker-compose build || true",
+
       "systemctl daemon-reload",
       "systemctl enable ructf-service@bookster",
-      "systemctl enable ructf-service@example",
+      "systemctl enable ructf-service@dcs",
       "systemctl enable ructf-service@hermicache",
       "systemctl enable ructf-service@museumorphosis",
+      "systemctl enable ructf-service@scp",
       "systemctl enable ructf-service@sneakers",
       "systemctl enable ructf-service@solaris",
+      "systemctl enable ructf-service@stalker",
     ]
   }
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 import json
 import random
 import sys
@@ -23,7 +23,11 @@ class ErrorChecker:
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        if exc_type in {requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout}:
+        if exc_type in {
+            requests.exceptions.ConnectTimeout,
+            requests.exceptions.ConnectionError,
+            requests.exceptions.ReadTimeout
+        }:
             self.verdict = Verdict.DOWN("Service is down")
 
         elif exc_type in {requests.exceptions.HTTPError}:
@@ -33,6 +37,8 @@ class ErrorChecker:
             print(exc_type)
             print(exc_value.__dict__)
             traceback.print_tb(exc_traceback, file=sys.stdout)
+            raise exc_value
+
         return True
 
 

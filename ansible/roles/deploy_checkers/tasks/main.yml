@@ -1,3 +1,23 @@
+- name: add deadsnakes ppa
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+
+- name: install sys deps
+  apt:
+    name:
+      - g++
+      - make
+      - libboost-all-dev
+      - python3.11-dev
+      - libssl-dev
+    install_recommends: no
+
+- name: install pip
+  shell: |
+    curl "https://bootstrap.pypa.io/get-pip.py" -o get-pip.py
+    python3.11 get-pip.py
+    rm get-pip.py
+
 - name: sync catalog
   synchronize: src="../../../../checkers" dest="{{cs_dir}}"
   tags: sync
@@ -10,18 +30,7 @@
     recurse: yes
   tags: sync
 
-- name: install sys deps
-  apt:
-    name:
-      - g++
-      - make
-      - libboost-all-dev
-      - python3.8
-      - python3-pip
-      - python3.8-dev
-      - python3-setuptools
-      - libssl-dev
-    install_recommends: no
-
-- name: python deps
-  command: python3.8 -m pip install requests pycrypto pillow aiohttp numpy gornilo pwntools pycryptodome protobuf
+- name: install requirements
+  shell: |
+    cd {{cs_dir}}/checkers
+    ./install_checker_requirements.sh

@@ -1,6 +1,7 @@
 - hosts: cs
   roles:
     - cs-common
+    - update_cs_config
 
 - hosts: monitoring
   roles:

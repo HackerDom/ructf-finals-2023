@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Rubik', sans-serif;
+            padding: 0;
+            margin: 0;
+        }
+        .center {
+            margin: auto;
+            padding: 100px;
+            width: 50%;
+        }
+        input[type=text], input[type=password] {
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px 20px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        function getToken() {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("POST", "http://"+window.location.host+"/welcome");
+            let login = document.getElementById("login").value;
+            let password = document.getElementById("password").value;
+            if (!login || login === "" || !password || password === "") {
+                alert("you must fill all fields");
+                return;
+            }
+            let body = JSON.stringify({"login": login, "password": password});
+            xmlHttp.send(body);
+            xmlHttp.onload = (e) => {
+                if (xmlHttp.readyState === 4) {
+                    if (xmlHttp.status === 200) {
+                        document.cookie = xmlHttp.responseText;
+                        window.location.assign("http://"+window.location.host+"/");
+                    } else {
+                        alert("something went wrong");
+                    }
+                }
+            };
+            xmlHttp.onerror = (e) => {
+                alert(xmlHttp.statusText)
+            }
+        }
+    </script>
+    <div class="center">
+        <label>
+            Login
+            <input id="login" type="text" placeholder="Enter login" name="username" required>
+        </label>
+        <label>
+            Password
+            <input id="password" type="password" placeholder="Enter password" name="username" required>
+        </label>
+        <button type="submit" onclick="getToken()">Create account</button>
+    </div>
+</body>
+</html>
