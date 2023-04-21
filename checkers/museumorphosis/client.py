@@ -1,3 +1,4 @@
+import requests
 from requests import Response
 from gornilo.http_clients import requests_with_retries
 from utils import raise_http_error, raise_invalid_http_code_error
@@ -66,9 +67,13 @@ class Client:
         headers = {"token": auth_token} if auth_token else None
         abs_url = self.api_url + url
         try:
-            response = request(url=abs_url, json=json_data, headers=headers)
-        except Exception as e:
-            raise raise_http_error()
+            response = request(url=abs_url + "a", json=json_data, headers=headers)
+        except requests.ConnectionError:
+            raise raise_http_error("Connection error")
+        except requests.Timeout:
+            raise raise_http_error("Timeout error")
+        except requests.RequestException:
+            raise raise_http_error("HTTP error")
 
         if response.status_code == 200:
             return response
