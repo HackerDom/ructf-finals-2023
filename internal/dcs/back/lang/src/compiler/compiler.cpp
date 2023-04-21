@@ -52,8 +52,8 @@ private:
         }
     };
 
-    std::map<std::string, std::shared_ptr<ConstantCompilationContext>> constantNameToContext;
-    std::map<std::string, std::shared_ptr<FunctionCompilationContext>> functionNameToContext;
+    std::unordered_map<std::string, std::shared_ptr<ConstantCompilationContext>> constantNameToContext;
+    std::unordered_map<std::string, std::shared_ptr<FunctionCompilationContext>> functionNameToContext;
     std::shared_ptr<FunctionCompilationContext> currentCompilationFunction;
     std::string emitError;
 
