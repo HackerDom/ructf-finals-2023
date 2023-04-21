@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"net/url"
 	"ructf-2023-finals/lost-museum/internal/app"
 	"ructf-2023-finals/lost-museum/internal/common"
 )
@@ -126,7 +127,13 @@ func GetUserJokesList(u app.JokesUseCase) fiber.Handler {
 
 func GetThemeJokes(u app.JokesUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		jokes, err := u.GetThemeJokes(c.Context(), c.Locals("username").(string), c.Params("theme"))
+		theme, err := url.QueryUnescape(c.Params("theme"))
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+			return c.JSON(errorResponse(err))
+		}
+
+		jokes, err := u.GetThemeJokes(c.Context(), c.Locals("username").(string), theme)
 		if err != nil {
 			switch err {
 			default:

@@ -7,6 +7,7 @@
 
 - hosts: master
   roles:
+    - load_logos
     - update_cs_config
 
 - hosts: master

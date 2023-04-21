@@ -62,7 +62,6 @@ export default {
             options: [
                 "private",
                 "public",
-                "friends",
             ],
         };
     },

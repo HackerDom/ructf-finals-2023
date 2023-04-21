@@ -5,17 +5,17 @@ while true; do
 
     find "/tmp/storage/ciphertexts/" \
         -type f \
-        -and -not -newermt "-1800 seconds" \
+        -and -not -newermt "-7200 seconds" \
         -delete
 
     find "/tmp/storage/keys/" \
         -type f \
-        -and -not -newermt "-1800 seconds" \
+        -and -not -newermt "-7200 seconds" \
         -delete
 
     find "/tmp/storage/users/" \
         -type f \
-        -and -not -newermt "-1800 seconds" \
+        -and -not -newermt "-7200 seconds" \
         -delete
 
     sleep 60

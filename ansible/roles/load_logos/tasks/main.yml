@@ -1,0 +1,4 @@
+- name: copy logos
+  synchronize:
+    src: logos
+    dest: "{{ cs_dir }}/public"

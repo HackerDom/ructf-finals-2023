@@ -7,13 +7,13 @@
                     <p class="error" v-if="error">{{error}}</p>
                     <va-input
                             v-model="login"
-                            label="Username"
+                            label="Имя пользователя"
                             :rules="[(value) => (value && value.length > 0) || 'Enter username']"
                     />
                     <va-input
                             v-model="password"
                             class="mt-3"
-                            label="Password"
+                            label="Пароль"
                             type="password"
                             :rules="[(value) => (value && value.length > 0) || 'Enter password']"
                     />
@@ -23,10 +23,10 @@
                                 class="mt-3"
                                 @click="onSubmit"
                         >
-                            Sign In
+                            Войти
                         </va-button>
 
-                        <router-link to="/register" class="link-small">Registration</router-link>
+                        <router-link to="/register" class="link-small">Зарегистрироваться</router-link>
                     </div>
 
                 </va-form>
