@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Issuecker",
-    "description": "Simple issue tracker",
+    "title": "Hermicache",
+    "description": "Hermicache",
     "version": "0.0.1"
   },
   "servers": [
     {
-      "url": "/app.cgi"
+      "url": "/"
     }
   ],
   "tags": [
@@ -130,6 +130,140 @@
           },
           "400": {
             "description": "Failed auth or invalid field"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/field/{uuid}": {
+      "get": {
+        "security": [
+          {
+            "cookieSecret": []
+          },
+          {
+            "cookieName": []
+          }
+        ],
+        "tags": [
+          "content"
+        ],
+        "summary": "Get field",
+        "operationId": "get_field",
+        "responses": {
+          "200": {
+            "description": "Field",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Field"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed auth or invalid field uuid"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/list_fields": {
+      "get": {
+        "security": [
+          {
+            "cookieSecret": []
+          },
+          {
+            "cookieName": []
+          }
+        ],
+        "tags": [
+          "content"
+        ],
+        "summary": "List your own field uuids",
+        "operationId": "List your own field uuids",
+        "responses": {
+          "200": {
+            "description": "Field uuid list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed auth or invalid field uuid"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/compute": {
+      "get": {
+        "security": [
+          {
+            "cookieSecret": []
+          },
+          {
+            "cookieName": []
+          }
+        ],
+        "tags": [
+          "content"
+        ],
+        "summary": "Run compute",
+        "operationId": "Run compute",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "field_uuid",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Field uuid",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "arg",
+            "schema": {
+              "type": "string"
+            },
+            "description": "function argument (empty for palindrome field)",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field uuid list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed auth or invalid field uuid"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -180,10 +314,12 @@
               "content": {
                 "type": "string"
               }
-            }
+            },
+            "description": "palindrome field, just a simple string"
           },
           {
             "type": "object",
+            "description": "recurrent function field",
             "properties": {
               "type": {
                 "type": "string",
