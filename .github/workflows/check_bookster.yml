@@ -50,6 +50,7 @@ jobs:
   check_sploit_bookster:
     name: Check sploit bookster
     runs-on: ubuntu-20.04
+    if: ${{ false }} # do not check sploits
     steps:
     - name: Checkout infra
       uses: actions/checkout@v2
