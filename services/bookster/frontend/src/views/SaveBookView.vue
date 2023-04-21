@@ -38,7 +38,7 @@
                 type="submit"
                 class="mt-3"
             >
-              Сохранить
+              Save
             </va-button>
           </div>
         </va-form>
