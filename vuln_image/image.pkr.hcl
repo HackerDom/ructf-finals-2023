@@ -59,6 +59,7 @@ build {
       "useradd -m -s /bin/bash bookster",
       "useradd -m -s /bin/bash dcs",
       "useradd -m -s /bin/bash hermicache",
+      "useradd -m -s /bin/bash lost-museum",
       "useradd -m -s /bin/bash museumorphosis",
       "useradd -m -s /bin/bash scp",
       "useradd -m -s /bin/bash sneakers",
@@ -111,6 +112,10 @@ build {
     destination = "/home/hermicache/"
   }
   provisioner "file" {
+    source = "../services/lost-museum/"
+    destination = "/home/lost-museum/"
+  }
+  provisioner "file" {
     source = "../services/museumorphosis/"
     destination = "/home/museumorphosis/"
   }
@@ -144,6 +149,9 @@ build {
       "cd ~hermicache",
       "docker-compose build || true",
 
+      "cd ~lost-museum",
+      "docker-compose build || true",
+
       "cd ~museumorphosis",
       "docker-compose build || true",
 
@@ -163,6 +171,7 @@ build {
       "systemctl enable ructf-service@bookster",
       "systemctl enable ructf-service@dcs",
       "systemctl enable ructf-service@hermicache",
+      "systemctl enable ructf-service@lost-museum",
       "systemctl enable ructf-service@museumorphosis",
       "systemctl enable ructf-service@scp",
       "systemctl enable ructf-service@sneakers",
@@ -181,7 +190,7 @@ build {
     inline = [
       "docker image prune --filter label=stage=builder -f || true",
       # remove all image after build completed
-      "docker image rm python:3.10-slim node:18.2.0-alpine nginx:1.16.0-alpine julia:1.8.5-alpine3.17 golang:1.20-alpine alpine:3.14 mcr.microsoft.com/dotnet/sdk:7.0 mcr.microsoft.com/dotnet/aspnet:7.0 php:8-fpm-alpine alpine:latest || true",
+      "docker image rm python:3.10-slim node:18.2.0-alpine nginx:1.16.0-alpine julia:1.8.5-alpine3.17 golang:1.20-alpine alpine:3.14 mcr.microsoft.com/dotnet/sdk:7.0 mcr.microsoft.com/dotnet/aspnet:7.0 php:8-fpm-alpine alpine:latest node:18.2.0-alpine nginx:1.16.0-alpine || true",
     ]
   }
 }

@@ -93,6 +93,9 @@ def do_get(request: gornilo.GetRequest) -> gornilo.Verdict:
 
         if res.error != '':
             raise Exception(f'unexpected GET error: {res.error}')
+        
+        if request.flag != res.description:
+            return gornilo.Verdict.CORRUPT('invalid flag')
 
         if flag_id.evaluation_result.strip() != res.executeResult.strip():
             return gornilo.Verdict.MUMBLE('invalid evaluation result')
@@ -124,7 +127,7 @@ def do_check(request: gornilo.CheckRequest) -> gornilo.Verdict:
         logging.info(f'get = {res}')
 
         if res.description != description:
-            return gornilo.Verdict.MUMBLE('invalid flag')
+            return gornilo.Verdict.CORRUPT('invalid flag')
 
         if test_suite.result not in (res.error, res.executeResult):
             return gornilo.Verdict.MUMBLE('invalid execution result')
