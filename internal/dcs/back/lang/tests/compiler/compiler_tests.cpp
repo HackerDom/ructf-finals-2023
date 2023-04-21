@@ -47,11 +47,11 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x0
-e: .quad 0x400599999999999a
-pi: .quad 0x400921fb5a7ed197
 x1: .quad 0x3ff3b31f84aa9f25
+e: .quad 0x400599999999999a
 x2: .quad 0xc10c97d0fc27e953
+_c_const_main_0: .quad 0x0
+pi: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -157,16 +157,16 @@ lol:
     retq
 
 
-_c_const_lol_0: .quad 0x4045800000000000
-_c_const_lol_1: .quad 0x3ff0000000000000
-_c_const_lol_2: .quad 0x4045800000000000
 _c_const_lol_3: .quad 0x4046800000000000
-_c_const_main_0: .quad 0x4045000000000000
+_c_const_lol_2: .quad 0x4045800000000000
+_c_const_lol_0: .quad 0x4045800000000000
+x1: .quad 0x3ff3b31f84aa9f25
 _c_const_main_1: .quad 0x409370e4c91a90a5
 e: .quad 0x400599999999999a
-pi: .quad 0x400921fb5a7ed197
-x1: .quad 0x3ff3b31f84aa9f25
 x2: .quad 0xc10c97d0fc27e953
+_c_const_main_0: .quad 0x4045000000000000
+_c_const_lol_1: .quad 0x3ff0000000000000
+pi: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -377,9 +377,9 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x400921fb5a7ed197
-_c_const_main_1: .quad 0x400599999999999a
 _c_const_main_2: .quad 0x4094e40000000000
+_c_const_main_1: .quad 0x400599999999999a
+_c_const_main_0: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -407,8 +407,8 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x400921fb5a7ed197
 _c_const_main_1: .quad 0x400599999999999a
+_c_const_main_0: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -526,8 +526,8 @@ f:
     retq
 
 
-_c_const_main_0: .quad 0x400921fb5a7ed197
 _c_const_main_1: .quad 0x400921fb5a7ed197
+_c_const_main_0: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -589,9 +589,9 @@ f:
     retq
 
 
-_c_const_main_0: .quad 0x400921fb5a7ed197
-_c_const_main_1: .quad 0x400599999999999a
 _c_const_main_2: .quad 0x4094e40000000000
+_c_const_main_1: .quad 0x400599999999999a
+_c_const_main_0: .quad 0x400921fb5a7ed197
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -629,10 +629,10 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x3ff0000000000000
-_c_const_main_1: .quad 0x4000000000000000
 _c_const_main_2: .quad 0x4000000000000000
+_c_const_main_1: .quad 0x4000000000000000
 _c_const_main_3: .quad 0x3ff0000000000000
+_c_const_main_0: .quad 0x3ff0000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -679,10 +679,10 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x40091eb851eb851f
-_c_const_main_1: .quad 0x4008000000000000
 _c_const_main_2: .quad 0x3ff0000000000000
+_c_const_main_1: .quad 0x4008000000000000
 _c_const_main_3: .quad 0x4000000000000000
+_c_const_main_0: .quad 0x40091eb851eb851f
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -771,8 +771,8 @@ main:
     retq
 
 
-_c_const_main_0: .quad 0x4014000000000000
 _c_const_main_1: .quad 0x4018000000000000
+_c_const_main_0: .quad 0x4014000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -815,9 +815,9 @@ main:
 ._0:
 
 
-_c_const_main_0: .quad 0x3ff0000000000000
-_c_const_main_1: .quad 0x4000000000000000
 _c_const_main_2: .quad 0x40091eb851eb851f
+_c_const_main_1: .quad 0x4000000000000000
+_c_const_main_0: .quad 0x3ff0000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }
@@ -867,8 +867,8 @@ f:
     retq
 
 
-_c_const_main_0: .quad 0xbff0000000000000
 _c_const_main_1: .quad 0xbff0000000000000
+_c_const_main_0: .quad 0xbff0000000000000
 .sign_bit: .quad 0x8000000000000000
 )", "");
 }

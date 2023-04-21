@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
         }
         auto record = storage->Get(token);
         if (record->Status == Storage::OperationStatus::InvalidToken) {
-            response.status = 400;
+            response.status = 404;
             nlohmann::json j{
                 {"status", "error"},
                 {"message", "invalid token"}
