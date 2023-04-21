@@ -87,13 +87,13 @@ func (h *Handlers) GetMuseumInfo(w http.ResponseWriter, r *http.Request) {
 	utils.ResponseJSON(w, http.StatusOK, dto.SerializeMuseum(museum))
 }
 
-func (h *Handlers) GetExhibitListBySearch(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetMyExhibitListBySearch(w http.ResponseWriter, r *http.Request) {
 	museumId, err := uuid.Parse(r.Header.Get("X-MuseumId"))
 	if err != nil {
 		utils.ResponseError(w, http.StatusUnprocessableEntity, errors.New("id must be uuid"))
 	}
 	search := r.URL.Query().Get("search")
-	exhibits, err := h.service.GetExhibitList(museumId, search)
+	exhibits, err := h.service.GetExhibitListBySearch(museumId, search)
 	if err != nil {
 		switch err {
 		case internal.NotFoundError:
@@ -103,7 +103,25 @@ func (h *Handlers) GetExhibitListBySearch(w http.ResponseWriter, r *http.Request
 		}
 		return
 	}
-	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibitList(exhibits))
+	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibitList(exhibits, true))
+}
+
+func (h *Handlers) GetExhibitsByMuseum(w http.ResponseWriter, r *http.Request) {
+	museumId, err := uuid.Parse(mux.Vars(r)["id"])
+	if err != nil {
+		utils.ResponseError(w, http.StatusUnprocessableEntity, errors.New("id must be uuid"))
+	}
+	exhibits, err := h.service.GetExhibitsByMuseum(museumId)
+	if err != nil {
+		switch err {
+		case internal.NotFoundError:
+			utils.ResponseError(w, http.StatusNotFound, err)
+		default:
+			utils.ResponseServerError(w, err)
+		}
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibitList(exhibits, false))
 }
 
 func (h *Handlers) CreateExhibit(w http.ResponseWriter, r *http.Request) {
@@ -127,10 +145,10 @@ func (h *Handlers) CreateExhibit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit))
+	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit, true))
 }
 
-func (h *Handlers) GetExhibit(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetMyExhibit(w http.ResponseWriter, r *http.Request) {
 	museumId, err := uuid.Parse(r.Header.Get("X-MuseumId"))
 	if err != nil {
 		utils.ResponseError(w, http.StatusUnprocessableEntity, errors.New("id must be uuid"))
@@ -151,5 +169,5 @@ func (h *Handlers) GetExhibit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit))
+	utils.ResponseJSON(w, http.StatusOK, dto.SerializeExhibit(exhibit, true))
 }

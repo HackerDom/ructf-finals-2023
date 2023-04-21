@@ -10,7 +10,7 @@ PUBLIC_FLAG_ID = sys.argv[2] if len(sys.argv[2]) > 2 else ""
 
 
 def main():
-    api_url = f"http://{IP}:{PORT}"
+    api_url = f"http://{IP}:{PORT}/api"
     public_flag_id = json.loads(PUBLIC_FLAG_ID)
     museum_id, exhibit_id = public_flag_id["museum_id"], public_flag_id["exhibit_id"]
 

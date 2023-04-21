@@ -34,18 +34,20 @@ func (a *App) Init() (*App, error) {
 
 func (a *App) GetApiRoutes() *mux.Router {
 	r := mux.NewRouter()
+	api := r.PathPrefix("/api").Subrouter()
 
 	auth := handlers.AuthMiddleware
 
-	r.HandleFunc("/register", a.handlers.Register).Methods("POST")
-	r.HandleFunc("/login", a.handlers.Login).Methods("POST")
+	api.HandleFunc("/register", a.handlers.Register).Methods("POST")
+	api.HandleFunc("/login", a.handlers.Login).Methods("POST")
 
-	r.HandleFunc("/museums", a.handlers.GetMuseumIdList).Methods("GET")
-	r.HandleFunc("/museums/{id}", a.handlers.GetMuseumInfo).Methods("GET")
+	api.HandleFunc("/museums", a.handlers.GetMuseumIdList).Methods("GET")
+	api.HandleFunc("/museums/{id}", a.handlers.GetMuseumInfo).Methods("GET")
+	api.HandleFunc("/museums/{id}/exhibits", a.handlers.GetExhibitsByMuseum).Methods("GET")
 
-	r.Handle("/museum/exhibits", auth(http.HandlerFunc(a.handlers.GetExhibitListBySearch))).Methods("GET")
-	r.Handle("/museum/exhibits", auth(http.HandlerFunc(a.handlers.CreateExhibit))).Methods("POST")
-	r.Handle("/museum/exhibits/{id}", auth(http.HandlerFunc(a.handlers.GetExhibit))).Methods("GET")
+	api.Handle("/museum/exhibits", auth(http.HandlerFunc(a.handlers.GetMyExhibitListBySearch))).Methods("GET")
+	api.Handle("/museum/exhibits", auth(http.HandlerFunc(a.handlers.CreateExhibit))).Methods("POST")
+	api.Handle("/museum/exhibits/{id}", auth(http.HandlerFunc(a.handlers.GetMyExhibit))).Methods("GET")
 
 	return r
 }

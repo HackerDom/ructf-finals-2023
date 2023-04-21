@@ -63,6 +63,10 @@ func (s *Service) GetExhibit(museumId, exhibitId uuid.UUID) (*internal.Exhibit, 
 	return s.repo.GetExhibit(museumId, exhibitId)
 }
 
-func (s *Service) GetExhibitList(museumId uuid.UUID, search string) ([]*internal.Exhibit, error) {
-	return s.repo.GetExhibitList(museumId, search)
+func (s *Service) GetExhibitListBySearch(museumId uuid.UUID, search string) ([]*internal.Exhibit, error) {
+	return s.repo.GetExhibitListBySearch(museumId, search)
+}
+
+func (s *Service) GetExhibitsByMuseum(museumId uuid.UUID) ([]*internal.Exhibit, error) {
+	return s.repo.GetExhibitsByMuseum(museumId)
 }

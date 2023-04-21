@@ -113,8 +113,35 @@ func (r *Repository) CreateExhibit(museumId uuid.UUID, data dto.ExhibitIn) (uuid
 	return id, nil
 }
 
-func (r *Repository) GetExhibitList(museumId uuid.UUID, search string) ([]*internal.Exhibit, error) {
+func (r *Repository) GetExhibitListBySearch(museumId uuid.UUID, search string) ([]*internal.Exhibit, error) {
 	rows, err := r.Query("QUERY ( SELECT * FROM exhibits WHERE title LIKE '%?%' ) AT DATABASE (?)", search, museumId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, internal.NotFoundError
+		}
+		return nil, fmt.Errorf("error while get exhibits rows: %w", err)
+	}
+	defer rows.Close()
+
+	var res []*internal.Exhibit
+	for rows.Next() {
+		exhibit := &internal.Exhibit{}
+		if err = rows.Scan(&exhibit.Id, &exhibit.Title, &exhibit.Description, &exhibit.Metadata); err != nil {
+			return nil, fmt.Errorf("error while scan exhibit: %w", err)
+		}
+		res = append(res, exhibit)
+	}
+	if err := rows.Err(); err != nil {
+		if err == sql.ErrNoRows {
+			return res, internal.NotFoundError
+		}
+		return res, fmt.Errorf("error while query exhibits: %w", err)
+	}
+	return res, nil
+}
+
+func (r *Repository) GetExhibitsByMuseum(museumId uuid.UUID) ([]*internal.Exhibit, error) {
+	rows, err := r.Query("QUERY ( SELECT * FROM exhibits ) AT DATABASE (?)", museumId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, internal.NotFoundError
