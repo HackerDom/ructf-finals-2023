@@ -5,12 +5,15 @@ ctf_root = os.path.join(os.path.dirname(__file__), '../../')
 services_dir = os.path.join(ctf_root, 'services')
 
 SERVICES = [
-  'example',
   # 'bookster',
-  'solaris',
-  'sneakers',
+  'dcs',
+  'example',
   'hermicache',
   'museumorphosis',
+  'scp',
+  'sneakers',
+  'solaris',
+  'stalker'
  ]
 
 TEMPLATE = '''

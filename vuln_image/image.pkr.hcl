@@ -60,6 +60,7 @@ build {
       "useradd -m -s /bin/bash dcs",
       "useradd -m -s /bin/bash hermicache",
       "useradd -m -s /bin/bash museumorphosis",
+      "useradd -m -s /bin/bash scp",
       "useradd -m -s /bin/bash sneakers",
       "useradd -m -s /bin/bash solaris",
       "useradd -m -s /bin/bash stalker",
@@ -114,6 +115,10 @@ build {
     destination = "/home/museumorphosis/"
   }
   provisioner "file" {
+    source = "../services/scp/"
+    destination = "/home/scp/"
+  }
+  provisioner "file" {
     source = "../services/sneakers/"
     destination = "/home/sneakers/"
   }
@@ -142,6 +147,9 @@ build {
       "cd ~museumorphosis",
       "docker-compose build || true",
 
+      "cd ~scp",
+      "docker-compose build || true",
+
       "cd ~sneakers",
       "docker-compose build || true",
 
@@ -156,6 +164,7 @@ build {
       "systemctl enable ructf-service@dcs",
       "systemctl enable ructf-service@hermicache",
       "systemctl enable ructf-service@museumorphosis",
+      "systemctl enable ructf-service@scp",
       "systemctl enable ructf-service@sneakers",
       "systemctl enable ructf-service@solaris",
       "systemctl enable ructf-service@stalker",
