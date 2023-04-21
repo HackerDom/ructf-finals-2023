@@ -3,9 +3,9 @@ cs_dir:  /home/cs/checksystem
 cs_scoreboard_dir: /home/cs/ctf-scoreboard-client
 
 pg_cs_user: cs
-pg_cs_pass: S0m3S3cre7
+pg_cs_pass: Fa5Th3t8NYLgFewD
 pg_cs_db: cs
-pg_cs_host: 10.10.10.4
+pg_cs_host: 10.10.10.10
 pg_cs_port: 5432
 pg_max_connections: 1024
 pg_shared_buffers: 1GB
@@ -26,17 +26,17 @@ cs_hypnotoad_keep_alive_timeout: 100
 cs_nginx_workers: 2
 cs_nginx_upstream_keepalive: 32
 cs_nginx_listen: 0.0.0.0:80
-cs_static_path: /home/cs/logos
+cs_static_path: /home/cs/ctf-scoreboard-client/scoreboard/build
 
 cs_nginx_auth_enabled: true
 cs_nginx_auth_user: root
-cs_nginx_auth_password: $apr1$LTFfWtS.$rSkRqtASVyYbnjxeFLdV4.
+cs_nginx_auth_password: $apr1$oHnKLLnm$7a9AcsNzw8VEmxHIsJBjH0
 
 
-cs_base_url: http://164.92.214.128/
-cs_admin_auth: root:RuCTF2023_S3cretP@ss
+cs_base_url: http://134.122.56.250/
+cs_admin_auth: root:RuCTF2023_S3cretP@ss_855d23b44f174939
 cs_ctf_name: RuCTF Finals 2023
-cs_flags_secret: t4DAg7UdWRSm7f3j
+cs_flags_secret: Wn49jWh2Eja3xsDz
 cs_round_length: 60
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
