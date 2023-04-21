@@ -61,6 +61,32 @@ services:
       nofile:
         soft: 16384
         hard: 16384
+  worker-cleaner:
+    build:
+      context: .
+    hostname: worker_cleaner
+    entrypoint: celery
+    restart: unless-stopped
+    command: -A celery_app.app beat --loglevel=info
+    volumes:
+      - vault:/vault/books
+      - ./service/db:/service/db
+      - ./service/media/images:/service/media/images
+    env_file:
+      - .env
+    links:
+      - redis
+      - web-app
+    depends_on:
+      - redis
+      - web-app
+    mem_limit: 1G
+    memswap_limit: 1G
+    pids_limit: 512
+    ulimits:
+      nofile:
+        soft: 16384
+        hard: 16384
   nginx:
       restart: unless-stopped
       build:
