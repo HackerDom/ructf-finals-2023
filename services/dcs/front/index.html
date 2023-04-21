@@ -1,11 +1,167 @@
 <!DOCTYPE html>
 <html land="en">
-    <head>
-        <meta charset="utf-8">
-        <title>dcs</title>
-    </head>
-    <body>
-        <p>Hello, world!</p>
-    </body>
-</html>
 
+<head>
+    <meta charset="utf-8">
+    <title>dcs</title>
+</head>
+<style>
+    body {
+        background-color: #ece5ce;
+        font-size: large;
+        color: black;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    pre {
+        display: block;
+        text-align: center;
+        word-wrap: break-word;
+    }
+
+    input[type="text"],
+    textarea {
+        display: block;
+        margin: 0 auto;
+        text-align: left;
+        padding: 10px;
+        font-size: 18px;
+        width: 60%;
+        border: 1px solid #ccc;
+    }
+
+    input[type="text"] {
+        display: block;
+        margin: 0 auto;
+        text-align: left;
+        padding: 10px;
+        font-size: 18px;
+    }
+
+    label {
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+    button[type="submit"] {
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 22px;
+        padding: 10px 20px;
+        background-color: #f1d4af;
+        border: #2c3531 1px solid;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #ddd;
+        text-align: center;
+        font-size: 24px;
+        padding: 20px 0;
+    }
+
+    .footer a {
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+    }
+
+    .result {
+        font-size: x-large;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <pre>
+        <b>
+______               _     _            _      _                                       _   _                             _                 
+|  _  \             (_)   | |          (_)    | |                                     | | (_)                           | |                
+| | | |___ _ __ ___  _  __| | _____   ___  ___| |__     ___ ___  _ __ ___  _ __  _   _| |_ _ _ __   __ _   ___ _   _ ___| |_ ___ _ __ ___  
+| | | / _ \ '_ ` _ \| |/ _` |/ _ \ \ / / |/ __| '_ \   / __/ _ \| '_ ` _ \| '_ \| | | | __| | '_ \ / _` | / __| | | / __| __/ _ \ '_ ` _ \ 
+| |/ /  __/ | | | | | | (_| | (_) \ V /| | (__| | | | | (_| (_) | | | | | | |_) | |_| | |_| | | | | (_| | \__ \ |_| \__ \ ||  __/ | | | | |
+|___/ \___|_| |_| |_|_|\__,_|\___/ \_/ |_|\___|_| |_|  \___\___/|_| |_| |_| .__/ \__,_|\__|_|_| |_|\__, | |___/\__, |___/\__\___|_| |_| |_|
+                                                                          | |                       __/ |       __/ |                      
+                                                                          |_|                      |___/       |___/                       
+        </b></pre>
+
+    <form id="json-form">
+        <label for="description">Description:</label>
+        <input type="text" name="description" id="description" required>
+        <label for="code">Code:</label>
+        <textarea type="text" name="code" id="code" cols="30" rows="5" required></textarea><br><br>
+        <button type="submit">Compute</button>
+    </form>
+
+    <div id="response" class="result"></div>
+
+    <div class="footer">
+        <a href="doc.md">Language doc can be obtained here</a>
+    </div>
+
+    <script>
+        const form = document.getElementById("json-form");
+        const responseDiv = document.getElementById("response");
+
+        form.code.addEventListener("keydown", function (event) {
+            if (event.key === "Tab") {
+                event.preventDefault();
+
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const value = this.value;
+                this.value = value.substring(0, start) + "\t" + value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        });
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const data = {
+                code: form.code.value,
+                description: form.description.value
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/compute");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function () {
+                if (xhr.status === 201) {
+                    let token = xhr.getResponseHeader('X-DCS-Token');
+                    let run = new XMLHttpRequest();
+                    run.open("GET", "/api/compute");
+                    run.setRequestHeader("X-DCS-Token", token);
+                    run.onload = function () {
+                        if (run.status === 200) {
+                            let j = JSON.parse(run.responseText);
+                            if (j["status"] === "success") {
+                                responseDiv.textContent = j["computed_value"];
+                            } else if (j["status"] === "error") {
+                                responseDiv.textContent = j["message"];
+                            }
+                        } else {
+                            responseDiv.textContent = run.responseText;
+                        }
+                    }
+                    run.send(null);
+                } else {
+                    responseDiv.textContent = xhr.responseText;
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        });
+    </script>
+
+</body>
+
+</html>
