@@ -254,6 +254,9 @@ class XSSChecker(VulnChecker):
             return Verdict.DOWN('timeout error')
         except requests.RequestException:
             return Verdict.MUMBLE('http error')
+        except ValueError:
+            print('Bad token - flag id: ', token)
+            return Verdict.MUMBLE('Value error or bad token')
         return Verdict.OK()
 
 
