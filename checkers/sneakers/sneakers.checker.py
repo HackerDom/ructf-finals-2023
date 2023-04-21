@@ -141,6 +141,9 @@ class SneakersChecker(VulnChecker):
         except VerdictHttpException as e:
             print(e)
             return e.verdict
+        except VerdictNotFoundException as e:
+            print(e)
+            return e.verdict
         except Exception as e:
             traceback.print_exc()
             return Verdict.MUMBLE("Couldn't put flag!")
@@ -168,6 +171,9 @@ class SneakersChecker(VulnChecker):
             print(e)
             return e.verdict
         except VerdictHttpException as e:
+            print(e)
+            return e.verdict
+        except VerdictNotFoundException as e:
             print(e)
             return e.verdict
         except Exception as e:
