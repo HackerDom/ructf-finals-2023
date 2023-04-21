@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Issuecker
+  description: Simple issue tracker
+  version: 0.0.1
+servers:
+- url: "/app.cgi"
+tags:
+- name: auth
+- name: content
+paths:
+  "/register":
+    post:
+      tags:
+      - auth
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UserPair"
+        required: true
+      security: []
+      responses:
+        '200':
+          description: Successful registration
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: username=username; secret=abcde12345;
+        '400':
+          description: Invalid username or password
+  "/login":
+    post:
+      tags:
+      - auth
+      summary: Log in into existing account
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UserPair"
+        required: true
+      security: []
+      responses:
+        '200':
+          description: Successful registration
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: username=username; secret=abcde12345;
+        '400':
+          description: Invalid username or password
+  "/field":
+    post:
+      security:
+      - cookieSecret: []
+      - cookieName: []
+      tags:
+      - content
+      summary: Create field
+      operationId: create_field
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Field"
+        required: true
+      responses:
+        '200':
+          description: Successful field creation
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK"
+        '400':
+          description: Failed auth or invalid field
+components:
+  securitySchemes:
+    cookieSecret:
+      type: apiKey
+      in: cookie
+      name: secret
+    cookieName:
+      type: apiKey
+      in: cookie
+      name: name
+  schemas:
+    UserPair:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        password:
+          type: string
+          example: password
+    Field:
+      oneOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - palindrome
+            content:
+              type: string
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - recurrent
+            content:
+              type: object
+              properties:
+                base:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: number
+                    minItems: 2
+                    maxItems: 2
+                coefficients:
+                  type: array
+                  items:
+                    type: number
+              additionalProperties: false
