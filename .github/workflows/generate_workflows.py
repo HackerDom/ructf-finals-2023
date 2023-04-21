@@ -9,6 +9,7 @@ SPLOIT = [
   'dcs',
   'example',
   'sneakers',
+  'lost_museum'
 ]
 
 SERVICES = [
