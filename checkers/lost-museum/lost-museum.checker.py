@@ -129,7 +129,7 @@ def get(req: GetRequest) -> Verdict:
     try:
         api = Api(req.hostname, PORT)
 
-        token = req.public_flag_id
+        token = req.flag_id
 
         username, theme = req.public_flag_id.split('+')[:2]
 

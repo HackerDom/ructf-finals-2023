@@ -97,7 +97,6 @@ func (u *UseCase) GetThemeJokes(ctx context.Context, username, theme string) ([]
 
 	for _, user := range users {
 		jokes, err := u.repo.GetUserJokes(ctx, user)
-		fmt.Println(jokes)
 		if err != nil {
 			return nil, fmt.Errorf("error while fetching user jokes: %w", err)
 		}
