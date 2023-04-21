@@ -3,8 +3,42 @@
     <head>
         <title>stalker</title>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="/static/styles.css">
     </head>
     <body>
-        <p>hello, world!</p>
+        <div class="content">
+            <p class="title">ФЛАГИ ДЛЯ ВСЕХ, ДАРОМ, И ПУСТЬ НИКТО НЕ УЙДЁТ ОБИЖЕННЫМ!</p>
+            <img class="header" src="/static/background.jpg">
+            <div id="auth-box" class="box">
+                <textarea id="username" placeholder="username" maxlength="32" spellcheck="false"></textarea>
+                <textarea id="password" placeholder="password" maxlength="32" spellcheck="false"></textarea>
+                <button id="auth-register-button">register</button>
+                <button id="auth-login-button">login</button>
+            </div>
+            <div id="menu-box" class="box">
+                <textarea id="menu-note-title" placeholder="note title" maxlength="32" spellcheck="false"></textarea>
+                <button id="menu-show-note-button">show note</button>
+                <textarea id="menu-user-name" placeholder="username" maxlength="32" spellcheck="false"></textarea>
+                <button id="menu-show-profile-button">show profile</button>
+                <button id="menu-new-note-button">new note</button>
+                <button id="menu-logout-button">logout</button>
+            </div>
+            <div id="user-box" class="box">
+                <textarea id="user-name" placeholder="username (empty)" readonly></textarea>
+                <textarea id="user-owned-notes" placeholder="owned notes (empty)" readonly></textarea>
+                <textarea id="user-shared-notes" placeholder="shared notes (empty)" readonly></textarea>
+                <button id="user-back-button">back to menu</button>
+            </div>
+            <div id="note-box" class="box">
+                <textarea id="note-title" placeholder="title (empty)" readonly></textarea>
+                <textarea id="note-content" placeholder="content (empty)" readonly></textarea>
+                <textarea id="note-owner" placeholder="owner (empty)" readonly></textarea>
+                <textarea id="note-viewers" placeholder="viewers (empty)" readonly></textarea>
+                <button id="note-share-button">share</button>
+                <button id="note-destroy-button">destroy</button>
+                <button id="note-back-button">back to menu</button>
+            </div>
+        </div>
+        <script src="/static/scripts.js"></script>
     </body>
 </html>
