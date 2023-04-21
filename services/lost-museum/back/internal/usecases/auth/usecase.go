@@ -42,7 +42,7 @@ func (u *UseCase) Register(ctx context.Context, username, password string) (stri
 		return "", fmt.Errorf("error while adding user: %w", err)
 	}
 
-	token, err := infra.GenerateToken(user, []string{}, u.secret)
+	token, err := infra.GenerateToken(user, u.secret)
 	if err != nil {
 		return "", fmt.Errorf("error while generating token: %w", err)
 	}
@@ -60,7 +60,7 @@ func (u *UseCase) Login(ctx context.Context, username, password string) (string,
 		return "", common.ErrNotExists
 	}
 
-	user, perms, err := u.repo.GetUser(ctx, username)
+	user, err := u.repo.GetUser(ctx, username)
 	if err != nil {
 		return "", fmt.Errorf("error while fetching user: %w", err)
 	}
@@ -74,7 +74,7 @@ func (u *UseCase) Login(ctx context.Context, username, password string) (string,
 		return "", common.ErrInvalidPassword
 	}
 
-	token, err := infra.GenerateToken(user, perms, u.secret)
+	token, err := infra.GenerateToken(user, u.secret)
 	if err != nil {
 		return "", fmt.Errorf("error while generating token: %w", err)
 	}

@@ -24,19 +24,21 @@ func authSuccessResponse(token string) *fiber.Map {
 }
 
 type getJokeRequest struct {
-	Theme string `form:"theme"`
+	Theme    string `form:"theme"`
+	Username string `form:"username"`
 }
 
 type createJokeRequest struct {
-	Theme string `form:"theme"`
-	Text  string `form:"text"`
+	Status string `form:"status"`
+	Theme  string `form:"theme"`
+	Text   string `form:"text"`
 }
 
 func jokeSuccessResponse(v map[string]string) *fiber.Map {
 	return &fiber.Map{
+		"status": v["status"],
 		"theme":  v["theme"],
 		"text":   v["text"],
-		"status": v["status"],
 	}
 }
 
@@ -45,11 +47,23 @@ func jokesListSuccessResponse(v []map[string]string) *fiber.Map {
 
 	for _, j := range v {
 		data = append(data, map[string]string{
+			"status": j["status"],
 			"theme":  j["theme"],
 			"text":   j["text"],
-			"status": j["status"],
 		})
 	}
 
 	return &fiber.Map{"data": data}
+}
+
+type createFriendRequestRequest struct {
+	To string `form:"to"`
+}
+
+type acceptFriendRequestRequest struct {
+	From string `form:"from"`
+}
+
+func friendsSuccessResponse(f []string) *fiber.Map {
+	return &fiber.Map{"data": f}
 }

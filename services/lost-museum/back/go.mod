@@ -7,6 +7,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	go.mongodb.org/mongo-driver v1.11.4
 	golang.org/x/crypto v0.7.0
+	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
 	gopkg.in/yaml.v2 v2.3.0
 )
 
