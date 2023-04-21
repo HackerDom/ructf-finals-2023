@@ -23,3 +23,23 @@ class Api:
     def get_joke(self, token: str, username: str, theme: str) -> Response:
         return self.session.get(f"{self.base_url}/api/jokes", data={"username": username, "theme": theme},
                                 headers={"Authorization": f"Bearer {token}"})
+
+    def list_jokes(self, token: str) -> Response:
+        return self.session.get(f"{self.base_url}/api/jokes/list", headers={"Authorization": f"Bearer {token}"})
+
+    def theme_jokes(self, token: str, theme: str) -> Response:
+        return self.session.get(f"{self.base_url}/api/jokes/list/{theme}", headers={"Authorization": f"Bearer {token}"})
+
+    def friends_list(self, token: str) -> Response:
+        return self.session.get(f"{self.base_url}/api/friends", headers={"Authorization": f"Bearer {token}"})
+
+    def requests_list(self, token: str) -> Response:
+        return self.session.get(f"{self.base_url}/api/friends/requests", headers={"Authorization": f"Bearer {token}"})
+
+    def friend_request(self, token: str, to: str) -> Response:
+        return self.session.post(f"{self.base_url}/api/friends/request", data={"to": to},
+                                 headers={"Authorization": f"Bearer {token}"})
+
+    def accept_request(self, token: str, fr: str) -> Response:
+        return self.session.post(f"{self.base_url}/api/friends/accept", data={"from": fr},
+                                 headers={"Authorization": f"Bearer {token}"})

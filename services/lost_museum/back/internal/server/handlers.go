@@ -114,7 +114,7 @@ func GetUserJokesList(u app.JokesUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		jokes, err := u.GetUserJokesList(c.Context(), c.Locals("username").(string))
 		if err != nil {
-			switch err {
+			switch {
 			default:
 				c.Status(http.StatusInternalServerError)
 			}
@@ -158,6 +158,8 @@ func CreateFriendRequest(u app.FriendsUseCase) fiber.Handler {
 		err := u.CreateFriendRequest(c.Context(), c.Locals("username").(string), body.To)
 		if err != nil {
 			switch {
+			case errors.Is(err, common.ErrNotExists):
+				c.Status(http.StatusBadRequest)
 			default:
 				c.Status(http.StatusInternalServerError)
 			}
@@ -180,6 +182,8 @@ func AcceptFriendRequest(u app.FriendsUseCase) fiber.Handler {
 		err := u.AcceptFriendRequest(c.Context(), c.Locals("username").(string), body.From)
 		if err != nil {
 			switch {
+			case errors.Is(err, common.ErrNotExists):
+				c.Status(http.StatusBadRequest)
 			default:
 				c.Status(http.StatusInternalServerError)
 			}
