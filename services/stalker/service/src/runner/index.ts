@@ -45,13 +45,13 @@ async function run(task: Task, workersCount: number): Promise<void> {
 
     const workerId = Bun.env.WORKER_ID;
 
-    if (typeof workerId !== 'string') {
-        return spawnWorkers(workersCount);
+    if (typeof workerId === 'string') {
+        console.log(`[*] Added new worker at ${time()} <${process.pid}>`);
+
+        return task();
     }
-
-    console.log(`[*] Added new worker at ${time()} <${process.pid}>`);
-
-    return task();
+    
+    return spawnWorkers(workersCount);
 }
 
 export default {

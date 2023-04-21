@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 
 import { errorHandler } from '@root/application/handlers';
-import { type Environment, authTokenMiddleware } from '@root/application/middlewares';
+import { type Environment } from '@root/application/context';
+import { authTokenMiddleware } from '@root/application/middlewares';
 
 const TOKEN_HEADER_NAME = 'X-Token';
 
@@ -14,3 +15,4 @@ export class ServiceRouter extends Hono<Environment> {
         this.onError(errorHandler());
     }
 }
+
