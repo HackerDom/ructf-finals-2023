@@ -14,13 +14,13 @@
 
         <template #right>
             <va-navbar-item><router-link v-if="token !== null" to="/joke/my" class="link">Мои анекдоты</router-link></va-navbar-item>
-            <va-navbar-item><router-link to="/jokes" class="link">Все анекдоты</router-link></va-navbar-item>
+            <va-navbar-item><router-link to="/jokes" class="link">Поиск анекдотов</router-link></va-navbar-item>
             <va-navbar-item><router-link v-if="token !== null" to="/joke/new" class="link">Новый анекдот</router-link></va-navbar-item>
-            <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Sign In</router-link></va-navbar-item>
-            <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Register</router-link></va-navbar-item>
+            <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Логин</router-link></va-navbar-item>
+            <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Регистрация</router-link></va-navbar-item>
 
             <va-navbar-item><router-link v-if="token !== null" to="/profile" class="link">Мои друзья</router-link></va-navbar-item>
-            <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Logout</va-navbar-item>
+            <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Выйти</va-navbar-item>
         </template>
     </va-navbar>
     <router-view :token="token" @login="onLogin" @userSet="onUserSet">
