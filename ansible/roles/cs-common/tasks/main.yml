@@ -1,0 +1,63 @@
+- name: user
+  user: name={{ cs_user }} state=present
+
+- name: system requirements
+  apt:
+    name:
+      - build-essential
+      - cpanminus
+      - gcc
+      - git
+      - libpq-dev
+      - libssl-dev
+      - make
+      - sudo
+      - zlib1g-dev
+      - rsync
+      - atop
+    state: latest
+    update_cache: yes
+
+- name: git name
+  git_config: name="user.name" value="{{ cs_user }}" scope="global"
+
+- name: git email
+  git_config: name="user.email" value="{{ cs_user }}@hackerdom.ru" scope="global"
+
+- name: repo stash
+  command: git stash chdir="{{ cs_dir }}"
+  become: true
+  become_user: "{{ cs_user }}"
+  ignore_errors: true
+  register: g
+  changed_when: "g.stdout.find('No local changes') == -1"
+  tags: update
+
+- name: repo
+  git: repo=https://github.com/HackerDom/checksystem.git dest={{ cs_dir }} version=63399fd6632789823d535f795a870001fa1a06aa
+  become: true
+  become_user: "{{ cs_user }}"
+  tags: update
+  
+- name: repo unstash
+  command: git stash pop chdir="{{ cs_dir }}"
+  become: true
+  become_user: "{{ cs_user }}"
+  ignore_errors: true
+  when: "g.stdout.find('No local changes') == -1"
+  tags: update
+
+- name: perl modules
+  command: cpanm -n --installdeps {{ cs_dir }}
+  register: r
+  changed_when: "r.stdout.find('Found dependencies') != -1"
+
+- name: docker
+  include_tasks: docker.yml
+
+- name: node_exporter
+  include_tasks:
+    file: node_exporter.yml
+    apply:
+      tags: node_exporter
+  tags: node_exporter

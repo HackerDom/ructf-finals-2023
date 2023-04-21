@@ -1,0 +1,29 @@
+- hosts: cs
+  roles:
+    - cs-common
+    - update_cs_config
+
+- hosts: monitoring
+  roles:
+    - role: monitoring
+      tags: monitoring
+
+- hosts: db
+  roles:
+    - db
+
+- hosts: master
+  roles:
+    - manager
+    - web
+    - watcher
+    - scoreboard
+
+- hosts: flags
+  roles:
+    - flags
+
+- hosts: checkers, master
+  roles:
+    - checkers
+    - deploy_checkers

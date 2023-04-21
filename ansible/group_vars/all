@@ -1,0 +1,73 @@
+cs_user: cs
+cs_dir:  /home/cs/checksystem
+cs_scoreboard_dir: /home/cs/ctf-scoreboard-client
+
+pg_cs_user: cs
+pg_cs_pass: S0m3S3cre7
+pg_cs_db: cs
+pg_cs_host: 10.10.10.4
+pg_cs_port: 5432
+pg_max_connections: 1024
+pg_shared_buffers: 1GB
+pg_work_mem: 256MB
+
+cs_limit_nofile: 10000
+
+cs_worker_default_jobs: 4
+cs_worker_checkers_jobs: 20
+cs_worker_checkers_queues: -q checker
+cs_worker_instance: 1
+
+cs_hypnotoad_listen: 127.0.0.1:8080
+cs_hypnotoad_flags_listen: 127.0.0.1:8080
+cs_hypnotoad_workers: 16
+cs_hypnotoad_accepts: 1024
+cs_hypnotoad_keep_alive_timeout: 100
+cs_nginx_workers: 2
+cs_nginx_upstream_keepalive: 32
+cs_nginx_listen: 0.0.0.0:80
+cs_static_path: /home/cs/logos
+
+cs_nginx_auth_enabled: true
+cs_nginx_auth_user: root
+cs_nginx_auth_password: $apr1$LTFfWtS.$rSkRqtASVyYbnjxeFLdV4.
+
+
+cs_base_url: http://164.92.214.128/
+cs_admin_auth: root:RuCTF2023_S3cretP@ss
+cs_ctf_name: RuCTF Finals 2023
+cs_flags_secret: t4DAg7UdWRSm7f3j
+cs_round_length: 60
+cs_flag_life_time: 15
+cs_disable_irrelevant_services: 0
+cs_time: "['2023-04-18 07:30:00', '2023-04-22 09:59:59']"
+
+cs_scoring: |
+    start_flag_price => 10,
+    heating_speed => 1/12,
+    max_flag_price => 10,
+    cooling_down => 1/2,
+    heating_flags_limit => 1000000,
+    cooling_submissions_limit => 1,
+    dying_rounds => 120,
+    dying_flag_price => 10
+
+cs_checkers_hostname_cb: |
+  sub { my ($team, $service) = @_; $team->{host} }
+
+teams: |
+  {name => 'team30', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28' },
+  {name => 'team31', network => '10.60.31.0/24', host => '10.60.31.3', token => 'CLOUD_31_4b74c7f1fa5b69cfcd7268c4962bbffb' },
+  {name => 'team32', network => '10.60.32.0/24', host => '10.60.32.3', token => 'CLOUD_32_95da288b4298c2a1eb2218cb55d9b2c1' },
+
+services: |
+  {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
+  {name => 'dcs', path => 'checkers/dcs/dcs.checker.py', timeout => 30, tcp_port => 7654},
+  {name => 'hermicache', path => 'checkers/hermicache/hermicache.checker.py', timeout => 30, tcp_port => 8080},
+  {name => 'museumorphosis', path => 'checkers/museumorphosis/museumorphosis.checker.py', timeout => 30, tcp_port => 6969},
+  {name => 'sneakers', path => 'checkers/sneakers/sneakers.checker.py', timeout => 30, tcp_port => 7777},
+  {name => 'solaris', path => 'checkers/solaris/solaris.checker.py', timeout => 30, tcp_port => 17173},
+  {name => 'stalker', path => 'checkers/stalker/stalker.checker.py', timeout => 30, tcp_port => 17171},
+
+queues: |
+  {}

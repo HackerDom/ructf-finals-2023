@@ -11,7 +11,7 @@ end
 
 function create_session(conn::Redis.RedisConnection, username)
     salt = randstring(20)
-    Redis.set(conn, username, salt)
+    Redis_set(conn, username, salt)
     return get_secret(username, salt)
 end
 
@@ -22,7 +22,7 @@ end
 
 
 function validate_session(conn::Redis.RedisConnection, username, secret)
-    salt = Redis.get(conn, username)
+    salt = Redis_get(conn, username)
     if salt == nothing
         return false
     end

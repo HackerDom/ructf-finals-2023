@@ -1,0 +1,88 @@
+
+name: Check museumorphosis
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'services/museumorphosis/**'
+      - 'checkers/museumorphosis/**'
+      - 'sploits/museumorphosis/**'
+  workflow_dispatch:
+    inputs:
+      cleanup_before_deploy:
+        description: 'Stops and fully removes service (with volumes!) before deploying again. Type "yes" to do it.'
+        required: false
+        default: "no"
+jobs:
+  check_service_museumorphosis:
+    name: Check service museumorphosis
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/museumorphosis/before_image_build.sh ]; then (cd ./services/museumorphosis && ./before_image_build.sh); fi
+    - name: Setup museumorphosis
+      run: (cd ./services/museumorphosis && docker-compose pull && docker-compose build && docker-compose up --build -d)
+  check_checker_museumorphosis:
+    name: Check checker museumorphosis
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/museumorphosis/before_image_build.sh ]; then (cd ./services/museumorphosis && ./before_image_build.sh); fi
+    - name: Setup museumorphosis
+      run: (cd ./services/museumorphosis && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/museumorphosis/requirements.txt ]; then python -m pip install -r checkers/museumorphosis/requirements.txt; fi
+    - name: Test checker on service
+      run: (cd ./checkers/museumorphosis && ./museumorphosis.checker.py TEST 127.0.0.1)
+  check_sploit_museumorphosis:
+    name: Check sploit museumorphosis
+    runs-on: ubuntu-20.04
+    if: ${{ false }}
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/museumorphosis/before_image_build.sh ]; then (cd ./services/museumorphosis && ./before_image_build.sh); fi
+    - name: Setup museumorphosis
+      run: (cd ./services/museumorphosis && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/museumorphosis/requirements.txt ]; then python -m pip install -r checkers/museumorphosis/requirements.txt; fi
+    - name: Setup sploit libraries
+      run: if [ -f sploits/museumorphosis/requirements.txt ]; then python -m pip install -r sploits/museumorphosis/requirements.txt; fi
+    - name: Test sploit on service
+      run: (./tools/check-sploit.py museumorphosis)
+  update_museumorphosis:
+    name: Deploy service using ansible to first teams
+    needs: [check_service_museumorphosis, check_checker_museumorphosis, check_sploit_museumorphosis]
+    runs-on: self-hosted
+    if: ${{ false }} # disable on game just in case
+    steps:
+    #- name: install ansible
+    #  run: sudo apt-get install -y ansible
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: change permission for ssh key
+      run: chmod 0600 ./teams/for_devs.ssh_key
+    - name: Run prebuilt hook
+      run: if [ -f services/museumorphosis/before_image_build.sh ]; then (cd ./services/museumorphosis && sudo ./before_image_build.sh); fi
+    - name: update checkers
+      run: cd ./ansible && ansible-playbook cs-checkers.yml
+    - name: deploy museumorphosis
+      run: cd ./ansible && ansible-playbook --extra-vars cleanup_service=${{ github.event.inputs.cleanup_before_deploy }} -t museumorphosis -l museumorphosis deploy-services.yml

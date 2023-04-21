@@ -4,12 +4,21 @@ import os
 ctf_root = os.path.join(os.path.dirname(__file__), '../../')
 services_dir = os.path.join(ctf_root, 'services')
 
+SPLOIT = [
+  # 'bookster',
+  'sneakers',
+]
+
 SERVICES = [
+  # 'bookster',
+  'dcs',
   'example',
-  'bookster',
-  'solaris',
-  # 'sneakers',
   'hermicache',
+  'museumorphosis',
+  'scp',
+  'sneakers',
+  'solaris',
+  'stalker'
  ]
 
 TEMPLATE = '''
@@ -62,6 +71,7 @@ jobs:
   check_sploit_{service}:
     name: Check sploit {service}
     runs-on: ubuntu-20.04
+    if: {sploit_enabled}
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
@@ -101,6 +111,11 @@ jobs:
       run: cd ./ansible && ansible-playbook --extra-vars cleanup_service=${{{{ github.event.inputs.cleanup_before_deploy }}}} -t {service_lower} -l {service_lower} deploy-services.yml
 '''
 
+def sploit_enabled(service) -> str:
+  if service in SPLOIT:
+    return '${{ true }}'
+  return '${{ false }}'
+
 for s in SERVICES:
     with open('check_{}.yml'.format(s), 'w') as f:
-        f.write(TEMPLATE.format(service=s, service_lower=s.lower()))
+      f.write(TEMPLATE.format(service=s, service_lower=s.lower(), sploit_enabled=sploit_enabled(s)))

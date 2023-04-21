@@ -3,3 +3,4 @@ variable "region" {
 }
 variable "do_token" {}
 variable "pvt_key" {}
+variable "secure_cloud_ip" {}

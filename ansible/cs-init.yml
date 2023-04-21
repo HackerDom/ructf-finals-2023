@@ -1,0 +1,17 @@
+- hosts: master
+  tasks:
+  - name: reset db
+    command: ./script/cs reset_db chdir="{{ cs_dir }}"
+    become: yes
+    become_user: "{{ cs_user }}"
+
+- hosts: master
+  roles:
+    - update_cs_config
+
+- hosts: master
+  tasks:
+  - name: init db
+    command: ./script/cs init_db chdir="{{ cs_dir }}"
+    become: yes
+    become_user: "{{ cs_user }}"

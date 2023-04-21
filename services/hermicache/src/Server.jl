@@ -2,13 +2,16 @@ using Bukdu
 using HTTP
 using Redis
 using JSONSchema
+using DataStructures
 
 
+include("Cache.jl")
 include("Compute.jl")
 include("Config.jl")
+include("RedisCommands.jl")
 include("Storage.jl")
-include("Cache.jl")
 include("SessionManager.jl")
+
 
 struct RestController <: ApplicationController
     conn::Conn
@@ -169,7 +172,7 @@ function with_required_params(handler, required_params)
         param_dict = HTTP.queryparams(HTTP.URI(c.conn.request.target))
         for required_param in required_params
             if !haskey(param_dict, required_param)
-                return code_and_message(400, "invalid params")
+                return code_and_message(c, 400, "invalid params")
             end
         end
 
@@ -261,13 +264,6 @@ function list_fields_handler(c::RestController, username)
 end
 
 
-function sandbox_handler(c::RestController)
-    println(CACHE)
-    println(CACHE_STAT)
-    println(EXCLUDE)
-end
-
-
 routes() do
     post("/register/", RestController, with_body_validator(register_handler, get_validator("user_pair.json")))
     post("/login/", RestController, with_body_validator(login_handler, get_validator("user_pair.json")))
@@ -277,8 +273,6 @@ routes() do
     get("/compute/", RestController, with_required_params(with_auth(compute_handler), ["field_uuid", "arg"]))
 
     get("/list_fields/", RestController, with_auth(list_fields_handler))
-
-    get("/sandbox/", RestController, sandbox_handler)
 
     plug(Plug.Parsers, [:json])
 end
