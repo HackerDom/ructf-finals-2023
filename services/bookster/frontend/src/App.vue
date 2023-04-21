@@ -14,7 +14,7 @@
 
     <template #right>
       <va-navbar-item><router-link v-if="token !== null" to="/books" class="link">My books</router-link></va-navbar-item>
-      <va-navbar-item><router-link  to="/book/save" class="link">Save the book</router-link></va-navbar-item>
+      <va-navbar-item><router-link v-if="token !== null"  to="/book/save" class="link">Save the book</router-link></va-navbar-item>
       <va-navbar-item v-if="token === null"><router-link to="/login" class="link">Sign In</router-link></va-navbar-item>
       <va-navbar-item v-if="token === null"><router-link to="/register" class="link">Register</router-link></va-navbar-item>
       <va-navbar-item v-if="token !== null" @click="onLogout" class="link">Logout</va-navbar-item>
