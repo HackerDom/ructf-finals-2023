@@ -11,6 +11,19 @@ resource "digitalocean_record" "cloud_a" {
 }
 
 
+resource "digitalocean_domain" "monitor" {
+  name = "monitor.ructf.org"
+}
+
+resource "digitalocean_record" "monitor_a" {
+  domain = digitalocean_domain.monitor.id
+  type   = "A"
+  name   = "@"
+  value  = digitalocean_droplet.cs-master.ipv4_address
+  ttl    = 30
+}
+
+
 resource "digitalocean_domain" "vpn" {
   name = "vpn.ructf.org"
 }
