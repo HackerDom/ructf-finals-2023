@@ -13,6 +13,7 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     video = models.FileField(upload_to='videos')
+    created_at = models.DateTimeField(auto_now=True)
     video_preview = models.FileField(upload_to='images')
     owner = models.ForeignKey(
         'auth.User',
