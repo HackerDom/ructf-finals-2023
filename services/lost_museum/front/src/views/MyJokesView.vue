@@ -3,7 +3,7 @@
 
         <va-progress-circle v-if="loading" indeterminate color="primary" />
         <JokeCard v-for="joke in jokes" :key="joke.theme" :joke="joke"/>
-        <p v-if="!loading && jokes.length === 0">У тебя нет анкдотов</p>
+        <p v-if="!loading && jokes.length === 0">У тебя нет анекдотов</p>
     </div>
 </template>
 

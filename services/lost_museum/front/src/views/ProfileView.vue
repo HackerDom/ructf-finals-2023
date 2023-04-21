@@ -4,8 +4,8 @@
             <va-input
                     v-model="newUsername"
                     class="mb-6 search"
-                    label="Добавить друга по username"
-                    placeholder="username"
+                    label="Добавить друга"
+                    placeholder="Имя пользователя"
                     @keyup.enter="newFriend"
             >
             </va-input>
@@ -42,7 +42,7 @@
 
                 <va-progress-circle v-if="loadingReq" indeterminate color="primary" />
                 <va-list style="max-width: 600px;">
-                    <va-list-label> Заявки ко мне </va-list-label>
+                    <va-list-label> Мои заявки </va-list-label>
                     <va-list-item
                             v-for="(request, i) in requests"
                             :key="i"

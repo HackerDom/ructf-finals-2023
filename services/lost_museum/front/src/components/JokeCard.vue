@@ -2,18 +2,17 @@
     <div class="container">
         <va-card>
             <va-card-content>
-                <va-card-title>Анекдот дня </va-card-title>
-                    <div class="title">         {{joke.theme}}
+                <va-card-title>Внимание анекдот</va-card-title>
+                    <div class="title">Тема: {{joke.theme}}
                     </div>
-                    <p>
-                        {{joke.status}}
-                    </p>
                     <div class="text">
-                        <p class="text__title">Внимание анекдот:</p>
                         <p class="text__words">
                             {{joke.text}}
                         </p>
                     </div>
+                    <p>
+                        Статус: {{joke.status}}
+                    </p>
                 </va-card-content>
         </va-card>
     </div>
