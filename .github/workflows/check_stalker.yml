@@ -48,7 +48,7 @@ jobs:
   check_sploit_stalker:
     name: Check sploit stalker
     runs-on: ubuntu-20.04
-    if: ${{ false }} # do not check sploits
+    if: ${{ false }}
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2

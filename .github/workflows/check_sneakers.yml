@@ -48,7 +48,7 @@ jobs:
   check_sploit_sneakers:
     name: Check sploit sneakers
     runs-on: ubuntu-20.04
-    if: ${{ false }} # do not check sploits
+    if: ${{ true }}
     steps:
     - name: Checkout infra
       uses: actions/checkout@v2
