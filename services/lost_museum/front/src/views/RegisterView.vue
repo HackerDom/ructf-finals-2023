@@ -1,42 +1,39 @@
-
-
-
 <template>
     <div class="container">
         <va-card tag="div">
-            <va-card-title>Registration</va-card-title>
+            <va-card-title>Регистрация</va-card-title>
             <va-card-content>
                 <va-form tag="form" ref="form" style="width: 250px;" @submit.prevent="onSubmit" @validation="validation = $event">
                     <p class="error" v-if="error">{{error}}</p>
                     <va-input
                             v-model="login"
                             class="mt-3"
-                            label="Username"
+                            label="Имя пользователя"
                             :rules="[(value) => (value && value.length > 0) || 'Enter username',]"
                     />
                     <va-input
                             v-model="password"
                             class="mt-3"
-                            label="Password"
+                            label="Пароль"
                             type="password"
-                            :rules="[(value) => (value && value.length > 5) || 'Password too short']"
+                            :rules="[(value) => (value && value.length > 5) || 'Короткий пароль']"
                     />
                     <va-input
                         v-model="password_repeat"
                         class="mt-3"
-                        label="Password repeat"
+                        label="Повторите пароль"
                         type="password"
-                        :rules="[(value) => (value && value === password) || 'Password not match']"
+                        :rules="[(value) => (value && value === password) || 'Пароли не совпадают']"
                     />
                     <div class="container">
                         <va-button
                                 type="submit"
                                 class="mt-3"
                         >
-                            Register
+                            Зарегистрироваться
                         </va-button>
 
-                        <router-link to="/login" class="link-small">Sign In</router-link>
+                        <router-link to="/login" class="link-small">Логин</router-link>
                     </div>
 
                 </va-form>
