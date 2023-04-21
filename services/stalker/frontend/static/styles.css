@@ -1,0 +1,85 @@
+:root {
+    --black: #1f1f1f;
+    --white: #d3d3d3;
+    --grey: #838383;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 2vh;
+}
+
+.content {
+    max-width: 70ch;
+    height: 100vh;
+    text-align: center;
+}
+
+.title {
+    margin: 1ch;
+    color: var(--white);
+    font-style: italic;
+    font-size: 2ch;
+}
+
+.header {
+    height: auto;
+    max-width: 100%;
+    padding-bottom: 1.5ch;
+}
+
+.box {
+    width: 32ch;
+    /* display: inline-block; */
+    display: none;
+    background: var(--black);
+    padding: 1.5ch;
+    border: 0.1ch solid var(--grey);
+    border-radius: 1ch;
+}
+
+.box textarea {
+    width: 95%;
+    height: 4ch;
+    line-height: 4ch;
+    margin: 0.5ch;
+    color: var(--white);
+    background: var(--black);
+    border-bottom: 0.1ch solid var(--grey);
+    resize: none;
+    outline: none;
+    overflow: hidden;
+    font-size: inherit;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.box button {
+    width: 95%;
+    height: 4ch;
+    margin: 0.5ch;
+    padding: 0;
+    color: var(--white);
+    background: var(--black);
+    border: 0.1ch solid var(--white);
+    cursor: pointer;
+    resize: none;
+    outline: none;
+    font-size: inherit;
+}
