@@ -1,7 +1,7 @@
 FROM golang:1.20-alpine as builder
 LABEL stage=builder
 
-RUN apk add build-base # for sqlite3 build
+RUN apk add --no-cache gcc musl-dev # for sqlite3 build
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY ./ ./
-RUN CGO_ENABLED=1 go build -v -o app cmd/app/main.go
+RUN CGO_ENABLED=1 go build -o app cmd/app/main.go
 
 FROM alpine:3.14
 
