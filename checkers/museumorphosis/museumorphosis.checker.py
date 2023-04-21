@@ -76,7 +76,8 @@ class MuseumorphosisChecker(VulnChecker):
 
         try:
             flag_id = json.loads(request.flag_id)
-            museum_id, exhibit_id = request.public_flag_id.split(':')
+            public_flag_id = json.loads(request.public_flag_id)
+            museum_id, exhibit_id = public_flag_id["museum_id"], public_flag_id["exhibit_id"]
 
             print(">>Get exhibit by public flag id...")
             exhibit_json = client.get_exhibit(exhibit_id, flag_id["museum_token"])
@@ -120,7 +121,7 @@ class MuseumorphosisChecker(VulnChecker):
             print(f">>Saved flag {flag}")
             print(f">>Saved flag_id {flag_id}")
 
-            public_flag_id = f"{museum_id}:{exhibit.id}"
+            public_flag_id = json.dumps({"museum_id": museum_id, "exhibit_id": exhibit.id})
             return Verdict.OK_WITH_FLAG_ID(public_flag_id, flag_id)
         except VerdictException as e:
             print(e)
