@@ -16,7 +16,7 @@ SERVICES = [
   'dcs',
   'example',
   'hermicache',
-  'lost-museum',
+  'lost_museum',
   'museumorphosis',
   'scp',
   'sneakers',
