@@ -6,6 +6,7 @@ services_dir = os.path.join(ctf_root, 'services')
 
 SPLOIT = [
   # 'bookster',
+  'dcs',
   'example',
   'sneakers',
 ]
