@@ -4,7 +4,7 @@ while true; do
     date -uR
     find "/var/dcs/data/" \
         -type f \
-        -and -not -newermt "-1800 seconds" \
+        -and -not -newermt "-7200 seconds" \
         -delete
     sleep 30
 done
