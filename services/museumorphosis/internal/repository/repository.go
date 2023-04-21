@@ -105,6 +105,9 @@ func (r *Repository) CreateExhibit(museumId uuid.UUID, data dto.ExhibitIn) (uuid
 	}
 	if err := r.QueryRow("QUERY ( INSERT INTO exhibits (id, title, description, metadata) VALUES ('?', '?', '?', '?') RETURNING id ) AT DATABASE (?)",
 		id.String(), data.Title, data.Description, data.Metadata, museumId).Scan(&id); err != nil {
+		if err == sql.ErrNoRows {
+			return uuid.Nil, internal.NotFoundError
+		}
 		return uuid.Nil, fmt.Errorf("error while create exhibit: %w", err)
 	}
 	return id, nil

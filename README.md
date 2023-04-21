@@ -4,8 +4,9 @@
 
 |Name    |CI|Sploit in CI |In image?| 
 |---     |---|---|---|
+|example|![example](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_example.yml/badge.svg)|+|-|
 |bookster|![bookster](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_bookster.yml/badge.svg)|-|+|
-|dcs|![dcs](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_dcs.yml/badge.svg)|-|+|
+|dcs|![dcs](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_dcs.yml/badge.svg)|+|+|
 |hermicache|![hermicache](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_hermicache.yml/badge.svg)|-|+|
 |museumorphosis|![museumorphosis](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_museumorphosis.yml/badge.svg)|-|+|
 |scp|![scp](https://github.com/HackerDom/ructf-finals-2023/actions/workflows/check_scp.yml/badge.svg)|-|+|

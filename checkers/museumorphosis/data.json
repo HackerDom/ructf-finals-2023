@@ -1,872 +1,977 @@
 [
   {
-    "museum": "Музей истории зубочисток Острые впечатления",
-    "exhibitName": "Зубочистка с рисунком Моне",
-    "exhibitDescription": "Зубочистка с изображением картины Клода Моне Лилии водной на ручке"
+    "museum": "The Museum of Absurdity",
+    "exhibitName": "The Invisible Sculpture",
+    "exhibitDescription": "An art piece that challenges the limits of perception by being completely invisible."
   },
   {
-    "museum": "Музей истории ковров Под ногами",
-    "exhibitName": "Ковер Космический полет",
-    "exhibitDescription": "Ковер с изображением космического корабля, созданный в 1960-х годах"
+    "museum": "The Quirky Museum of Curiosities",
+    "exhibitName": "The Talking Taxidermy Deer",
+    "exhibitDescription": "A stuffed deer that has been equipped with a voice box and can speak to visitors."
   },
   {
-    "museum": "Музей истории салфеток Нежные прикосновения",
-    "exhibitName": "Салфетка Розовый фламинго",
-    "exhibitDescription": "Салфетка с изображением розового фламинго, созданная в 1950-х годах"
+    "museum": "The Museum of Unusual Artifacts",
+    "exhibitName": "The Shrunken Head",
+    "exhibitDescription": "A preserved human head that has been shrunken down to a fraction of its original size."
   },
   {
-    "museum": "Музей истории чайников Чайный путь",
-    "exhibitName": "Чайник Дракон",
-    "exhibitDescription": "Чайник в форме дракона, созданный в Китае в XVIII веке"
+    "museum": "The Museum of Strange Science",
+    "exhibitName": "The Time Machine Prototype",
+    "exhibitDescription": "A prototype of a time machine that was never completed due to its dangerous and unpredictable nature."
   },
   {
-    "museum": "Музей истории пуговиц Застегнуться на все пуговицы",
-    "exhibitName": "Пуговица Королевский герб",
-    "exhibitDescription": "Пуговица с изображением герба королевства, созданная в XVIII веке"
+    "museum": "The Museum of Eccentric Inventions",
+    "exhibitName": "The Hovering Bicycle",
+    "exhibitDescription": "A bicycle that has been outfitted with a hovering mechanism, allowing it to float above the ground."
   },
   {
-    "museum": "Музей истории карандашей Рисовый мир",
-    "exhibitName": "Карандаш Шекспир",
-    "exhibitDescription": "Карандаш, выпущенный в честь 400-летия со дня рождения Уильяма Шекспира"
+    "museum": "The Museum of Surrealism",
+    "exhibitName": "The Clock That Melts",
+    "exhibitDescription": "A clock that appears to be melting off its pedestal, defying the laws of physics."
   },
   {
-    "museum": "Музей истории зонтиков Защита от небесных капель",
-    "exhibitName": "Зонт Парижская мода",
-    "exhibitDescription": "Зонт, созданный в Париже в 1920-х годах, украшенный вышивкой и перьями"
+    "museum": "The Museum of Bizarre Biology",
+    "exhibitName": "The Two-Headed Snake",
+    "exhibitDescription": "A snake with two fully functional heads, each capable of controlling the body."
   },
   {
-    "museum": "Музей истории оранжерей Зеленый мир",
-    "exhibitName": "Агава Королева ночи",
-    "exhibitDescription": "Редкий вид агавы, цветущей только ночью и создающей особую атмосферу в оранжерее"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "The Haunted Doll",
+    "exhibitDescription": "A doll that is said to be possessed by the spirit of a deceased child."
   },
   {
-    "museum": "Музей истории печатных машин Печатный мир",
-    "exhibitName": "Печатная машина Хемингуэй",
-    "exhibitDescription": "Печатная машина, принадлежавшая Эрнесту Хемингуэю и использованная им при написании своих произведений"
+    "museum": "The Museum of Cryptic Art",
+    "exhibitName": "The Painting That Changes",
+    "exhibitDescription": "A painting that appears to change every time it is viewed, with new details and colors appearing each time."
   },
   {
-    "museum": "Музей истории карточных игр Игровой мир",
-    "exhibitName": "Колода карт Золотая лихорадка",
-    "exhibitDescription": "Колода карт, созданная в период золотой лихорадки в США и украшенная золотыми изображениями"
+    "museum": "The Museum of Enigmatic Objects",
+    "exhibitName": "The Cursed Mirror",
+    "exhibitDescription": "A mirror that is rumored to bring bad luck to anyone who looks into it."
   },
   {
-    "museum": "Музей истории бутылок Винный мир",
-    "exhibitName": "Стеклянная бутылка Лафит",
-    "exhibitDescription": "Стеклянная бутылка известного французского вина Шато Лафит, выпущенная в 1960-х годах"
+    "museum": "The Museum of Unexplained Phenomena",
+    "exhibitName": "The Levitating Rock",
+    "exhibitDescription": "A rock that appears to defy gravity by levitating in mid-air."
   },
   {
-    "museum": "Музей истории кошельков Деньги под контролем",
-    "exhibitName": "Кошелек Королевский скипетр",
-    "exhibitDescription": "Кожаный кошелек, украшенный изображением королевского скипетра и созданный в XVIII веке"
+    "museum": "The Museum of Oddities and Antiquities",
+    "exhibitName": "The Mummified Mermaid",
+    "exhibitDescription": "A preserved mermaid specimen that was discovered in a remote jungle."
   },
   {
-    "museum": "Музей истории бусин Бусинный мир",
-    "exhibitName": "Бусы Древняя Русь",
-    "exhibitDescription": "Бусы из древнерусского стекла, найденные при раскопках в Киеве"
+    "museum": "The Museum of the Macabre",
+    "exhibitName": "The Guillotine Blade",
+    "exhibitDescription": "An authentic blade from a historic guillotine, used to execute countless people during the French Revolution."
   },
   {
-    "museum": "Музей истории костюмов Модный мир",
-    "exhibitName": "Кокошник Царская невеста",
-    "exhibitDescription": "Кокошник, созданный в XIX веке для царской невесты и украшенный бриллиантами и жемчугом"
+    "museum": "The Museum of Peculiarities",
+    "exhibitName": "The Singing Plant",
+    "exhibitDescription": "A plant that emits strange and beautiful melodies when touched or exposed to sunlight."
   },
   {
-    "museum": "Музей истории зеркал Отражение мира",
-    "exhibitName": "Зеркало Луна",
-    "exhibitDescription": "Зеркало с изображением лунного пейзажа, созданное в 1970-х годах"
+    "museum": "The Wacky Museum of Oddities",
+    "exhibitName": "The Three-Headed Chicken",
+    "exhibitDescription": "A rare and bizarre specimen of a chicken with three heads."
   },
   {
-    "museum": "Музей абсурда Вот это да!",
-    "exhibitName": "Шляпа с ушами",
-    "exhibitDescription": "Необычная шляпа с ушами, созданная неизвестным дизайнером"
+    "museum": "The Museum of Mysterious Artifacts",
+    "exhibitName": "The Ancient Curse Tablet",
+    "exhibitDescription": "A tablet inscribed with a curse from an ancient civilization, believed to still hold power."
   },
   {
-    "museum": "Музей истории парикмахерского искусства Прическа",
-    "exhibitName": "Первый фен для волос",
-    "exhibitDescription": "Устройство для сушки волос, изобретенное в начале 20 века"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Ghostly Apparition",
+    "exhibitDescription": "A photograph capturing a ghostly apparition that has been haunting a particular location for decades."
   },
   {
-    "museum": "Музей юмора и сатиры Смех",
-    "exhibitName": "Клоунский нос",
-    "exhibitDescription": "Атрибут клоуна, используемый для создания комического эффекта"
+    "museum": "The Museum of Esoteric Knowledge",
+    "exhibitName": "The Alchemists Stone",
+    "exhibitDescription": "A legendary stone that was believed to have the power to turn base metals into gold and grant eternal life."
   },
   {
-    "museum": "Музей истории обуви Шаг",
-    "exhibitName": "Туфли с каблуком в виде птицы",
-    "exhibitDescription": "Нестандартная модель женских туфель, созданная известным дизайнером обуви"
+    "museum": "The Museum of Unusual Creatures",
+    "exhibitName": "The Chupacabra Specimen",
+    "exhibitDescription": "A specimen of the legendary chupacabra, a creature said to suck the blood of livestock."
   },
   {
-    "museum": "Музей истории парфюмерии Аромат",
-    "exhibitName": "Первый парфюм Chanel №5",
-    "exhibitDescription": "Легендарный аромат, созданный Коко Шанель в 1921 году"
+    "museum": "The Museum of Abnormal Anatomy",
+    "exhibitName": "The Conjoined Twins Skeleton",
+    "exhibitDescription": "The skeletal remains of conjoined twins, showcasing their unique anatomy and medical condition."
   },
   {
-    "museum": "Музей истории кино Оскар",
-    "exhibitName": "Золотой Оскар",
-    "exhibitDescription": "Награда Американской киноакадемии за выдающиеся достижения в киноискусстве"
+    "museum": "The Museum of Fantastic Beasts",
+    "exhibitName": "The Unicorn Horn",
+    "exhibitDescription": "A preserved unicorn horn, said to have healing powers and magical properties."
   },
   {
-    "museum": "Музей истории игрушек Играшка",
-    "exhibitName": "Конструктор Лего",
-    "exhibitDescription": "Популярный конструктор для детей, созданный компанией Lego в 1949 году"
+    "museum": "The Museum of Enigmatic Art",
+    "exhibitName": "The Painting That Vanished",
+    "exhibitDescription": "A painting that disappeared from its frame under mysterious circumstances, leaving behind only a blank canvas."
   },
   {
-    "museum": "Музей истории моды Гламур",
-    "exhibitName": "Шляпа с цветами",
-    "exhibitDescription": "Элегантная шляпа с цветами, созданная известным модельером"
+    "museum": "The Museum of Bizarre Phenomena",
+    "exhibitName": "The Spontaneous Human Combustion Artifact",
+    "exhibitDescription": "An artifact from a case of spontaneous human combustion, a mysterious and unexplained phenomenon."
   },
   {
-    "museum": "Музей истории театра Драма",
-    "exhibitName": "Первый костюм Гамлета",
-    "exhibitDescription": "Костюм, созданный для первого спектакля Гамлет Уильяма Шекспира"
+    "museum": "The Museum of Strange History",
+    "exhibitName": "The Cursed Egyptian Tomb",
+    "exhibitDescription": "An artifact from an Egyptian tomb that was believed to be cursed, causing misfortune and death to those who disturbed it."
   },
   {
-    "museum": "Музей истории спорта Адреналин",
-    "exhibitName": "Сноуборд",
-    "exhibitDescription": "Любимый вид экстремального спорта, позволяющий кататься на снегу на специальной доске"
+    "museum": "The Museum of Unconventional Art",
+    "exhibitName": "The Sculpture Made of Human Hair",
+    "exhibitDescription": "A sculpture made entirely of human hair, showcasing the artists unconventional approach to art."
   },
   {
-    "museum": "Музей истории автомобилей Автолегенды",
-    "exhibitName": "Форд Т",
-    "exhibitDescription": "Легендарный автомобиль, выпускавшийся компанией Ford с 1908 по 1927 годы"
+    "museum": "The Museum of Unusual Architecture",
+    "exhibitName": "The Upside-Down House",
+    "exhibitDescription": "A house designed to be upside-down, challenging visitors perceptions and sense of balance."
   },
   {
-    "museum": "Музей истории космонавтики Космос",
-    "exhibitName": "Скафандр Ю.А. Гагарина",
-    "exhibitDescription": "Скафандр, в котором Юрий Гагарин совершил первый полет в космос"
+    "museum": "The Museum of Mysterious Phenomena",
+    "exhibitName": "The Bermuda Triangle Artifact",
+    "exhibitDescription": "An artifact recovered from the mysterious Bermuda Triangle, a region known for numerous unexplained disappearances."
   },
   {
-    "museum": "Музей истории музыки Мелодия",
-    "exhibitName": "Электрогитара Fender Stratocaster",
-    "exhibitDescription": "Одна из самых популярных электрогитар в мире, созданная компанией Fender в 1954 году"
+    "museum": "The Museum of Eccentric Artifacts",
+    "exhibitName": "The Mechanical Arm",
+    "exhibitDescription": "A fully functional mechanical arm, designed and built by a 19th century inventor."
   },
   {
-    "museum": "Музей истории науки Диалог",
-    "exhibitName": "Первый телефон",
-    "exhibitDescription": "Устройство для передачи звуковых сигналов на расстояние, изобретенное Александром Беллом в 1876 году"
+    "museum": "The Museum of Unusual Natural History",
+    "exhibitName": "The Giant Squid Specimen",
+    "exhibitDescription": "A preserved specimen of a giant squid, one of the largest and most elusive creatures in the ocean."
   },
   {
-    "museum": "Музей истории живописи Художества",
-    "exhibitName": "Мона Лиза",
-    "exhibitDescription": "Знаменитая картина Леонардо да Винчи, написанная в начале 16 века"
+    "museum": "The Museum of Peculiar Art",
+    "exhibitName": "The Painting That Hides a Secret",
+    "exhibitDescription": "A painting that appears to be a simple landscape, but contains hidden symbols and messages that have yet to be deciphered."
   },
   {
-    "museum": "Музей истории архитектуры Строительство",
-    "exhibitName": "Пирамида Хеопса",
-    "exhibitDescription": "Одна из семи чудес древнего мира, построенная в Древнем Египте в 26 веке до нашей эры"
+    "museum": "The Museum of Cryptic Artifacts",
+    "exhibitName": "The Crystal Skull",
+    "exhibitDescription": "A mysterious crystal skull that has been the subject of much speculation and debate among archaeologists and paranormal enthusiasts."
   },
   {
-    "museum": "Музей истории религии Вера",
-    "exhibitName": "Библия Гуттенберга",
-    "exhibitDescription": "Первое книгопечатное издание Библии, созданное Иоганном Гуттенбергом в 1455 году"
+    "museum": "The Museum of Unexplained Phenomena",
+    "exhibitName": "The Crop Circle Artifact",
+    "exhibitDescription": "An artifact from a crop circle formation, a phenomenon that has yet to be fully explained by science."
   },
   {
-    "museum": "Музей истории транспорта Движение",
-    "exhibitName": "Первый паровоз",
-    "exhibitDescription": "Устройство для перемещения по железной дороге, работающее на паровой машине, созданное в начале 19 века"
+    "museum": "The Museum of Curious Objects",
+    "exhibitName": "The Singing Sword",
+    "exhibitDescription": "A sword that emits a haunting melody when unsheathed, its origins and purpose shrouded in mystery."
   },
   {
-    "museum": "Музей истории железнодорожного транспорта Поезд",
-    "exhibitName": "Локомотив Сталин",
-    "exhibitDescription": "Мощный паровоз, созданный в СССР в 1930-х годах и названный в честь Иосифа Сталина"
+    "museum": "The Museum of Strange Technology",
+    "exhibitName": "The Time Machine Prototype",
+    "exhibitDescription": "A prototype of a time machine, created by a scientist who claimed to have discovered the secret to time travel."
   },
   {
-    "museum": "Музей истории аэронавтики Небо",
-    "exhibitName": "Первый самолет братьев Райт",
-    "exhibitDescription": "Устройство, способное подниматься в воздух и двигаться по нему с помощью мотора, созданное братьями Райт в 1903 году"
+    "museum": "The Museum of Unusual Science",
+    "exhibitName": "The Teleportation Device",
+    "exhibitDescription": "A device that claims to be able to teleport objects from one location to another, its authenticity and effectiveness still debated by scientists."
   },
   {
-    "museum": "Музей истории кино Кинематограф",
-    "exhibitName": "Кинопроектор Lumiere",
-    "exhibitDescription": "Первый кинопроектор, созданный братьями Люмьер в 1895 году"
+    "museum": "The Museum of Mysterious Artifacts",
+    "exhibitName": "The Aztec Sacrificial Dagger",
+    "exhibitDescription": "A dagger used in Aztec sacrifices, believed to be cursed and capable of bringing misfortune to those who possess it."
   },
   {
-    "museum": "Музей истории спорта Спорт",
-    "exhibitName": "Мяч для футбола Тельстар",
-    "exhibitDescription": "Официальный мяч чемпионата мира по футболу 1970 года, созданный компанией Adidas"
+    "museum": "The Museum of Paranormal History",
+    "exhibitName": "The Haunted Doll",
+    "exhibitDescription": "A doll believed to be possessed by a malevolent spirit, causing strange occurrences and terrorizing its owners."
   },
   {
-    "museum": "Музей истории телевидения Телевидение",
-    "exhibitName": "Первый телевизор",
-    "exhibitDescription": "Устройство для преобразования электрических сигналов в изображение, созданное в 1927 году"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Crystal Pyramid",
+    "exhibitDescription": "A crystal pyramid that emits a strange energy field, its purpose and origin still unknown."
   },
   {
-    "museum": "Музей истории компьютерной техники Компьютер",
-    "exhibitName": "Первый персональный компьютер",
-    "exhibitDescription": "Устройство для обработки информации, созданное в 1975 году компанией IBM"
+    "museum": "The Museum of Unusual Antiques",
+    "exhibitName": "The Shrunken Head",
+    "exhibitDescription": "A shrunken head from an indigenous tribe, believed to possess mystical powers and used in ancient rituals."
   },
   {
-    "museum": "Музей истории моды Мода",
-    "exhibitName": "Маленькое черное платье Коко Шанель",
-    "exhibitDescription": "Известное платье, созданное Коко Шанель в 1926 году и ставшее символом моды"
+    "museum": "The Museum of Strange Art",
+    "exhibitName": "The Living Painting",
+    "exhibitDescription": "A painting that appears to come to life, with the figures moving and interacting with each other in a way that defies explanation."
   },
   {
-    "museum": "Музей истории театра Театр",
-    "exhibitName": "Костюм Гамлета",
-    "exhibitDescription": "Костюм, который носил актер Лоуренс Оливье в спектакле Гамлет в 1948 году"
+    "museum": "The Museum of Esoteric Objects",
+    "exhibitName": "The Crystal Ball",
+    "exhibitDescription": "A crystal ball used for divination and scrying, believed to have the power to reveal hidden truths and future events."
   },
   {
-    "museum": "Музей истории кулинарии Кулинария",
-    "exhibitName": "Посуда Древнего Китая",
-    "exhibitDescription": "Керамическая посуда, созданная в Древнем Китае более 2000 лет назад"
+    "museum": "The Museum of Unusual Artifacts",
+    "exhibitName": "The Alien Artifact",
+    "exhibitDescription": "An artifact believed to be of extraterrestrial origin, recovered from a UFO crash site and studied by scientists for its advanced technology."
   },
   {
-    "museum": "Музей истории медицины Здоровье",
-    "exhibitName": "Первый искусственный сердечный клапан",
-    "exhibitDescription": "Устройство, используемое для замены поврежденного сердечного клапана, созданное в 1960 году"
+    "museum": "The Museum of Strange Phenomena",
+    "exhibitName": "The Levitating Stone",
+    "exhibitDescription": "A stone that appears to levitate on its own, defying the laws of gravity and physics."
   },
   {
-    "museum": "Музей истории животных Животные",
-    "exhibitName": "Скелет тираннозавра",
-    "exhibitDescription": "Скелет одного из самых крупных и опасных хищников, живших на Земле в меловой период"
+    "museum": "The Museum of Mysterious Objects",
+    "exhibitName": "The Black Dahlia Clue",
+    "exhibitDescription": "An object found at the scene of the infamous Black Dahlia murder, providing a clue to the identity of the killer."
   },
   {
-    "museum": "Музей истории океанографии Океан",
-    "exhibitName": "Батискаф Триест",
-    "exhibitDescription": "Подводное судно, способное погружаться на глубину более 10 километров, созданное в 1960 году"
+    "museum": "The Museum of Unconventional Science",
+    "exhibitName": "The Mind-Reading Device",
+    "exhibitDescription": "A device that claims to be able to read peoples thoughts, its effectiveness and ethics still debated by scientists and ethicists."
   },
   {
-    "museum": "Музей истории авиации Авиация",
-    "exhibitName": "Самолет братьев Райт",
-    "exhibitDescription": "Первый самолет, совершивший управляемый полет в 1903 году, созданный братьями Райт"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Necronomicon",
+    "exhibitDescription": "A book of forbidden knowledge and dark magic, said to have been written by the mad Arab Abdul Alhazred."
   },
   {
-    "museum": "Музей истории архитектуры Архитектура",
-    "exhibitName": "Пирамида Хеопса",
-    "exhibitDescription": "Одна из семи чудес древнего мира, построенная в 2560 году до нашей эры"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Ghostly Apparition",
+    "exhibitDescription": "A photograph of a ghostly apparition, captured by a paranormal investigator during an investigation of a haunted location."
   },
   {
-    "museum": "Музей истории науки Наука",
-    "exhibitName": "Телескоп Галилео",
-    "exhibitDescription": "Первый телескоп, созданный итальянским ученым Галилео Галилеем в 1609 году"
+    "museum": "The Museum of Anomalous Objects",
+    "exhibitName": "The Cursed Painting",
+    "exhibitDescription": "A painting that is said to bring misfortune and tragedy to anyone who possesses it, with a history of mysterious deaths and accidents associated with it."
   },
   {
-    "museum": "Музей истории железнодорожного транспорта Железная дорога",
-    "exhibitName": "Паровоз Рокет",
-    "exhibitDescription": "Первый паровоз, созданный английским инженером Джорджем Стефенсоном в 1829 году"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Egyptian Curse Tablet",
+    "exhibitDescription": "A tablet inscribed with a curse from ancient Egypt, believed to have been used to punish enemies and protect tombs."
   },
   {
-    "museum": "Музей истории космонавтики Космос",
-    "exhibitName": "Корабль Восток-1",
-    "exhibitDescription": "Первый космический корабль, на котором Юрий Гагарин совершил первый полет в космос в 1961 году"
+    "museum": "The Museum of Bizarre Artifacts",
+    "exhibitName": "The Voodoo Doll",
+    "exhibitDescription": "A doll used in voodoo rituals, believed to have the power to control the actions and thoughts of its target."
   },
   {
-    "museum": "Музей истории музыки Музыка",
-    "exhibitName": "Гитара Стратокастер",
-    "exhibitDescription": "Одна из самых известных электрогитар, созданная компанией Fender в 1954 году"
+    "museum": "The Museum of Paranormal Objects",
+    "exhibitName": "The Ouija Board",
+    "exhibitDescription": "A board used for communicating with spirits, with a history of mysterious and sometimes dangerous interactions with the supernatural."
   },
   {
-    "museum": "Музей истории железа Железо",
-    "exhibitName": "Меч короля Артура",
-    "exhibitDescription": "Легендарный меч, связанный с историей короля Артура и рыцарей Круглого стола"
+    "museum": "The Museum of Enigmatic Art",
+    "exhibitName": "The Invisible Sculpture",
+    "exhibitDescription": "An art piece that is said to be invisible, with only its presence and energy field detectable by those who experience it."
   },
   {
-    "museum": "Музей истории денег Деньги",
-    "exhibitName": "Первая монета",
-    "exhibitDescription": "Круглая монета, созданная в VII веке до нашей эры в Лидии (ныне территория Турции)"
+    "museum": "The Museum of Unusual Art",
+    "exhibitName": "The Living Statue",
+    "exhibitDescription": "A statue that appears to come to life, with the figure moving and interacting with the audience in a way that defies explanation."
   },
   {
-    "museum": "Музей истории железных дорог Железные дороги",
-    "exhibitName": "Паровоз Брюссель",
-    "exhibitDescription": "Один из первых паровозов, созданный в 1835 году в Бельгии"
+    "museum": "The Museum of Strange Artifacts",
+    "exhibitName": "The Curse of King Tuts Tomb",
+    "exhibitDescription": "An artifact associated with the curse that allegedly caused the deaths of those who opened King Tuts tomb, with a history of misfortune and tragedy."
   },
   {
-    "museum": "Музей истории религии Религия",
-    "exhibitName": "Книга мертвых",
-    "exhibitDescription": "Древний египетский текст, написанный на папирусе и содержащий инструкции для умерших, как пройти через загробный мир"
+    "museum": "The Museum of Esoteric History",
+    "exhibitName": "The Philosophers Stone",
+    "exhibitDescription": "A legendary substance that is said to have the power to turn base metals into gold and grant immortality to its possessor, sought after by alchemists throughout history."
   },
   {
-    "museum": "Музей истории науки Наука",
-    "exhibitName": "Телескоп Галилея",
-    "exhibitDescription": "Телескоп, созданный итальянским ученым Галилео Галилеем в начале XVII века, позволил ему впервые наблюдать космические объекты, такие как Луна и планеты Солнечной системы"
+    "museum": "The Museum of Unusual History",
+    "exhibitName": "The Roswell Debris",
+    "exhibitDescription": "Debris recovered from the site of the Roswell UFO crash, with a controversial history and ongoing debate over its true nature and origin."
   },
   {
-    "museum": "Музей истории музыки Музыка",
-    "exhibitName": "Струнный квартет Бетховена",
-    "exhibitDescription": "Один из самых известных музыкальных произведений, написанных немецким композитором Людвигом ван Бетховеном в 1825 году"
+    "museum": "The Museum of Strange Technology",
+    "exhibitName": "The Antigravity Device",
+    "exhibitDescription": "A device that claims to be able to defy gravity and allow for levitation and flight, with a history of experimentation and controversy."
   },
   {
-    "museum": "Музей истории театра Театр",
-    "exhibitName": "Маска комедии и трагедии",
-    "exhibitDescription": "Символ театра, представляющий две противоположные эмоции - радость и горе"
+    "museum": "The Museum of Mysterious Art",
+    "exhibitName": "The Enchanted Forest Painting",
+    "exhibitDescription": "A painting that depicts a forest with magical properties, with stories of those who have entered the painting and never returned."
   },
   {
-    "museum": "Музей истории религии Религия",
-    "exhibitName": "Книга мертвых",
-    "exhibitDescription": "Древний египетский текст, содержащий инструкции по прохождению покойником после смерти в загробный мир"
+    "museum": "The Museum of Cryptic Objects",
+    "exhibitName": "The Cursed Amulet",
+    "exhibitDescription": "An amulet believed to be cursed, with a history of bringing misfortune and tragedy to those who possess it."
   },
   {
-    "museum": "Музей истории архитектуры Архитектура",
-    "exhibitName": "Колизей",
-    "exhibitDescription": "Древний римский амфитеатр, построенный в 80 году н.э. и являющийся одним из символов Рима"
+    "museum": "The Museum of Unexplained Art",
+    "exhibitName": "The Ghost Ship Painting",
+    "exhibitDescription": "A painting that depicts a ghost ship, with stories of those who have seen the ship and its spectral crew sailing the seas."
   },
   {
-    "museum": "Музей истории железнодорожного транспорта Железная дорога",
-    "exhibitName": "Паровоз Рок-Айленд",
-    "exhibitDescription": "Один из самых известных паровозов в мире, который эксплуатировался в США в конце XIX - начале XX века"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Haunted Mirror",
+    "exhibitDescription": "A mirror that is said to be haunted by the ghost of its previous owner, with reports of strange sightings and unexplained events."
   },
   {
-    "museum": "Музей истории мебели Мебель",
-    "exhibitName": "Стул Тео Ван Дозбурга",
-    "exhibitDescription": "Известный стул, созданный голландским дизайнером Тео Ван Дозбургом в 1917 году и ставший символом модернизма"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "The Black Magic Grimoire",
+    "exhibitDescription": "A book of black magic spells and rituals, believed to have been used by dark practitioners throughout history."
   },
   {
-    "museum": "Музей истории специй Специи",
-    "exhibitName": "Корица",
-    "exhibitDescription": "Одна из самых известных и популярных специй, которая используется в кулинарии по всему миру"
+    "museum": "The Museum of Enigmatic Objects",
+    "exhibitName": "The Crystal Skull",
+    "exhibitDescription": "A crystal skull that is said to possess mystical powers, with legends of its origins and the secrets it holds."
   },
   {
-    "museum": "Музей истории металлургии Металлургия",
-    "exhibitName": "Железный меч",
-    "exhibitDescription": "Древнее оружие, созданное из железа и использовавшееся в боевых действиях в разных культурах в течение многих веков"
+    "museum": "The Museum of Unusual Artifacts",
+    "exhibitName": "The Mysterious Stonehenge Artifact",
+    "exhibitDescription": "An artifact found at Stonehenge, with a mysterious purpose and unknown origin."
   },
   {
-    "museum": "Музей истории народных промыслов Народные промыслы",
-    "exhibitName": "Ковер",
-    "exhibitDescription": "Изделие, созданное из различных материалов, таких как шерсть, хлопок или шелк, и используемое для украшения пола или стен в доме"
+    "museum": "The Museum of Esoteric Artifacts",
+    "exhibitName": "The Book of Thoth",
+    "exhibitDescription": "An ancient Egyptian book of magic and wisdom, said to have been written by the god Thoth himself."
   },
   {
-    "museum": "Музей истории наук о Земле Науки о Земле",
-    "exhibitName": "Глобус",
-    "exhibitDescription": "Сферическая модель Земли, которая помогает визуализировать ее форму и географические особенности"
+    "museum": "The Museum of Strange History",
+    "exhibitName": "The Mystery of the Mary Celeste",
+    "exhibitDescription": "An exhibit exploring the mysterious disappearance of the crew of the Mary Celeste, with theories and speculation about what happened on board."
   },
   {
-    "museum": "Музей истории игр Игры",
-    "exhibitName": "Шахматы",
-    "exhibitDescription": "Стратегическая настольная игра, которая возникла в Индии в VI веке н.э. и стала одной из самых популярных игр в мире"
+    "museum": "The Museum of Paranormal Artifacts",
+    "exhibitName": "The Haunted Doll",
+    "exhibitDescription": "A doll that is said to be possessed by a malevolent spirit, with a history of causing fear and terror among those who have encountered it."
   },
   {
-    "museum": "Музей истории космонавтики Космонавтика",
-    "exhibitName": "Спутник Спутник-1",
-    "exhibitDescription": "Первый искусственный спутник Земли, запущенный Советским Союзом в 1957 году"
+    "museum": "The Museum of Unexplained Phenomena",
+    "exhibitName": "The Bermuda Triangle Mystery",
+    "exhibitDescription": "An exhibit exploring the mysterious disappearances and strange occurrences associated with the Bermuda Triangle."
   },
   {
-    "museum": "Музей истории балета Балет",
-    "exhibitName": "Лебединое озеро",
-    "exhibitDescription": "Одно из самых известных балетных произведений, созданное русским композитором Петром Ильичем Чайковским в 1875-76 годах"
+    "museum": "The Museum of Mystical Objects",
+    "exhibitName": "The Tarot Deck of Aleister Crowley",
+    "exhibitDescription": "A tarot deck designed by the infamous occultist Aleister Crowley, with a history of controversy and dark magic."
   },
   {
-    "museum": "Музей истории астрономии Астрономия",
-    "exhibitName": "Телескоп Хаббла",
-    "exhibitDescription": "Космический телескоп, запущенный в 1990 году и названный в честь американского астронома Эдвина Хаббла"
+    "museum": "The Museum of Unconventional Artifacts",
+    "exhibitName": "The Alien Skull",
+    "exhibitDescription": "A skull believed to be from an extraterrestrial being, with ongoing debates and speculation about its authenticity."
   },
   {
-    "museum": "Музей истории кино Кино",
-    "exhibitName": "Кинопроектор",
-    "exhibitDescription": "Устройство, используемое для показа фильмов на большом экране"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown language, with a history of mystery and intrigue among scholars and codebreakers."
   },
   {
-    "museum": "Музей истории автомобилей Автомобиль",
-    "exhibitName": "Форд Т",
-    "exhibitDescription": "Первый массовый автомобиль, выпущенный компанией Ford в 1908 году"
+    "museum": "The Museum of Strange Phenomena",
+    "exhibitName": "The Mothman Prophecies",
+    "exhibitDescription": "An exhibit exploring the sightings and prophecies associated with the mysterious Mothman creature."
   },
   {
-    "museum": "Музей истории моды Мода",
-    "exhibitName": "Маленькое черное платье",
-    "exhibitDescription": "Известное платье, созданное модным дизайнером Коко Шанель в 1926 году и ставшее символом элегантности и стиля"
+    "museum": "The Museum of Mysterious Objects",
+    "exhibitName": "The Shroud of Turin",
+    "exhibitDescription": "A cloth believed by some to be the burial shroud of Jesus Christ, with ongoing debates and scientific analysis about its authenticity."
   },
   {
-    "museum": "Музей истории фотографии Фотография",
-    "exhibitName": "Первая фотография",
-    "exhibitDescription": "Первое изображение, созданное французским изобретателем Жозефом Ньепсом в 1826 году"
+    "museum": "The Museum of Occult Art",
+    "exhibitName": "The Satanic Bible",
+    "exhibitDescription": "A book of Satanic philosophy and rituals, written by Anton LaVey and controversial for its promotion of individualism and rebellion against societal norms."
   },
   {
-    "museum": "Музей истории науки Наука",
-    "exhibitName": "Первый компьютер",
-    "exhibitDescription": "Электромеханический компьютер, созданный английским ученым Чарльзом Бэббиджем в 1822 году"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Ark of the Covenant",
+    "exhibitDescription": "An artifact from the Bible, believed to contain the Ten Commandments and possess great power, with legends of its location and history."
   },
   {
-    "museum": "Музей истории спорта Спорт",
-    "exhibitName": "Мяч для баскетбола",
-    "exhibitDescription": "Игровой мяч, используемый в баскетболе, изобретенном американским физкультурником Джеймсом Нейсмитом в 1891 году"
+    "museum": "The Museum of Cryptid Creatures",
+    "exhibitName": "The Loch Ness Monster",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the elusive creature known as the Loch Ness Monster."
   },
   {
-    "museum": "Музей истории науки Наука",
-    "exhibitName": "Первый спутник Марса",
-    "exhibitDescription": "Космический аппарат, запущенный Советским Союзом в 1960 году и ставший первым искусственным объектом, достигшим Марса"
+    "museum": "The Museum of Supernatural Phenomena",
+    "exhibitName": "The Winchester Mystery House",
+    "exhibitDescription": "An exhibit exploring the strange architecture and paranormal activity associated with the Winchester Mystery House."
   },
   {
-    "museum": "Музей истории живописи Живопись",
-    "exhibitName": "Мона Лиза",
-    "exhibitDescription": "Одна из самых известных картин в мире, созданная итальянским художником Леонардо да Винчи в XVI веке"
+    "museum": "The Museum of Esoteric Knowledge",
+    "exhibitName": "The Emerald Tablet",
+    "exhibitDescription": "An ancient text believed to contain the secrets of alchemy and the philosophers stone, with a history of mystery and intrigue among occultists."
   },
   {
-    "museum": "Музей истории науки Наука",
-    "exhibitName": "Первый телефон",
-    "exhibitDescription": "Устройство, изобретенное американским изобретателем Александром Грэхемом Беллом в 1876 году и ставшее первым электрическим телефоном в мире"
+    "museum": "The Museum of Unexplained Art",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown language, with a history of mystery and intrigue among scholars and codebreakers."
   },
   {
-    "museum": "Музей истории животных Животные",
-    "exhibitName": "Скелет тираннозавра",
-    "exhibitDescription": "Один из самых больших и опасных хищников, когда-либо живших на Земле, жил в период верхнемеловой эры около 68-66 миллионов лет назад"
+    "museum": "The Museum of Paranormal History",
+    "exhibitName": "The Salem Witch Trials",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the infamous Salem Witch Trials."
   },
   {
-    "museum": "Музей истории медицины Медицина",
-    "exhibitName": "Первый антибиотик",
-    "exhibitDescription": "Пенициллин, первый антибиотик, был открыт английским бактериологом Александром Флемингом в 1928 году"
+    "museum": "The Museum of Mysterious Artifacts",
+    "exhibitName": "The Roswell UFO Incident",
+    "exhibitDescription": "An exhibit exploring the alleged crash of an extraterrestrial spacecraft in Roswell, New Mexico, and the government cover-up that followed."
   },
   {
-    "museum": "Музей истории наук о Здоровье Науки о Здоровье",
-    "exhibitName": "Первый стетоскоп",
-    "exhibitDescription": "Медицинский инструмент, изобретенный французским врачом Рене Леннеком в 1816 году и используемый для прослушивания сердца и легких пациента"
+    "museum": "The Museum of Occult Objects",
+    "exhibitName": "The Necronomicon",
+    "exhibitDescription": "A book of forbidden knowledge and dark magic, believed to have been written by the mad Arab Abdul Alhazred."
   },
   {
-    "museum": "Музей истории наук о Земле Науки о Земле",
-    "exhibitName": "Первый глобус Земли",
-    "exhibitDescription": "Сферическая модель Земли, созданная греческим ученым Крайстофором Буно в 1492 году"
+    "museum": "The Museum of Haunted History",
+    "exhibitName": "The Ghost Ship Mary Celeste",
+    "exhibitDescription": "An exhibit exploring the mysterious disappearance of the crew of the Mary Celeste, and the legends of the ghost ship that continues to sail the seas."
   },
   {
-    "museum": "Музей истории медицины Медицина",
-    "exhibitName": "Первый сердечный протез",
-    "exhibitDescription": "Сердечный протез, созданный американским хирургом Дентоном Куэлом в 1960 году и ставший первым успешным имплантированным сердечным протезом"
+    "museum": "The Museum of Unconventional Art",
+    "exhibitName": "The Dada Manifesto",
+    "exhibitDescription": "A manifesto written by the Dadaists, promoting anti-art and rebellion against societal norms."
   },
   {
-    "museum": "Музей истории наук о Земле Науки о Земле",
-    "exhibitName": "Первый компас",
-    "exhibitDescription": "Устройство, используемое для определения направления на Земле, было изобретено китайскими учеными в III веке н.э."
+    "museum": "The Museum of Supernatural Objects",
+    "exhibitName": "The Annabelle Doll",
+    "exhibitDescription": "A doll that is said to be possessed by a demonic spirit, with a history of causing terror and tragedy among those who have encountered it."
   },
   {
-    "museum": "Музей истории пиццы Пицца-Мания",
-    "exhibitName": "Гигантская пицца",
-    "exhibitDescription": "Самая большая пицца в мире, приготовленная в Италии в 2012 году и весившая более 23 тонн"
+    "museum": "The Museum of Esoteric Art",
+    "exhibitName": "The Alchemical Tarot",
+    "exhibitDescription": "A tarot deck designed by Robert M. Place, with a focus on alchemical symbolism and mythology."
   },
   {
-    "museum": "Музей истории кофе Кофейня",
-    "exhibitName": "Старинный кофевар",
-    "exhibitDescription": "Раритетный кофевар, созданный в Германии в начале XX века и использующийся до сих пор"
+    "museum": "The Museum of Unexplained Phenomena",
+    "exhibitName": "The Tunguska Event",
+    "exhibitDescription": "An exhibit exploring the mysterious explosion that occurred in Tunguska, Siberia in 1908, with theories and speculation about its cause."
   },
   {
-    "museum": "Музей истории парикмахерского искусства Стрижка",
-    "exhibitName": "Античный расчесочник",
-    "exhibitDescription": "Расчесочник, найденный на раскопках древнегреческого города и датированный III веком до н.э."
+    "museum": "The Museum of Strange Artifacts",
+    "exhibitName": "The Antikythera Mechanism",
+    "exhibitDescription": "An ancient Greek device believed to be an early form of computer, with ongoing debate and analysis about its purpose and function."
   },
   {
-    "museum": "Музей истории кукол Кукольный дом",
-    "exhibitName": "Кукла-вампир",
-    "exhibitDescription": "Редкая кукла, выпущенная в США в 1960-х годах и ставшая объектом коллекционирования"
+    "museum": "The Museum of Paranormal Objects",
+    "exhibitName": "The Dybbuk Box",
+    "exhibitDescription": "A box believed to be haunted by a malevolent spirit known as a dybbuk, with a history of causing misfortune and tragedy among its owners."
   },
   {
-    "museum": "Музей истории парфюмерии Аромат",
-    "exhibitName": "Античный флакон для духов",
-    "exhibitDescription": "Флакон, изготовленный в Риме в I веке н.э. и использовавшийся для хранения ароматических масел"
+    "museum": "The Museum of Enigmatic Phenomena",
+    "exhibitName": "The Wow! Signal",
+    "exhibitDescription": "An exhibit exploring the mysterious radio signal detected in 1977, with ongoing debate and speculation about its origin and meaning."
   },
   {
-    "museum": "Музей истории игрушек Игрушки",
-    "exhibitName": "Робот-трансформер",
-    "exhibitDescription": "Игрушка-робот, созданная японской компанией Takara Tomy в 1980-х годах и ставшая популярной во всем мире"
+    "museum": "The Museum of Ancient Mysteries",
+    "exhibitName": "The Pyramids of Giza",
+    "exhibitDescription": "An exhibit exploring the construction and purpose of the ancient Egyptian pyramids, with theories and legends surrounding their design and use."
   },
   {
-    "museum": "Музей истории кино Киномир",
-    "exhibitName": "Оскар",
-    "exhibitDescription": "Золотая статуэтка, вручаемая ежегодно лучшим кинематографистам мира на церемонии вручения премии Оскар"
+    "museum": "The Museum of Cryptozoology",
+    "exhibitName": "Bigfoot",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the elusive creature known as Bigfoot, with ongoing debate and speculation about its existence."
   },
   {
-    "museum": "Музей истории игр Игры",
-    "exhibitName": "Первый компьютерный шахматный программный продукт",
-    "exhibitDescription": "Программа, созданная американским ученым Клаудио Чикерони в 1970 году и ставшая прародителем компьютерных шахмат"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Black Mirror",
+    "exhibitDescription": "A mirror believed to have mystical properties, with a history of use in divination and scrying."
   },
   {
-    "museum": "Музей истории музыки Музыка",
-    "exhibitName": "Старинный граммофон",
-    "exhibitDescription": "Раритетный граммофон, созданный в начале XX века и используемый для воспроизведения звукозаписей на виниловых пластинках"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "The Scream",
+    "exhibitDescription": "An iconic painting by Edvard Munch, with a history of inspiring fear and unease in those who view it."
   },
   {
-    "museum": "Музей истории транспорта Транспорт",
-    "exhibitName": "Первый самолет братьев Райт",
-    "exhibitDescription": "Самолет, совершивший первый управляемый полет в истории авиации в 1903 году"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Bermuda Triangle",
+    "exhibitDescription": "An exhibit exploring the mysterious disappearances and strange phenomena associated with the Bermuda Triangle."
   },
   {
-    "museum": "Музей истории костюмов Костюм",
-    "exhibitName": "Корсет",
-    "exhibitDescription": "Женская одежда, популярная в XIX веке и используемая для формирования талии и бедер"
+    "museum": "The Museum of Paranormal Artifacts",
+    "exhibitName": "The Amityville Horror House",
+    "exhibitDescription": "An exhibit exploring the alleged haunting and paranormal activity associated with the Amityville Horror House."
   },
   {
-    "museum": "Музей истории наук о Здоровье Науки о Здоровье",
-    "exhibitName": "Первый вакцинатор",
-    "exhibitDescription": "Медицинское устройство, созданное в начале XIX века для введения вакцины против оспы"
+    "museum": "The Museum of Dark Arts",
+    "exhibitName": "The Satanic Bible",
+    "exhibitDescription": "A book written by Anton LaVey promoting the philosophy and practices of Satanism."
   },
   {
-    "museum": "Музей истории спорта Спорт",
-    "exhibitName": "Старинный боксерский мешок",
-    "exhibitDescription": "Снаряд для тренировки боксеров, созданный в начале XX века и используемый до сих пор"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Bell Witch",
+    "exhibitDescription": "An exhibit exploring the legend of the Bell Witch, a malevolent spirit that terrorized a Tennessee family in the early 19th century."
   },
   {
-    "museum": "Музей истории наук о Земле Науки о Земле",
-    "exhibitName": "Первый телескоп",
-    "exhibitDescription": "Оптический прибор, изобретенный голландским ученым Хансом Липпергей в 1608 году и использовавшийся для изучения космоса"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Baghdad Battery",
+    "exhibitDescription": "An ancient battery-like device discovered in Iraq, with ongoing debate and speculation about its purpose and function."
   },
   {
-    "museum": "Музей истории подводных камней Подводный мир",
-    "exhibitName": "Камень-рыба",
-    "exhibitDescription": "Каменная фигура, созданная природой и напоминающая форму рыбы"
+    "museum": "The Museum of Esoteric Artifacts",
+    "exhibitName": "The Stonehenge",
+    "exhibitDescription": "An exhibit exploring the construction and purpose of the ancient stone circle in England, with theories and legends surrounding its design and use."
   },
   {
-    "museum": "Музей истории печенек Сладкий мир",
-    "exhibitName": "Кекс Забытый рецепт",
-    "exhibitDescription": "Рецепт классического кекса, найденный в старинной книге и восстановленный специалистами музея"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Exorcist",
+    "exhibitDescription": "An exhibit exploring the true story behind the novel and film, and the alleged demonic possession that inspired them."
   },
   {
-    "museum": "Музей истории игрушек Детский мир",
-    "exhibitName": "Деревянный конь",
-    "exhibitDescription": "Игрушка, созданная из дерева и являющаяся одним из самых древних видов игрушек"
+    "museum": "The Museum of Unexplained History",
+    "exhibitName": "The Oak Island Money Pit",
+    "exhibitDescription": "An exhibit exploring the mysterious pit on Oak Island, Nova Scotia, with legends and speculation surrounding its origin and contents."
   },
   {
-    "museum": "Музей истории парфюмерии Ароматный мир",
-    "exhibitName": "Античное масло",
-    "exhibitDescription": "Ароматическое масло, созданное в Древней Греции и использовавшееся в качестве парфюма"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "The Knights Templar",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the medieval Christian military order, with theories and legends surrounding their practices and beliefs."
   },
   {
-    "museum": "Музей истории танцев Танцевальный мир",
-    "exhibitName": "Танцующая пара",
-    "exhibitDescription": "Фигурка, изображающая пару во время танца и являющаяся образцом классической бальной культуры"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Tower of London",
+    "exhibitDescription": "An exhibit exploring the dark history and alleged hauntings associated with the Tower of London."
   },
   {
-    "museum": "Музей истории кино Кинематографический мир",
-    "exhibitName": "Первый киноаппарат",
-    "exhibitDescription": "Аппарат, созданный братьями Люмьер в 1895 году и ставший первым устройством для показа движущихся картин"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Shroud of Turin",
+    "exhibitDescription": "An ancient cloth believed by some to be the burial shroud of Jesus Christ, with ongoing debate and analysis about its authenticity."
   },
   {
-    "museum": "Музей истории музыки Музыкальный мир",
-    "exhibitName": "Старинный граммофон",
-    "exhibitDescription": "Устройство для проигрывания звукозаписей, созданное в начале XX века и ставшее одним из первых видов аудиоаппаратуры"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Poltergeists",
+    "exhibitDescription": "An exhibit exploring the history and alleged hauntings associated with poltergeists, with theories and legends surrounding their origin and behavior."
   },
   {
-    "museum": "Музей истории автомобилей Автомобильный мир",
-    "exhibitName": "Форд Т",
-    "exhibitDescription": "Автомобиль, созданный Генри Фордом в 1908 году и ставший первым массовым автомобилем в истории"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Necronomicon",
+    "exhibitDescription": "A fictional book created by H.P. Lovecraft, with a cult following and alleged mystical properties."
   },
   {
-    "museum": "Музей истории спорта Спортивный мир",
-    "exhibitName": "Первый футбольный мяч",
-    "exhibitDescription": "Мяч, созданный в середине XIX века и ставший символом игры в футбол"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Antikythera Mechanism",
+    "exhibitDescription": "An ancient Greek device discovered in a shipwreck, with ongoing debate and speculation about its purpose and function."
   },
   {
-    "museum": "Музей истории косметических средств Красота и здоровье",
-    "exhibitName": "Античное мыло",
-    "exhibitDescription": "Косметическое средство, созданное в Древней Греции и используемое для очищения кожи"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Aleister Crowley",
+    "exhibitDescription": "An exhibit exploring the life and teachings of the controversial occultist Aleister Crowley, with theories and legends surrounding his practices and beliefs."
   },
   {
-    "museum": "Музей истории алкоголя Алкогольный мир",
-    "exhibitName": "Старинный бокал",
-    "exhibitDescription": "Стеклянный бокал, использовавшийся в XVIII веке для подачи вина на столе"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Winchester Mystery House",
+    "exhibitDescription": "An exhibit exploring the strange architecture and alleged hauntings associated with the Winchester Mystery House in California."
   },
   {
-    "museum": "Музей истории животных Животный мир",
-    "exhibitName": "Скелет динозавра",
-    "exhibitDescription": "Остатки древнего животного, жившего на Земле миллионы лет назад и ставшего объектом изучения ученых"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown language, with ongoing debate and speculation about its origin and content."
   },
   {
-    "museum": "Музей истории мореплавания Морской мир",
-    "exhibitName": "Первый компас",
-    "exhibitDescription": "Устройство для определения направления на море, созданное в Древнем Китае и ставшее одним из важнейших изобретений в истории мореплавания"
+    "museum": "The Museum of Paranormal Artifacts",
+    "exhibitName": "The Annabelle Doll",
+    "exhibitDescription": "An exhibit exploring the alleged hauntings and demonic possession associated with the Annabelle Doll."
   },
   {
-    "museum": "Музей истории балета Балетный мир",
-    "exhibitName": "Туфли для балета",
-    "exhibitDescription": "Обувь, созданная специально для танцев в стиле балета и являющаяся неотъемлемой частью костюма балерины"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "The Dark Arts",
+    "exhibitDescription": "An exhibit exploring the history and practices of dark magic and witchcraft."
   },
   {
-    "museum": "Музей истории косметических процедур Красивый мир",
-    "exhibitName": "Античная маска для лица",
-    "exhibitDescription": "Косметическая маска, созданная в Древней Греции и используемая для ухода за кожей лица"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Crystal Skulls",
+    "exhibitDescription": "Ancient crystal skulls believed by some to have mystical properties, with ongoing debate and speculation about their origin and purpose."
   },
   {
-    "museum": "Музей истории фонарей Свет в темноте",
-    "exhibitName": "Фонарь Карбидный",
-    "exhibitDescription": "Карбидный фонарь, используемый в начале XX века для освещения улиц и домов"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Tunguska Event",
+    "exhibitDescription": "An exhibit exploring the mysterious explosion that occurred in Siberia in 1908, with theories and legends surrounding its cause and effects."
   },
   {
-    "museum": "Музей истории книг Бумажный мир",
-    "exhibitName": "Рукопись Кодекс Леонардо да Винчи",
-    "exhibitDescription": "Рукопись, содержащая записи и рисунки Леонардо да Винчи, созданная в XV веке"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Near-Death Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of near-death experiences, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории масок Лица мира",
-    "exhibitName": "Маска Тутанхамон",
-    "exhibitDescription": "Маска фараона Тутанхамона, найденная в его гробнице в Долине Царей"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Salem Witch Trials",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the infamous witch trials in Salem, Massachusetts."
   },
   {
-    "museum": "Музей истории кувшинов Питьевой мир",
-    "exhibitName": "Кувшин Самовар",
-    "exhibitDescription": "Керамический кувшин в форме самовара, созданный в России в XIX веке"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Tarot",
+    "exhibitDescription": "An exhibit exploring the history and use of tarot cards in divination and fortune-telling."
   },
   {
-    "museum": "Музей истории игрушек Игровой мир",
-    "exhibitName": "Кукла Барби",
-    "exhibitDescription": "Первая кукла Барби, созданная в 1959 году компанией Mattel"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Piri Reis Map",
+    "exhibitDescription": "An ancient map that appears to show Antarctica before it was discovered, with ongoing debate and speculation about its accuracy and origin."
   },
   {
-    "museum": "Музей истории фотографии Запечатленные моменты",
-    "exhibitName": "Фотоаппарат Лейка",
-    "exhibitDescription": "Фотоаппарат, созданный в 1925 году компанией Leica и ставший одним из самых популярных среди профессиональных фотографов"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Holy Grail",
+    "exhibitDescription": "An exhibit exploring the legends and mythology surrounding the Holy Grail, with ongoing debate and speculation about its existence and significance."
   },
   {
-    "museum": "Музей истории музыкальных инструментов Звуковой мир",
-    "exhibitName": "Гитара Стратокастер",
-    "exhibitDescription": "Электрогитара Fender Stratocaster, созданная в 1954 году и ставшая одной из самых известных и популярных в мире"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Alchemy",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding alchemy, with theories and legends surrounding its practices and beliefs."
   },
   {
-    "museum": "Музей истории косметики Красивый мир",
-    "exhibitName": "Помада Шанель Руж",
-    "exhibitDescription": "Помада Chanel Rouge, созданная Коко Шанель в 1924 году и ставшая символом женской красоты"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "Poltergeists",
+    "exhibitDescription": "An exhibit exploring the history and alleged hauntings associated with poltergeists, with theories and legends surrounding their existence and behavior."
   },
   {
-    "museum": "Музей истории парфюмерии Ароматный мир",
-    "exhibitName": "Парфюм Шанель №5",
-    "exhibitDescription": "Парфюм Chanel №5, созданный в 1921 году и ставший классикой мировой парфюмерии"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Antikythera Mechanism",
+    "exhibitDescription": "An ancient Greek device discovered in a shipwreck that appears to have been used for astronomical calculations, with ongoing debate and speculation about its purpose and function."
   },
   {
-    "museum": "Музей истории часов Временной мир",
-    "exhibitName": "Часы Патек Филипп",
-    "exhibitDescription": "Наручные часы Patek Philippe, созданные в Швейцарии в XIX веке и ставшие символом роскоши и престижа"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown script and language, with ongoing debate and speculation about its origin and meaning."
   },
   {
-    "museum": "Музей истории обуви Шаг за шагом",
-    "exhibitName": "Туфли Маноло Бланик",
-    "exhibitDescription": "Туфли Manolo Blahnik, созданные в 1970-х годах и ставшие одними из самых популярных и модных в мире"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Near-Death Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of near-death experiences, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории мебели Домашний мир",
-    "exhibitName": "Стул Ван дер Роэ",
-    "exhibitDescription": "Стул, созданный голландским дизайнером Ритвельдом в 1917 году и ставший символом современного дизайна"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Mothman",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Mothman, a creature reportedly seen in West Virginia."
   },
   {
-    "museum": "Музей истории транспорта Движущийся мир",
-    "exhibitName": "Автомобиль Форд Т",
-    "exhibitDescription": "Автомобиль Ford Model T, созданный в 1908 году и ставший первым массовым автомобилем в мире"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Tarot",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Tarot, with theories and legends surrounding its use and significance."
   },
   {
-    "museum": "Музей истории компьютеров Цифровой мир",
-    "exhibitName": "Компьютер Apple I",
-    "exhibitDescription": "Первый персональный компьютер Apple I, созданный Стивом Джобсом и Стивом Возняком в 1976 году"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Wow! Signal",
+    "exhibitDescription": "A strong radio signal detected in 1977 that has never been explained, with ongoing debate and speculation about its origin."
   },
   {
-    "museum": "Музей истории спорта Спортивный мир",
-    "exhibitName": "Мяч Футбольный",
-    "exhibitDescription": "Футбольный мяч, использованный на чемпионате мира по футболу в 1970 году в Мексике"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Annabelle Doll",
+    "exhibitDescription": "An allegedly haunted doll that has been the subject of several horror movies, with ongoing debate and speculation about its authenticity."
   },
   {
-    "museum": "Музей истории игральных карт Карты мира",
-    "exhibitName": "Колода карт Таро",
-    "exhibitDescription": "Колода карт Таро, используемая для гаданий и предсказаний, созданная в Италии в XV веке"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Clairvoyance",
+    "exhibitDescription": "An exhibit exploring the phenomenon of clairvoyance, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории текстиля Тканевый мир",
-    "exhibitName": "Шелковый кимоно",
-    "exhibitDescription": "Традиционное японское кимоно из шелка, созданное в XIX веке"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Chupacabra",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Chupacabra, a creature reportedly seen in Latin America and the United States."
   },
   {
-    "museum": "Музей истории ювелирных изделий Блестящий мир",
-    "exhibitName": "Кольцо Кохинор",
-    "exhibitDescription": "Кольцо с бриллиантом Кохинор, найденным в Индии и подаренным британской королеве Виктории в 1850 году"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Piri Reis Map",
+    "exhibitDescription": "An ancient map that appears to show Antarctica before it was discovered, with ongoing debate and speculation about its accuracy and origin."
   },
   {
-    "museum": "Музей истории костюма Модный мир",
-    "exhibitName": "Платье Маленькое черное",
-    "exhibitDescription": "Платье Chanel Little Black Dress, созданное Коко Шанель в 1926 году и ставшее классикой женской моды"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Witchcraft",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding witchcraft, with theories and legends surrounding its practices and beliefs."
   },
   {
-    "museum": "Музей истории кухни Вкусный мир",
-    "exhibitName": "Поварская книга Эшар",
-    "exhibitDescription": "Поварская книга Auguste Escoffier, созданная в начале XX века и ставшая классикой французской кулинарии"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Tunguska Event",
+    "exhibitDescription": "A mysterious explosion that occurred in Siberia in 1908, with ongoing debate and speculation about its cause."
   },
   {
-    "museum": "Музей истории специй Ароматный мир",
-    "exhibitName": "Перец Черный",
-    "exhibitDescription": "Черный перец, один из самых популярных и распространенных видов специй в мире, используется в кулинарии и медицине"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Precognition",
+    "exhibitDescription": "An exhibit exploring the phenomenon of precognition, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории науки Удивительный мир",
-    "exhibitName": "Телескоп Хаббл",
-    "exhibitDescription": "Космический телескоп Hubble, запущенный в 1990 году и ставший одним из наиболее значимых инструментов для изучения космоса"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "Haunted Objects",
+    "exhibitDescription": "An exhibit exploring the history and alleged hauntings associated with various objects, with theories and legends surrounding their paranormal activity."
   },
   {
-    "museum": "Музей истории медицины Здоровый мир",
-    "exhibitName": "Стетоскоп",
-    "exhibitDescription": "Медицинский инструмент для прослушивания звуков внутри тела, созданный в начале XIX века"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Baghdad Battery",
+    "exhibitDescription": "An ancient device that appears to have been used for electroplating, with ongoing debate and speculation about its purpose and function."
   },
   {
-    "museum": "Музей истории физики Мир энергии",
-    "exhibitName": "Лампа Эдисона",
-    "exhibitDescription": "Первая электрическая лампа, созданная Томасом Эдисоном в 1879 году и ставшая прорывом в истории электроосвещения"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Bermuda Triangle",
+    "exhibitDescription": "An exhibit exploring the history and legends surrounding the mysterious disappearances of ships and planes in the Bermuda Triangle."
   },
   {
-    "museum": "Музей истории биологии Живой мир",
-    "exhibitName": "Череп Тираннозавра",
-    "exhibitDescription": "Череп динозавра Тираннозавра, одного из самых крупных и опасных хищников в истории Земли"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Necromancy",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding necromancy, with theories and legends surrounding its practices and beliefs."
   },
   {
-    "museum": "Музей истории географии Мир на ладони",
-    "exhibitName": "Глобус Меркатора",
-    "exhibitDescription": "Глобус Меркатора, созданный в XVI веке и ставший одним из наиболее распространенных инструментов для изучения географии"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Telekinesis",
+    "exhibitDescription": "An exhibit exploring the phenomenon of telekinesis, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории архитектуры Строительный мир",
-    "exhibitName": "Пирамида Хеопса",
-    "exhibitDescription": "Пирамида фараона Хеопса, построенная в Древнем Египте около 2500 года до н.э. и ставшая одним из семи чудес света"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Jersey Devil",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Jersey Devil, a creature reportedly seen in New Jersey."
   },
   {
-    "museum": "Музей истории живописи Художественный мир",
-    "exhibitName": "Картина Мона Лиза",
-    "exhibitDescription": "Картина Леонардо да Винчи Мона Лиза, созданная в XVI веке и ставшая одной из самых известных и дорогих картин в мире"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Philosophers Stone",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosophers Stone, with theories and legends surrounding its supposed ability to turn base metals into gold."
   },
   {
-    "museum": "Музей истории театра Драматический мир",
-    "exhibitName": "Кукла Каспер",
-    "exhibitDescription": "Кукла Каспер, один из главных героев традиционного европейского кукольного театра"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Taos Hum",
+    "exhibitDescription": "A low-frequency humming sound heard in the town of Taos, New Mexico, with ongoing debate and speculation about its origin."
   },
   {
-    "museum": "Музей истории кино Кинематографический мир",
-    "exhibitName": "Камера Аррифлекс",
-    "exhibitDescription": "Киноаппарат Arriflex, созданный в 1937 году и ставший одним из наиболее популярных среди профессиональных кинорежиссеров"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Dybbuk Box",
+    "exhibitDescription": "An allegedly haunted Jewish wine cabinet that has been the subject of several horror movies, with ongoing debate and speculation about its authenticity."
   },
   {
-    "museum": "Музей истории автомобилей Автомир",
-    "exhibitName": "Форд Т-Модель",
-    "exhibitDescription": "Первый массовый автомобиль, созданный Генри Фордом в 1908 году и ставший символом эпохи промышленной революции"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Psychokinesis",
+    "exhibitDescription": "An exhibit exploring the phenomenon of psychokinesis, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории авиации Небесный мир",
-    "exhibitName": "Самолет Спитфайр",
-    "exhibitDescription": "Истребитель Spitfire, созданный в Великобритании в 1930-х годах и ставший одним из символов Второй мировой войны"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "Bigfoot",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding Bigfoot, a creature reportedly seen in North America."
   },
   {
-    "museum": "Музей истории музыки Музыкальный мир",
-    "exhibitName": "Гитара Стратокастер",
-    "exhibitDescription": "Электрогитара Fender Stratocaster, созданная в 1954 году и ставшая одной из самых популярных и значимых гитар в истории рок-музыки"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The London Hammer",
+    "exhibitDescription": "An ancient hammer found in Texas that appears to be made of metal not native to Earth, with ongoing debate and speculation about its origin and age."
   },
   {
-    "museum": "Музей истории техники Технический мир",
-    "exhibitName": "Паровой двигатель",
-    "exhibitDescription": "Первый паровой двигатель, созданный Джеймсом Уаттом в XVIII веке и ставший основой промышленной революции"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Demonology",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding demonology, with theories and legends surrounding demonic possession and exorcism."
   },
   {
-    "museum": "Музей истории игрушек Игровой мир",
-    "exhibitName": "Кукла Барби",
-    "exhibitDescription": "Кукла Барби, созданная компанией Mattel в 1959 году и ставшая одной из самых популярных и значимых игрушек в мире"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Wow! Signal",
+    "exhibitDescription": "A strong radio signal detected in 1977 that has never been explained, with ongoing debate and speculation about its origin."
   },
   {
-    "museum": "Музей истории спорта Спортивный мир",
-    "exhibitName": "Мяч Футбольный",
-    "exhibitDescription": "Футбольный мяч, один из самых популярных и распространенных видов спортивных снарядов в мире"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Remote Viewing",
+    "exhibitDescription": "An exhibit exploring the phenomenon of remote viewing, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории транспорта Транспортный мир",
-    "exhibitName": "Локомотив Стимсон",
-    "exhibitDescription": "Паровоз Stimson, созданный в США в 1860-х годах и ставший одним из первых паровозов с железным каркасом"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "Voodoo",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding Voodoo, with theories and legends surrounding its practices and beliefs."
   },
   {
-    "museum": "Музей истории коммуникаций Связной мир",
-    "exhibitName": "Телефон Белл",
-    "exhibitDescription": "Первый телефон, созданный Александром Грэхамом Беллом в 1876 году и ставший прорывом в истории коммуникаций"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Antikythera Mechanism",
+    "exhibitDescription": "An ancient Greek device that appears to have been used for astronomical purposes, with ongoing debate and speculation about its purpose and function."
   },
   {
-    "museum": "Музей истории компьютеров Цифровой мир",
-    "exhibitName": "Персональный компьютер Аппл II",
-    "exhibitDescription": "Первый успешный персональный компьютер Apple II, созданный Стивом Джобсом и Стивом Возняком в 1977 году и ставший началом эры персональных компьютеров"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Mary Celeste",
+    "exhibitDescription": "An exhibit exploring the history and legends surrounding the mysterious disappearance of the crew of the Mary Celeste."
   },
   {
-    "museum": "Музей истории космонавтики Космический мир",
-    "exhibitName": "Космический корабль Союз",
-    "exhibitDescription": "Космический корабль Soyuz, созданный в СССР в 1960-х годах и ставший основным средством доставки астронавтов на Международную космическую станцию"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Alchemy",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding alchemy, with theories and legends surrounding its supposed ability to turn base metals into gold and create an elixir of immortality."
   },
   {
-    "museum": "Музей истории футбола Футбольный мир",
-    "exhibitName": "Кубок мира по футболу",
-    "exhibitDescription": "Трофей, вручаемый победителю чемпионата мира по футболу, созданный в 1974 году и ставший одним из самых престижных трофеев в мировом спорте"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Near-Death Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of near-death experiences, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории косметики Красивый мир",
-    "exhibitName": "Помада Шанель",
-    "exhibitDescription": "Помада Chanel Rouge Coco, созданная в 2010 году и ставшая одной из самых популярных и значимых продуктов в истории косметики"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Loch Ness Monster",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Loch Ness Monster, a creature reportedly seen in Scotland."
   },
   {
-    "museum": "Музей истории парфюмерии Ароматный мир",
-    "exhibitName": "Парфюм Шанель №5",
-    "exhibitDescription": "Аромат Chanel №5, созданный в 1921 году и ставший одним из самых известных и популярных парфюмов в мире"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Tarot",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Tarot, with theories and legends surrounding its use for divination and fortune-telling."
   },
   {
-    "museum": "Музей истории книги Книжный мир",
-    "exhibitName": "Книга Война и мир",
-    "exhibitDescription": "Роман Льва Толстого Война и мир, созданный в XIX веке и ставший одним из самых значимых произведений в истории русской литературы"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Tunguska Event",
+    "exhibitDescription": "An exhibit exploring the mysterious explosion that occurred in Tunguska, Russia in 1908, with ongoing debate and speculation about its cause."
   },
   {
-    "museum": "Музей истории народных промыслов Ремесленный мир",
-    "exhibitName": "Ковер Гобелен",
-    "exhibitDescription": "Ковер-гобелен, созданный вручную в XVII-XIX веках и ставший одним из самых дорогих и роскошных видов народных промыслов"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Annabelle Doll",
+    "exhibitDescription": "An allegedly haunted doll that has been the subject of several horror movies, with ongoing debate and speculation about its authenticity."
   },
   {
-    "museum": "Музей истории науки Научный мир",
-    "exhibitName": "Телескоп Хаббл",
-    "exhibitDescription": "Космический телескоп Hubble, запущенный в 1990 году и ставший одним из самых важных инструментов в исследовании космоса"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Out-of-Body Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of out-of-body experiences, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории живописи Живописный мир",
-    "exhibitName": "Картина Мона Лиза",
-    "exhibitDescription": "Картина Леонардо да Винчи Мона Лиза, созданная в XVI веке и ставшая одной из самых известных и значимых картин в мировой живописи"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Mothman",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Mothman, a creature reportedly seen in West Virginia."
   },
   {
-    "museum": "Музей истории костюма Модный мир",
-    "exhibitName": "Платье Маленькое черное",
-    "exhibitDescription": "Платье Chanel Маленькое черное, созданное в 1926 году и ставшее символом элегантности и стиля в мировой моде"
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown script and language, with ongoing debate and speculation about its origin and meaning."
   },
   {
-    "museum": "Музей истории архитектуры Архитектурный мир",
-    "exhibitName": "Собор Нотр-Дам де Пари",
-    "exhibitDescription": "Собор Notre-Dame de Paris, созданный в XII-XIV веках и ставший одним из самых значимых архитектурных памятников Франции"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Witchcraft",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding witchcraft, with theories and legends surrounding witch trials and persecution."
   },
   {
-    "museum": "Музей истории кино Кинематографический мир",
-    "exhibitName": "Фильм Крестный отец",
-    "exhibitDescription": "Фильм Крестный отец, созданный Фрэнсисом Фордом Копполой в 1972 году и ставший одним из самых значимых и культовых фильмов в истории кинематографа"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Oak Island Money Pit",
+    "exhibitDescription": "An exhibit exploring the mysterious pit on Oak Island, Nova Scotia, with ongoing debate and speculation about its purpose and contents."
   },
   {
-    "museum": "Музей истории театра Театральный мир",
-    "exhibitName": "Пьеса Гамлет",
-    "exhibitDescription": "Пьеса Уильяма Шекспира Гамлет, созданная в XVII веке и ставшая одной из самых известных и значимых пьес в мировом театре"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Mediumship",
+    "exhibitDescription": "An exhibit exploring the phenomenon of mediumship, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории народной медицины Здоровый мир",
-    "exhibitName": "Трава Ромашка",
-    "exhibitDescription": "Ромашка, одно из самых популярных и распространенных лекарственных растений в мире, используемое для лечения многих заболеваний"
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "Ghosts",
+    "exhibitDescription": "An exhibit exploring the history and legends surrounding ghosts, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории еды Кулинарный мир",
-    "exhibitName": "Блюдо Паста карбонара",
-    "exhibitDescription": "Итальянское блюдо Pasta carbonara, созданное в середине XX века и ставшее одним из самых популярных и известных блюд итальянской кухни"
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Rosetta Stone",
+    "exhibitDescription": "An ancient artifact that helped scholars decipher Egyptian hieroglyphs, with ongoing debate and speculation about its significance."
   },
   {
-    "museum": "Музей истории астрономии Звездный мир",
-    "exhibitName": "Планетарий",
-    "exhibitDescription": "Планетарий, устройство для визуализации звездного неба и планет, ставшее одним из самых популярных и интересных объектов в истории астрономии"
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Bermuda Triangle",
+    "exhibitDescription": "An exhibit exploring the legends and theories surrounding the mysterious disappearances of ships and planes in the Bermuda Triangle."
   },
   {
-    "museum": "Музей истории игр Игровой мир",
-    "exhibitName": "Игра Денди",
-    "exhibitDescription": "Игровая приставка Nintendo Entertainment System, известная как Денди, созданная в 1983 году и ставшая одной из самых популярных и значимых игровых консолей в истории"
+    "museum": "The Museum of Occult History",
+    "exhibitName": "The Philosophers Stone",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosophers Stone, a substance believed to have the power to transmute metals and grant eternal life."
   },
   {
-    "museum": "Музей истории фотографии Фотографический мир",
-    "exhibitName": "Камера Лейка",
-    "exhibitDescription": "Фотокамера Leica, созданная в 1925 году и ставшая одной из самых значимых и популярных камер в истории фотографии"
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Telekinesis",
+    "exhibitDescription": "An exhibit exploring the phenomenon of telekinesis, with personal accounts and scientific research."
   },
   {
-    "museum": "Музей истории рекламы Рекламный мир",
-    "exhibitName": "Рекламный плакат Coca-Cola",
-    "exhibitDescription": "Рекламный плакат Coca-Cola, созданный в 1930-х годах и ставший одним из самых известных и узнаваемых рекламных изображений в мире"
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "Bigfoot",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding Bigfoot, a creature reportedly seen in North America."
   },
   {
-    "museum": "Музей истории медицины Медицинский мир",
-    "exhibitName": "Стетоскоп",
-    "exhibitDescription": "Стетоскоп, медицинский инструмент, созданный в XIX веке и ставший одним из самых важных инструментов для диагностики заболеваний"
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Necronomicon",
+    "exhibitDescription": "An ancient grimoire mentioned in the works of H.P. Lovecraft, with ongoing debate and speculation about its authenticity."
   },
   {
-    "museum": "Музей истории железнодорожного транспорта Железнодорожный мир",
-    "exhibitName": "Поезд Ориент-экспресс",
-    "exhibitDescription": "Поезд Orient Express, созданный в XIX веке и ставший одним из самых роскошных и престижных поездов в мире"
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Wow! Signal",
+    "exhibitDescription": "An exhibit exploring the mysterious radio signal detected in 1977, with ongoing debate and speculation about its origin."
   },
   {
-    "museum": "Музей истории морской техники Морской мир",
-    "exhibitName": "Корабль Титаник",
-    "exhibitDescription": "Пассажирский лайнер Titanic, построенный в начале XX века и ставший одним из самых известных и трагических кораблей в истории морской техники"
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Dybbuk Box",
+    "exhibitDescription": "An allegedly haunted box that has been the subject of several horror movies, with ongoing debate and speculation about its authenticity."
+  },
+  {
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Poltergeists",
+    "exhibitDescription": "An exhibit exploring the phenomenon of poltergeists, with personal accounts and scientific research."
+  },
+  {
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Chupacabra",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Chupacabra, a creature reportedly seen in Latin America."
+  },
+  {
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Baghdad Battery",
+    "exhibitDescription": "An ancient device that appears to have been used for electroplating, with ongoing debate and speculation about its purpose and function."
+  },
+  {
+    "museum": "The Museum of Occult History",
+    "exhibitName": "The Black Mass",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Black Mass, a supposed ritual performed by Satanists."
+  },
+  {
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Taos Hum",
+    "exhibitDescription": "An exhibit exploring the mysterious low-frequency hum heard in Taos, New Mexico, with ongoing debate and speculation about its cause."
+  },
+  {
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Psychic Healing",
+    "exhibitDescription": "An exhibit exploring the phenomenon of psychic healing, with personal accounts and scientific research."
+  },
+  {
+    "museum": "The Museum of Supernatural Art",
+    "exhibitName": "Vampires",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding vampires, with personal accounts and scientific research."
+  },
+  {
+    "museum": "The Museum of Enigmatic Artifacts",
+    "exhibitName": "The Antikythera Mechanism",
+    "exhibitDescription": "An ancient Greek device that is believed to have been used for astronomical and calendrical purposes, with ongoing debate and speculation about its complexity and purpose."
+  },
+  {
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Tunguska Event",
+    "exhibitDescription": "An exhibit exploring the mysterious explosion that occurred in Siberia in 1908, with ongoing debate and speculation about its cause."
+  },
+  {
+    "museum": "The Museum of Occult History",
+    "exhibitName": "Alchemy",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding alchemy, an ancient practice that aimed to transform base metals into gold and find the elixir of life."
+  },
+  {
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Near-Death Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of near-death experiences, with personal accounts and scientific research."
+  },
+  {
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Loch Ness Monster",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Loch Ness Monster, a creature reportedly seen in Scotland."
+  },
+  {
+    "museum": "The Museum of Occult Artifacts",
+    "exhibitName": "The Crystal Skulls",
+    "exhibitDescription": "Ancient crystal skulls that are believed to have mystical properties, with ongoing debate and speculation about their origin and authenticity."
+  },
+  {
+    "museum": "The Museum of Unexplained Objects",
+    "exhibitName": "The Voynich Manuscript",
+    "exhibitDescription": "An ancient manuscript written in an unknown script and language, with ongoing debate and speculation about its meaning and purpose."
+  },
+  {
+    "museum": "The Museum of Supernatural Artifacts",
+    "exhibitName": "The Annabelle Doll",
+    "exhibitDescription": "An allegedly haunted doll that has been the subject of several horror movies, with ongoing debate and speculation about its authenticity."
+  },
+  {
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Remote Viewing",
+    "exhibitDescription": "An exhibit exploring the phenomenon of remote viewing, with personal accounts and scientific research."
+  },
+  {
+    "museum": "The Museum of Supernatural History",
+    "exhibitName": "The Mothman",
+    "exhibitDescription": "An exhibit exploring the sightings and legends surrounding the Mothman, a creature reportedly seen in West Virginia."
+  },
+  {
+    "museum": "The Museum of Unexplained Artifacts",
+    "exhibitName": "The Piri Reis Map",
+    "exhibitDescription": "An ancient map that shows parts of the world that were not yet discovered at the time it was created, with ongoing debate and speculation about how it was made."
+  },
+  {
+    "museum": "The Museum of Occult History",
+    "exhibitName": "The Salem Witch Trials",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Salem Witch Trials, a series of hearings and prosecutions of people accused of witchcraft in colonial Massachusetts."
+  },
+  {
+    "museum": "The Museum of Unexplained Mysteries",
+    "exhibitName": "The Oak Island Money Pit",
+    "exhibitDescription": "An exhibit exploring the mysterious pit found on Oak Island, Nova Scotia, with ongoing debate and speculation about its purpose and contents."
+  },
+  {
+    "museum": "The Museum of Paranormal Phenomena",
+    "exhibitName": "Out-of-Body Experiences",
+    "exhibitDescription": "An exhibit exploring the phenomenon of out-of-body experiences, with personal accounts and scientific research."
   }
 ]
