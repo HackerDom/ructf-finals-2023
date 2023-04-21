@@ -1,0 +1,88 @@
+
+name: Check lost_museum
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'services/lost_museum/**'
+      - 'checkers/lost_museum/**'
+      - 'sploits/lost_museum/**'
+  workflow_dispatch:
+    inputs:
+      cleanup_before_deploy:
+        description: 'Stops and fully removes service (with volumes!) before deploying again. Type "yes" to do it.'
+        required: false
+        default: "no"
+jobs:
+  check_service_lost_museum:
+    name: Check service lost_museum
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/lost_museum/before_image_build.sh ]; then (cd ./services/lost_museum && ./before_image_build.sh); fi
+    - name: Setup lost_museum
+      run: (cd ./services/lost_museum && docker-compose pull && docker-compose build && docker-compose up --build -d)
+  check_checker_lost_museum:
+    name: Check checker lost_museum
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/lost_museum/before_image_build.sh ]; then (cd ./services/lost_museum && ./before_image_build.sh); fi
+    - name: Setup lost_museum
+      run: (cd ./services/lost_museum && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/lost_museum/requirements.txt ]; then python -m pip install -r checkers/lost_museum/requirements.txt; fi
+    - name: Test checker on service
+      run: (cd ./checkers/lost_museum && ./lost_museum.checker.py TEST 127.0.0.1)
+  check_sploit_lost_museum:
+    name: Check sploit lost_museum
+    runs-on: ubuntu-20.04
+    if: ${{ false }}
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run prebuilt hook
+      run: if [ -f services/lost_museum/before_image_build.sh ]; then (cd ./services/lost_museum && ./before_image_build.sh); fi
+    - name: Setup lost_museum
+      run: (cd ./services/lost_museum && docker-compose pull && docker-compose build && docker-compose up --build -d)
+    - name: Sleep some time. Wait service ready
+      run: sleep 30
+    - name: Prepare python for checker
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+    - name: Setup checker libraries
+      run: if [ -f checkers/lost_museum/requirements.txt ]; then python -m pip install -r checkers/lost_museum/requirements.txt; fi
+    - name: Setup sploit libraries
+      run: if [ -f sploits/lost_museum/requirements.txt ]; then python -m pip install -r sploits/lost_museum/requirements.txt; fi
+    - name: Test sploit on service
+      run: (./tools/check-sploit.py lost_museum)
+  update_lost_museum:
+    name: Deploy service using ansible to first teams
+    needs: [check_service_lost_museum, check_checker_lost_museum, check_sploit_lost_museum]
+    runs-on: self-hosted
+    if: ${{ false }} # disable on game just in case
+    steps:
+    #- name: install ansible
+    #  run: sudo apt-get install -y ansible
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: change permission for ssh key
+      run: chmod 0600 ./teams/for_devs.ssh_key
+    - name: Run prebuilt hook
+      run: if [ -f services/lost_museum/before_image_build.sh ]; then (cd ./services/lost_museum && sudo ./before_image_build.sh); fi
+    - name: update checkers
+      run: cd ./ansible && ansible-playbook cs-checkers.yml
+    - name: deploy lost_museum
+      run: cd ./ansible && ansible-playbook --extra-vars cleanup_service=${{ github.event.inputs.cleanup_before_deploy }} -t lost_museum -l lost_museum deploy-services.yml
