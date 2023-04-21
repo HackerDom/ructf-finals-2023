@@ -86,7 +86,7 @@
   },
   {
     "museum": "The Museum of Esoteric Knowledge",
-    "exhibitName": "The Alchemist's Stone",
+    "exhibitName": "The Alchemists Stone",
     "exhibitDescription": "A legendary stone that was believed to have the power to turn base metals into gold and grant eternal life."
   },
   {
@@ -122,12 +122,12 @@
   {
     "museum": "The Museum of Unconventional Art",
     "exhibitName": "The Sculpture Made of Human Hair",
-    "exhibitDescription": "A sculpture made entirely of human hair, showcasing the artist's unconventional approach to art."
+    "exhibitDescription": "A sculpture made entirely of human hair, showcasing the artists unconventional approach to art."
   },
   {
     "museum": "The Museum of Unusual Architecture",
     "exhibitName": "The Upside-Down House",
-    "exhibitDescription": "A house designed to be upside-down, challenging visitors' perceptions and sense of balance."
+    "exhibitDescription": "A house designed to be upside-down, challenging visitors perceptions and sense of balance."
   },
   {
     "museum": "The Museum of Mysterious Phenomena",
@@ -222,7 +222,7 @@
   {
     "museum": "The Museum of Unconventional Science",
     "exhibitName": "The Mind-Reading Device",
-    "exhibitDescription": "A device that claims to be able to read people's thoughts, its effectiveness and ethics still debated by scientists and ethicists."
+    "exhibitDescription": "A device that claims to be able to read peoples thoughts, its effectiveness and ethics still debated by scientists and ethicists."
   },
   {
     "museum": "The Museum of Occult Artifacts",
@@ -266,12 +266,12 @@
   },
   {
     "museum": "The Museum of Strange Artifacts",
-    "exhibitName": "The Curse of King Tut's Tomb",
-    "exhibitDescription": "An artifact associated with the curse that allegedly caused the deaths of those who opened King Tut's tomb, with a history of misfortune and tragedy."
+    "exhibitName": "The Curse of King Tuts Tomb",
+    "exhibitDescription": "An artifact associated with the curse that allegedly caused the deaths of those who opened King Tuts tomb, with a history of misfortune and tragedy."
   },
   {
     "museum": "The Museum of Esoteric History",
-    "exhibitName": "The Philosopher's Stone",
+    "exhibitName": "The Philosophers Stone",
     "exhibitDescription": "A legendary substance that is said to have the power to turn base metals into gold and grant immortality to its possessor, sought after by alchemists throughout history."
   },
   {
@@ -387,7 +387,7 @@
   {
     "museum": "The Museum of Esoteric Knowledge",
     "exhibitName": "The Emerald Tablet",
-    "exhibitDescription": "An ancient text believed to contain the secrets of alchemy and the philosopher's stone, with a history of mystery and intrigue among occultists."
+    "exhibitDescription": "An ancient text believed to contain the secrets of alchemy and the philosophers stone, with a history of mystery and intrigue among occultists."
   },
   {
     "museum": "The Museum of Unexplained Art",
@@ -706,8 +706,8 @@
   },
   {
     "museum": "The Museum of Occult Artifacts",
-    "exhibitName": "The Philosopher's Stone",
-    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosopher's Stone, with theories and legends surrounding its supposed ability to turn base metals into gold."
+    "exhibitName": "The Philosophers Stone",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosophers Stone, with theories and legends surrounding its supposed ability to turn base metals into gold."
   },
   {
     "museum": "The Museum of Unexplained Objects",
@@ -841,8 +841,8 @@
   },
   {
     "museum": "The Museum of Occult History",
-    "exhibitName": "The Philosopher's Stone",
-    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosopher's Stone, a substance believed to have the power to transmute metals and grant eternal life."
+    "exhibitName": "The Philosophers Stone",
+    "exhibitDescription": "An exhibit exploring the history and mythology surrounding the Philosophers Stone, a substance believed to have the power to transmute metals and grant eternal life."
   },
   {
     "museum": "The Museum of Paranormal Phenomena",
