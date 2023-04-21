@@ -28,6 +28,14 @@ func NewServer(port, secret string, a app.App) *Server {
 		jokes.Get("/list/:theme", GetThemeJokes(a.Jokes))
 	}
 
+	friends := auth.Group("/friends")
+	{
+		friends.Get("/", GetFriendsList(a.Friends))
+		friends.Get("/requests", GetRequestsList(a.Friends))
+		friends.Post("/request", CreateFriendRequest(a.Friends))
+		friends.Post("/accept", AcceptFriendRequest(a.Friends))
+	}
+
 	return s
 }
 
