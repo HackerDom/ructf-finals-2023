@@ -125,10 +125,6 @@ function with_query_params_validator(handler, required_params)
 end
 
 
-# with_validator: f(c, message) -> f(c)
-# with_auth1: f(c, username, message) -> f(c, message)
-
-
 function with_auth(handler)
     function wrapped_handler(c::RestController, args...)
         secret_cookies = HTTP.Cookies.readcookies(c.conn.request.headers, "secret")
@@ -273,6 +269,8 @@ routes() do
     get("/compute/", RestController, with_required_params(with_auth(compute_handler), ["field_uuid", "arg"]))
 
     get("/list_fields/", RestController, with_auth(list_fields_handler))
+
+    plug(Plug.Static, at="/", from=normpath(@__DIR__, "./public"))
 
     plug(Plug.Parsers, [:json])
 end
