@@ -1,6 +1,6 @@
 - name: repo
   git: repo=https://github.com/xelez/ctf-scoreboard-client.git dest={{ cs_scoreboard_dir }}
-  become: yes
+  become: true
   become_user: "{{ cs_user }}"
 
 - name: npm install
