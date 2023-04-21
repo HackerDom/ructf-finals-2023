@@ -75,7 +75,25 @@ teams: |
   {name => 'House Of Depression', logo => '/logos/team_17.png', network => '10.60.17.0/24', host => '10.60.17.3', token => 'CLOUD_17_11e5e4cc2cfc0841a2a16c909ca41a25' },
   {name => 'Team8',               logo => '/logos/team_18.png', network => '10.60.18.0/24', host => '10.60.18.3', token => 'CLOUD_18_d74ddccd3cffdf58ea3a01fe677e0b12' },
   {name => 'Wetox',               logo => '/logos/team_19.jpg', network => '10.60.19.0/24', host => '10.60.19.3', token => 'CLOUD_19_2cfef27e4131415d0cbf0709b186c4e5' },
-  {name => 'NPC',                                               network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28' },
+
+  {name => 'BinaryBears',           network => '10.60.20.0/24', host => '10.60.20.3', token => 'CLOUD_20_b45f0660add5e626c8dc226d9f450b2c', tags => ['guest'] },
+  {name => 'Bushwhackers',          network => '10.60.21.0/24', host => '10.60.21.3', token => 'CLOUD_21_487f5146c920cfce69596b19a8443c44', tags => ['guest'] },
+  {name => 'C4T BuT S4D',           network => '10.60.22.0/24', host => '10.60.22.3', token => 'CLOUD_22_845baa067621f8519837adeeffb16812', tags => ['guest'] },
+  {name => 'Drovosec',              network => '10.60.23.0/24', host => '10.60.23.3', token => 'CLOUD_23_8007872a563e4d79774797fc43aa74f9', tags => ['guest'] },
+  {name => 'FaKappa',               network => '10.60.24.0/24', host => '10.60.24.3', token => 'CLOUD_24_725238d55231a78d3f143a113e31a20d', tags => ['guest'] },
+  {name => 'It\'s KEVA Time',       network => '10.60.25.0/24', host => '10.60.25.3', token => 'CLOUD_25_47d59a7d7db2c568faa4ec3a192c11ee', tags => ['guest'] },
+  {name => 'kks',                   network => '10.60.26.0/24', host => '10.60.26.3', token => 'CLOUD_26_31214fe598fe11884f9086b25ce6e632', tags => ['guest'] },
+  {name => 'N0N@me13',              network => '10.60.27.0/24', host => '10.60.27.3', token => 'CLOUD_27_fccf28fc5ad2afc6eb2c33cdc9f9d0c5', tags => ['guest'] },
+  {name => 'Omsk Hackers',          network => '10.60.28.0/24', host => '10.60.28.3', token => 'CLOUD_28_d4e64f0dba12e25aa992ca9c54ddffec', tags => ['guest'] },
+  {name => 'ONO',                   network => '10.60.29.0/24', host => '10.60.29.3', token => 'CLOUD_29_89938a63a21c425636dfb9303a6a2d9b', tags => ['guest'] },
+  {name => 'QarabagTeam',           network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_30_763f808dee222a1121d4e6a42772ec28', tags => ['guest'] },
+  {name => 'qual3nc3',              network => '10.60.31.0/24', host => '10.60.31.3', token => 'CLOUD_31_4b74c7f1fa5b69cfcd7268c4962bbffb', tags => ['guest'] },
+  {name => 'smiley-from-telega',    network => '10.60.32.0/24', host => '10.60.32.3', token => 'CLOUD_32_95da288b4298c2a1eb2218cb55d9b2c1', tags => ['guest'] },
+  {name => 'SPRAVEDLIVAЯ RUSH A',   network => '10.60.33.0/24', host => '10.60.33.3', token => 'CLOUD_33_7b2ae78838e263895b2b65c3f6898443', tags => ['guest'] },
+  {name => 'Yet another Keva Team', network => '10.60.34.0/24', host => '10.60.34.3', token => 'CLOUD_34_c4c90bc55d3934ee17b510eb09130688', tags => ['guest'] },
+  {name => 'guest_JiEs',            network => '10.60.35.0/24', host => '10.60.35.3', token => 'CLOUD_35_c2d67aa9d7b30d22893fb1f6cbcaaced', tags => ['guest'] },
+
+  {name => 'NPC', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_36_8ab5e634232694ea017a84470005a1fd', tags => ['NPC'] },
 
 services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
