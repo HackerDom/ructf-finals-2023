@@ -230,8 +230,8 @@ def cmd_list_vms(team, args):
 
 def cmd_create_vm(team, args):
     vm = int(args[0])
-    return "200 Ok", {"result": "ok", "msg": "VMs are created by orgs"}
-    # return create_task(team, "create_vm", "create_team_instance.py", [str(team), str(vm)], timeout=1200)
+    # return "200 Ok", {"result": "ok", "msg": "VMs are created by orgs"}
+    return create_task(team, "create_vm", "create_team_instance.py", [str(team), str(vm)], timeout=1200)
 
 def cmd_get_team_openvpn_config(team, args):
     if not DEV_MODE:
