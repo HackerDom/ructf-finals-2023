@@ -48,9 +48,9 @@ All steps in one [sploit](/sploits/bookster/bookster.1.sploit.py)
 
 - Need to reverse our binary build
 - use bindiff with original ffmpeg 2.1.8
-- Understand how ffmpeg options was renamed
-- Find what hidden filter param apply to image 
-- Update to newer version of ffmpeg with original filter param
+- Understand how ffmpeg options was renamed 
+- Find what hidden filter param apply to image. [This files was changed in source](/writeups/bookster/ffmpegchanges/cmd_utils.c) 
+- Update to newer version of ffmpeg with original option names and filter param
 
 ### Patch alternative 
 
