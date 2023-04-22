@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -12,7 +11,6 @@ import (
 	"ructf-2023-finals/lost-museum/internal/usecases/auth"
 	"ructf-2023-finals/lost-museum/internal/usecases/friends"
 	"ructf-2023-finals/lost-museum/internal/usecases/jokes"
-	"time"
 )
 
 var ctx = context.Background()
@@ -30,18 +28,6 @@ func main() {
 	a := app.New(auth.New(r, secret), jokes.New(r), friends.New(r))
 
 	s := server.NewServer(":8000", secret, a)
-
-	go func() {
-		for {
-			select {
-			case <-time.After(2 * time.Hour):
-				err = r.Clean(ctx)
-				if err != nil {
-					fmt.Println("cleaning error", err)
-				}
-			}
-		}
-	}()
 
 	if err = s.Run(); err != nil {
 		log.Fatal(err)
