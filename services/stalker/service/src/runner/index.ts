@@ -1,3 +1,5 @@
+import { randomBytes } from "@root/utils";
+
 type Task = () => Promise<void>;
 
 type Worker = {
@@ -12,11 +14,13 @@ async function spawnWorkers(workersCount: number): Promise<void> {
     const workers: Worker[] = [];
 
     for (let i = 0; i < workersCount; i++) {
+        const workerId = `worker-${randomBytes(8)}`;
+
         const worker = Bun.spawn({
             cmd: process.argv,
             env: {
                 ...Bun.env,
-                WORKER_ID: i.toString(),
+                WORKER_ID: workerId,
             },
 
             stdout: 'inherit',
@@ -46,11 +50,11 @@ async function run(task: Task, workersCount: number): Promise<void> {
     const workerId = Bun.env.WORKER_ID;
 
     if (typeof workerId === 'string') {
-        console.log(`[*] Added new worker at ${time()} <${process.pid}>`);
+        console.log(`[*] Added new ${workerId} at ${time()} <${process.pid}>`);
 
         return task();
     }
-    
+
     return spawnWorkers(workersCount);
 }
 

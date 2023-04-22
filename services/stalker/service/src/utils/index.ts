@@ -53,13 +53,17 @@ export async function parseJson<T = any>(stream: ReadableStream<Uint8Array> | nu
     }
 }
 
+export function randomBytes(length: number): string {
+    return crypto.randomBytes(length).toString('hex');
+}
+
 export async function loadPrivateKey(): Promise<string> {
     const keyPath = '/tmp/secrets/key.txt';
 
     const file = Bun.file(keyPath);
 
     if (file.size === 0) {
-        const key = crypto.randomBytes(16).toString('hex');
+        const key = randomBytes(16);
 
         const length = await Bun.write(file, key);
 

@@ -14,7 +14,7 @@ export function authTokenMiddleware(headerName: string): MiddlewareHandler {
 
         if (typeof token === 'string') {
             const name = await validateToken(token, privateKey);
-            
+
             if (name !== null) {
                 const user = await User.findOne({ where: { name } });
                 ctx.set('user', user);
@@ -30,7 +30,5 @@ export function authTokenMiddleware(headerName: string): MiddlewareHandler {
 
             ctx.header(headerName, token);
         }
-
-        ctx.header('Access-Control-Expose-Headers', headerName);
     };
 }
