@@ -32,6 +32,7 @@ cs_nginx_auth_enabled: true
 cs_nginx_auth_user: root
 cs_nginx_auth_password: $apr1$oHnKLLnm$7a9AcsNzw8VEmxHIsJBjH0
 
+grafana_admin_pass: E2nwAJfpQbJ348PD
 
 cs_base_url: https://monitor.ructf.org/
 cs_admin_auth: root:RuCTF2023_S3cretP@ss_855d23b44f174939
@@ -40,8 +41,8 @@ cs_flags_secret: Wn49jWh2Eja3xsDz
 cs_round_length: 60
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
-cs_time: "['2023-04-18 07:30:00', '2023-04-22 09:59:59']"
-# cs_time: "['2023-04-22 06:00:00', '2023-04-22 08:00:00'], ['2023-04-22 09:00:00', '2023-04-22 14:00:00']"
+# cs_time: "['2023-04-18 07:30:00', '2023-04-22 09:59:59']"
+cs_time: "['2023-04-22 06:00:00', '2023-04-22 08:00:00'], ['2023-04-22 09:00:00', '2023-04-22 14:00:00']"
 
 cs_scoring: |
     start_flag_price => 10,
