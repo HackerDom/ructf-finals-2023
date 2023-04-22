@@ -145,6 +145,8 @@ await note.addViewer(viewer); // here `note` has id of the checker's note
 
 Example exploit: [sploit.py](/sploits/stalker/sploit.py)
 
+P.S. After successful stealing of the checker's note, we could easily do the opposite operation: delete `viewer` from note's viewers. This improvement will remain Viewers table unchanged.
+
 ## Patch
 
 Just delete `visible` from PRIMARY KEY and AUTO_INCREMENT fields will become unique.
