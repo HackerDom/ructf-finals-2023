@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import time
 import json
 import dataclasses
 from typing import Self, Dict, Any
@@ -165,19 +166,33 @@ class Api:
             self: Self, method: str, url: str, body: Dict[str, Any] = {},
     ) -> Response | model.ServiceError:
         session = gornilo.http_clients.requests_with_retries(
-            status_forcelist = (500, 502),
+            status_forcelist = (),
         )
 
-        response = session.request(
-            method = method,
-            url = url,
-            json = body,
-            allow_redirects = False,
-            stream = True,
-            headers = {
-                TOKEN_HEADER_NAME: self.token,
-            },
-        )
+        retry_count = 5
+        retry_timeout = 2
+
+        last_exc = None
+
+        for _ in range(retry_count):
+            try:
+                response = session.request(
+                    method = method,
+                    url = url,
+                    json = body,
+                    allow_redirects = False,
+                    stream = True,
+                    headers = {
+                        TOKEN_HEADER_NAME: self.token,
+                    },
+                )
+
+                break
+            except Exception as e:
+                last_exc = e
+                time.sleep(retry_timeout)
+        else:
+            raise last_exc
 
         self.token = response.headers.get(TOKEN_HEADER_NAME)
 
