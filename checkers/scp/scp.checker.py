@@ -4,6 +4,8 @@ import json
 import random
 import re
 import string
+import time
+import requests
 
 from gornilo import NewChecker, CheckRequest, GetRequest, PutRequest, Verdict, VulnChecker
 from gornilo.http_clients import requests_with_retries
@@ -23,7 +25,8 @@ def get_token(url: str):
         "login": random_str(),
         "password": random_str()
     }
-    resp = requests_with_retries().post(welcome, json=user_data)
+    resp = _retry(requests.post, 10, url=welcome, json=user_data)
+    # resp = requests_with_retries().post(welcome, json=user_data)
     while resp.status_code == 409:
         user_data = {
             "login": random_str(),
@@ -42,7 +45,8 @@ async def check_service(request: CheckRequest) -> Verdict:
 
         # checking welcome [get]
 
-        resp = requests_with_retries().get(url + "welcome")
+        resp = _retry(requests.get, 10, url=url + "welcome")
+        # resp = requests_with_retries().get(url + "welcome")
         if resp.status_code != 200:
             return Verdict.MUMBLE("Verdict: MUMBLE bad welcome")
 
@@ -68,7 +72,8 @@ async def check_service(request: CheckRequest) -> Verdict:
         save = '@docId <- {(scp' + str(n) + ') -> save};'
         result = '{(@docId) -> result};'
         ql = doc_flag + ''.join(doc_fields) + save + result
-        resp = requests_with_retries(1).post(url, json={"token": token, "query": ql})
+        resp = _retry(requests.post, 10, url=url, json={"token": token, "query": ql})
+        # resp = requests_with_retries(1).post(url, json={"token": token, "query": ql})
         if resp.status_code == 400:
             return Verdict.MUMBLE("Verdict: MUMBLE could not get list of docs")
         if resp.status_code == 500:
@@ -82,7 +87,8 @@ async def check_service(request: CheckRequest) -> Verdict:
         @docs <- {(0, 50) -> list};
         {(@docs) -> result};
         '''
-        resp = requests_with_retries().post(url, json={"token": token, "query": ql})
+        resp = _retry(requests.post, 10, url=url, json={"token": token, "query": ql})
+        # resp = requests_with_retries().post(url, json={"token": token, "query": ql})
         if resp.status_code == 400:
             return Verdict.MUMBLE("Verdict: MUMBLE could not get list of docs")
         if resp.status_code == 500:
@@ -107,7 +113,8 @@ async def check_service(request: CheckRequest) -> Verdict:
         doc_getting = '@doc <- {(@docId) -> get};'
         res = '{(@doc) -> result};'
         ql = doc_id_var + doc_getting + res
-        resp = requests_with_retries().post(url, json={"token": token, "query": ql})
+        resp = _retry(requests.post, 10, url=url, json={"token": token, "query": ql})
+        # resp = requests_with_retries().post(url, json={"token": token, "query": ql})
         if resp.status_code == 200:
             resp_data = resp.json()
             if resp_data["type"] != "HTML":
@@ -141,7 +148,8 @@ class GameChecker(VulnChecker):
                 "token": token,
                 "query": ql
             }
-            resp = requests_with_retries().post(url, json=data)
+            resp = _retry(requests.post, 10, url=url, json=data)
+            # resp = requests_with_retries().post(url, json=data)
             if resp.status_code == 400:
                 return Verdict.MUMBLE("Verdict: MUMBLE could not execute query")
             if resp.status_code == 500:
@@ -192,7 +200,8 @@ class GameChecker(VulnChecker):
                 "token": token,
                 "query": ql
             }
-            resp = requests_with_retries(1).post(url, json=data)
+            resp = _retry(requests.post, 10, url=url, json=data)
+            # resp = requests_with_retries(1).post(url, json=data)
             if resp.status_code == 400:
                 return Verdict.MUMBLE("Verdict: MUMBLE could not execute query")
             if resp.status_code == 500:
@@ -207,6 +216,20 @@ class GameChecker(VulnChecker):
             # return Verdict.OK_WITH_FLAG_ID(doc_id, token)
         except Exception as e:
             return Verdict.DOWN("Verdict: DOWN could not write secrets" + str(e))
+
+
+def _retry(method, i, **kwargs):
+    if i == 1:
+        return method(**kwargs)
+    try:
+        resp = method(**kwargs)
+        if resp.status_code != 200:
+            time.sleep(0.5)
+            return _retry(method, i - 1, **kwargs)
+        return resp
+    except Exception:
+        time.sleep(0.5)
+        return _retry(method, i - 1, **kwargs)
 
 
 if __name__ == "__main__":
