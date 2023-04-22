@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>scp</title>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Rubik', sans-serif;
+        padding: 0;
+        margin: 0;
+    }
+    .center {
+        margin: auto;
+        padding: 20px;
+        width: 50%;
+    }
+    .back {
+        margin: 0 auto;
+        padding: 20px;
+        width: 50%;
+    }
+    .navigation {
+        width: 49%;
+        padding: 15px;
+        margin: auto;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+    }
+    .navigation-div {
+        width: 50%;
+        margin: auto;
+    }
+    input {
+        width: 49%;
+        margin: auto;
+        padding: 12px;
+        display: inline-block;
+        box-sizing: border-box;
+    }
+    button {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+    }
+    .spoiler{
+        color: black;
+        background-color:black;
+    }
+
+    .spoiler:hover{
+        background: none;
+    }
+</style>
+<body onload="getDocs()">
+<div class="back">
+    <div class="navigation-div">
+        <button class="navigation" onclick="getDocs()">home</button>
+        <button class="navigation" onclick="toLogin()">login</button>
+    </div>
+</div>
+<div id="content"></div>
+<script type="text/javascript">
+    const pagging = `<div class="back">
+    <div class="navigation-div">
+        <label><input id="offset" type="number" placeholder="0"></label>
+        <label><input id="limit" type="number" placeholder="10"></label>
+        <button onclick="getDocs()">get</button>
+    </div>
+</div>`;
+    function getDocs() {
+        let xmlHttp = new XMLHttpRequest();
+        let offsetEl = document.getElementById("offset");
+        let offset = "0";
+        if (offsetEl && offsetEl.value) {
+            offset = offsetEl.value;
+        }
+        let limitEl = document.getElementById("limit");
+        let limit = "10";
+        if (limitEl && limitEl.value) {
+            limit = limitEl.value;
+        }
+        let query = `@doc <- {(${offset}, ${limit}) -> list};{(@doc) -> result};`;
+        if (!document.cookie) {
+            toLogin();
+            return;
+        }
+        let data = JSON.stringify({"token": document.cookie, "query": query});
+        xmlHttp.open("POST", "http://"+window.location.host+"/")
+        xmlHttp.send(data);
+        xmlHttp.onload = (e) => {
+            if (xmlHttp.readyState === 4) {
+                if (xmlHttp.status === 200) {
+                    let s = document.getElementById("content");
+                    let respData = JSON.parse(xmlHttp.responseText);
+                    let docs_to_user = respData.body.trim().split("\n");
+                    let buttons = "";
+                    docs_to_user.forEach(
+                        (line) => {
+                            let id = line.split(":")[0];
+                            let owner = line.split(":")[1].trim();
+                            buttons += `<button onclick="getDoc(${id})"><p hidden="hidden">owner: ${owner}</p>  document: ${id}</button>`
+                        }
+                    )
+                    s.innerHTML = `<div class="center">${buttons}</div>` + pagging;
+                }
+            }
+        };
+    }
+
+    function getDoc(id) {
+        let xmlHttp = new XMLHttpRequest();
+        let query = `@docId <- ${id};@doc <- {(@docId) -> get};{(@doc) -> result}`;
+        let data = JSON.stringify({"token": document.cookie, "query": query});
+        xmlHttp.open("POST", "http://"+window.location.host+"/")
+        xmlHttp.send(data);
+        xmlHttp.onload = (e) => {
+            if (xmlHttp.readyState === 4) {
+                if (xmlHttp.status === 200) {
+                    let s = document.getElementById("content");
+                    let respData = JSON.parse(xmlHttp.responseText);
+                    s.innerHTML = `<div class="center">${respData.body}</div>`;
+                }
+            }
+        }
+    }
+
+    function toLogin() {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", "http://"+window.location.host+"/welcome");
+        xmlHttp.send();
+        xmlHttp.onload = (e) => {
+            if (xmlHttp.readyState === 4) {
+                if (xmlHttp.status === 200) {
+                    window.location.assign("http://"+window.location.host+"/welcome");
+                } else {
+                    alert("something went wrong");
+                }
+            }
+        };
+    }
+</script>
+</body>
+</html>
