@@ -5,7 +5,7 @@ from requests import Response
 class Api:
     def __init__(self, host, port=18888):
         self.base_url = f'http://{host}:{port}'
-        self.session = requests_with_retries(status_forcelist=(500, 502))
+        self.session = requests_with_retries(status_forcelist=(500, 502), default_timeout=15)
 
     def front(self):
         return self.session.get(f"{self.base_url}")
