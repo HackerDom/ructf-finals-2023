@@ -1,13 +1,39 @@
+import { clean } from "@root/cleaner";
 import { randomBytes } from "@root/utils";
 
 type Task = () => Promise<void>;
 
 type Worker = {
-    exited: Promise<number>;
+    killed: boolean;
 };
 
 function time(): number {
     return Bun.nanoseconds() / 1_000_000_000; // seconds
+}
+
+async function watchWorkers(workers: Worker[]): Promise<void> {
+    const timeout = 1000; // 1 seconds
+    const cleanSeconds = 2 * 60 * 60; // 2 hours
+
+    while (true) {
+        // run cleaner
+        await clean(cleanSeconds);
+
+        let killedCount = 0;
+
+        workers.forEach(worker => {
+            if (worker.killed) {
+                killedCount += 1;
+            }
+        });
+
+        if (killedCount === workers.length) {
+            console.log(`[*] Application has been stopped at ${time()}`);
+            process.exit();
+        }
+
+        await Bun.sleep(timeout);
+    }
 }
 
 async function spawnWorkers(workersCount: number): Promise<void> {
@@ -37,11 +63,7 @@ async function spawnWorkers(workersCount: number): Promise<void> {
         workers.push(worker);
     }
 
-    await Promise.all(
-        workers.map(worker => worker.exited),
-    );
-
-    console.log(`[*] Application has been stopped at ${time()}`);
+    await watchWorkers(workers);
 }
 
 async function run(task: Task, workersCount: number): Promise<void> {
