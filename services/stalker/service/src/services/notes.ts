@@ -132,6 +132,10 @@ const Notes: NotesService = {
             throw new OwnerMismatchError('you should own this note');
         }
 
+        if (note.visible) {
+            throw new ValidationError('note is visible');
+        }
+
         const viewer = await User.findOne({ where: { name: req.viewer } });
 
         if (viewer === null) {
@@ -160,6 +164,10 @@ const Notes: NotesService = {
 
         if (typeof note === 'undefined') {
             throw new OwnerMismatchError('you should own this note');
+        }
+
+        if (note.visible) {
+            throw new ValidationError('note is visible');
         }
 
         const viewer = await User.findOne({ where: { name: req.viewer } });
