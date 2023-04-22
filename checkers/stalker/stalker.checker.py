@@ -56,55 +56,61 @@ def generate_credentials() -> Tuple[str, str]:
 
 
 def check_note_object(
-        note: model.Note,
+        note: model.Note | None,
         title: str,
         visible: bool,
         content: str | None,
         viewers: Iterable[str] | None,
         owner: str,
 ) -> None:
+    if note is None:
+        raise model.ValidationError('failed to get note')
+
     if note.title != title:
-        return gornilo.Verdict.MUMBLE('invalid note title')
-    
+        raise model.ValidationError('invalid note title')
+
     if note.visible != visible:
-        return gornilo.Verdict.MUMBLE('invalid note visible')
-    
+        raise model.ValidationError('invalid note visible')
+
     if content is not None:
         if note.content != content:
-            return gornilo.Verdict.MUMBLE('invalid note content')
+            raise model.ValidationError('invalid note content')
     else:
         if note.content is not None:
-            return gornilo.Verdict.MUMBLE('invalid note content')
-    
+            raise model.ValidationError('invalid note content')
+
     if viewers is not None:
         if note.viewers is None or set(note.viewers) != set(viewers):
-            return gornilo.Verdict.MUMBLE('invalid note viewers')
+            raise model.ValidationError('invalid note viewers')
     else:
         if note.viewers is not None:
-            return gornilo.Verdict.MUMBLE('invalid note viewers')
+            raise model.ValidationError('invalid note viewers')
 
     if note.owner != owner:
-        return gornilo.Verdict.MUMBLE('invalid note owner')
-    
+        raise model.ValidationError('invalid note owner')
+
 
 def check_user_object(
-        user: model.User,
+        user: model.User | None,
         username: str,
         owned_notes: Iterable[str],
         shared_notes: Iterable[str] | None,
 ) -> None:
+    if user is None:
+        raise model.ValidationError('failed to get user')
+
     if user.name != username:
-        return gornilo.Verdict.MUMBLE('invalid user name')
+        raise model.ValidationError('invalid user name')
 
     if set(user.owned_notes) != set(owned_notes):
-        return gornilo.Verdict.MUMBLE('invalid user owned_notes')
-    
+        raise model.ValidationError('invalid user owned_notes')
+
     if shared_notes is not None:
         if user.shared_notes is None or set(user.shared_notes) != set(shared_notes):
-            return gornilo.Verdict.MUMBLE('invalid user shared_notes')
+            raise model.ValidationError('invalid user shared_notes')
     else:
         if user.shared_notes is not None:
-            return gornilo.Verdict.MUMBLE('invalid user shared_notes')
+            raise model.ValidationError('invalid user shared_notes')
 
 
 def do_put(request: gornilo.PutRequest) -> gornilo.Verdict:
@@ -114,7 +120,7 @@ def do_put(request: gornilo.PutRequest) -> gornilo.Verdict:
 
     if not api.user_register(username, password):
         return gornilo.Verdict.MUMBLE('failed to register')
-    
+
     note_title = random_string(16)
 
     if not api.note_create(note_title, False, request.flag):
@@ -138,13 +144,119 @@ def do_get(request: gornilo.GetRequest) -> gornilo.Verdict:
 
     note = api.note_get(flag_id.note_title)
 
+    if note is None:
+        return gornilo.Verdict.CORRUPT('note with flag not found')
+
     if note.content != request.flag:
         return gornilo.Verdict.CORRUPT('invalid flag')
+
+    if not api.user_logout():
+        return gornilo.Verdict.MUMBLE('failed to logout')
 
     return gornilo.Verdict.OK()
 
 
 def do_check(request: gornilo.CheckRequest) -> gornilo.Verdict:
+    api1 = client.Api(request.hostname, port)
+    username1, password1 = generate_credentials()
+
+    if not api1.user_register(username1, password1):
+        return gornilo.Verdict.MUMBLE('failed to register')
+
+    check_user_object(
+        api1.user_get(username1),
+        username1, [], [],
+    )
+
+    note1_title = random_string(16)
+    note1_visible = True
+    note1_content = random_string(32)
+
+    if not api1.note_create(note1_title, note1_visible, note1_content):
+        return gornilo.Verdict.MUMBLE('failed to create note')
+
+    check_note_object(
+        api1.note_get(note1_title),
+        note1_title, note1_visible, note1_content, [], username1,
+    )
+
+    note2_title = random_string(16)
+    note2_visible = False
+    note2_content = random_string(32)
+
+    if not api1.note_create(note2_title, note2_visible, note2_content):
+        return gornilo.Verdict.MUMBLE('failed to create note')
+
+    check_note_object(
+        api1.note_get(note2_title),
+        note2_title, note2_visible, note2_content, [], username1,
+    )
+
+    check_user_object(
+        api1.user_get(username1),
+        username1, [note1_title, note2_title], [],
+    )
+
+    api2 = client.Api(request.hostname, port)
+    username2, password2 = generate_credentials()
+
+    if not api2.user_register(username2, password2):
+        return gornilo.Verdict.MUMBLE('failed to register')
+
+    check_note_object(
+        api2.note_get(note1_title),
+        note1_title, note1_visible, note1_content, None, username1,
+    )
+
+    check_note_object(
+        api2.note_get(note2_title),
+        note2_title, note2_visible, None, None, username1,
+    )
+
+    if not api1.note_share(note2_title, username2):
+        return gornilo.Verdict.MUMBLE('failed to share note')
+
+    check_note_object(
+        api2.note_get(note2_title),
+        note2_title, note2_visible, note2_content, None, username1,
+    )
+
+    check_note_object(
+        api1.note_get(note2_title),
+        note2_title, note2_visible, note2_content, [username2], username1,
+    )
+
+    if not api1.note_deny(note2_title, username2):
+        return gornilo.Verdict.MUMBLE('failed to deny note')
+
+    check_note_object(
+        api2.note_get(note2_title),
+        note2_title, note2_visible, None, None, username1,
+    )
+
+    check_note_object(
+        api1.note_get(note2_title),
+        note2_title, note2_visible, note2_content, [], username1,
+    )
+
+    if not api1.note_destroy(note2_title):
+        return gornilo.Verdict.MUMBLE('failed to destroy note')
+
+    if api2.note_get(note2_title) is not None:
+        return gornilo.Verdict.MUMBLE('note is not destroyed')
+
+    api3 = client.Api(request.hostname, port)
+
+    check_note_object(
+        api3.note_get(note1_title),
+        note1_title, note1_visible, note1_content, None, username1,
+    )
+
+    check_user_object(
+        api3.user_get(username1),
+        username1, [note1_title], None,
+    )
+
     return gornilo.Verdict.OK()
 
 

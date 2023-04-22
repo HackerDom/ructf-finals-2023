@@ -24,9 +24,9 @@ class Response:
 class Api:
     def __init__(self: Self, hostname: str, port: int) -> None:
         self.url = f'http://{hostname}:{port}'
-        self.token = 'x'
+        self.token: str | None = None
 
-    def user_get(self: Self, username: str) -> model.User:
+    def user_get(self: Self, username: str) -> model.User | None:
         url = self.url + f'/users/profile/{username}'
 
         response = self.http_request('GET', url)
@@ -34,8 +34,11 @@ class Api:
         if isinstance(response, Response) and response.code == 200:
             return model.User.parse(response.content)
 
+        if isinstance(response, model.ServiceError) and response.name == 'UserNotFoundError':
+            return None
+
         raise model.ProtocolError('invalid response on user/profile')
-    
+
     def user_register(self: Self, username: str, password: str) -> bool:
         url = self.url + '/users/register'
         body = {
@@ -69,7 +72,7 @@ class Api:
             return False
 
         raise model.ProtocolError('invalid response on user/login')
-    
+
     def user_logout(self: Self) -> bool:
         url = self.url + '/users/logout'
         body = {}
@@ -80,8 +83,8 @@ class Api:
             return True
 
         raise model.ProtocolError('invalid response on user/logout')
-    
-    def note_get(self: Self, title: str) -> model.Note:
+
+    def note_get(self: Self, title: str) -> model.Note | None:
         url = self.url + f'/notes/{title}'
 
         response = self.http_request('GET', url)
@@ -89,8 +92,11 @@ class Api:
         if isinstance(response, Response) and response.code == 200:
             return model.Note.parse(response.content)
 
+        if isinstance(response, model.ServiceError) and response.name == 'NoteNotFoundError':
+            return None
+
         raise model.ProtocolError('invalid response on note/get')
-    
+
     def note_create(self: Self, title: str, visible: bool, content: str) -> bool:
         url = self.url + '/notes'
         body = {
@@ -108,7 +114,7 @@ class Api:
             return False
 
         raise model.ProtocolError('invalid response on note/create')
-    
+
     def note_share(self: Self, title: str, viewer: str) -> bool:
         url = self.url + f'/notes/{title}/share'
         body = {
@@ -124,7 +130,7 @@ class Api:
             return False
 
         raise model.ProtocolError('invalid response on note/share')
-    
+
     def note_deny(self: Self, title: str, viewer: str) -> bool:
         url = self.url + f'/notes/{title}/deny'
         body = {
@@ -140,7 +146,7 @@ class Api:
             return False
 
         raise model.ProtocolError('invalid response on note/deny')
-    
+
     def note_destroy(self: Self, title: str) -> bool:
         url = self.url + f'/notes/{title}/destroy'
         body = {}
@@ -154,7 +160,7 @@ class Api:
             return False
 
         raise model.ProtocolError('invalid response on note/destroy')
-    
+
     def http_request(
             self: Self, method: str, url: str, body: Dict[str, Any] = {},
     ) -> Response | model.ServiceError:
@@ -199,7 +205,7 @@ class Api:
             content = json.loads(data)
         except Exception:
             raise model.ProtocolError('failed to parse json response')
-        
+
         if 'error' in content:
             error = content['error']
 

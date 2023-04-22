@@ -61,17 +61,14 @@ class Note:
             ]),
             any([
                 viewers is None,
-                all([
-                    isinstance(viewers, list),
-                    all(isinstance(viewer, str) for viewer in viewers),
-                ]),
+                isinstance(viewers, list) and all(isinstance(viewer, str) for viewer in viewers),
             ]),
             isinstance(owner, str),
         ]
 
         if not all(assertions):
             raise ValidationError('invalid note structure')
-        
+
         return Note(
             title = title,
             visible = visible,
@@ -95,16 +92,10 @@ class User:
 
         assertions = [
             isinstance(name, str),
-            all([
-                isinstance(owned_notes, list),
-                all(isinstance(owned_note, str) for owned_note in owned_notes),
-            ]),
+            isinstance(owned_notes, list) and all(isinstance(owned_note, str) for owned_note in owned_notes),
             any([
                 shared_notes is None,
-                all([
-                    isinstance(shared_notes, list),
-                    all(isinstance(shared_note, str) for shared_note in shared_notes),
-                ]),
+                isinstance(shared_notes, list) and all(isinstance(shared_note, str) for shared_note in shared_notes),
             ]),
         ]
 
