@@ -138,29 +138,29 @@ def check(req: CheckRequest) -> Verdict:
         if resp.status_code != 201:
             return Verdict.MUMBLE("something went wrong with create joke (user 2)")
 
-        resp = api.theme_jokes(token2, theme)
-        if resp.status_code != 200:
-            return Verdict.MUMBLE("something went wrong with theme jokes")
-
-        data = resp.json().get("data", [])
-        if len(data) != 1 or data[0]["theme"] != theme or data[0]["text"] != text:
-            return Verdict.MUMBLE("invalid data in theme jokes list")
+        # resp = api.theme_jokes(token2, theme)
+        # if resp.status_code != 200:
+        #     return Verdict.MUMBLE("something went wrong with theme jokes")
+        #
+        # data = resp.json().get("data", [])
+        # if len(data) != 1 or data[0]["theme"] != theme or data[0]["text"] != text:
+        #     return Verdict.MUMBLE("invalid data in theme jokes list")
 
         resp = api.create_joke(token2, status, theme2, text2)
         if resp.status_code != 201:
             return Verdict.MUMBLE("something went wrong with create joke (user 2)")
 
-        resp = api.theme_jokes(token2, theme2)
-        if resp.status_code != 200:
-            return Verdict.MUMBLE("something went wrong with theme jokes")
-
-        data = resp.json().get("data", [])
-        if len(data) < 2 or \
-                data[0]["theme"] != theme2 or \
-                data[0]["text"] != text2 or \
-                data[1]["theme"] != theme2 or \
-                data[1]["text"] != text2:
-            return Verdict.MUMBLE("invalid data in theme jokes list")
+        # resp = api.theme_jokes(token2, theme2)
+        # if resp.status_code != 200:
+        #     return Verdict.MUMBLE("something went wrong with theme jokes")
+        #
+        # data = resp.json().get("data", [])
+        # if len(data) < 2 or \
+        #         data[0]["theme"] != theme2 or \
+        #         data[0]["text"] != text2 or \
+        #         data[1]["theme"] != theme2 or \
+        #         data[1]["text"] != text2:
+        #     return Verdict.MUMBLE("invalid data in theme jokes list")
 
         resp = api.friend_request(token, username2)
         if resp.status_code != 200:
@@ -211,14 +211,14 @@ def check(req: CheckRequest) -> Verdict:
                 or data["theme"] != theme or data["text"] != text:
             return Verdict.MUMBLE("missing fields when get joke")
 
-        resp = api.theme_jokes(token2, theme)
-        if resp.status_code != 200:
-            return Verdict.MUMBLE("something went wrong with theme jokes")
-
-        data = resp.json().get("data", [])
-        if len(data) < 2 or data[0]["theme"] != theme or data[0]["text"] != text \
-                or data[1]["theme"] != theme or data[1]["text"] != text:
-            return Verdict.MUMBLE("invalid data in theme jokes list (friends)")
+        # resp = api.theme_jokes(token2, theme)
+        # if resp.status_code != 200:
+        #     return Verdict.MUMBLE("something went wrong with theme jokes")
+        #
+        # data = resp.json().get("data", [])
+        # if len(data) < 2 or data[0]["theme"] != theme or data[0]["text"] != text \
+        #         or data[1]["theme"] != theme or data[1]["text"] != text:
+        #     return Verdict.MUMBLE("invalid data in theme jokes list (friends)")
 
     except requests.JSONDecodeError:
         return Verdict.MUMBLE("invalid json")

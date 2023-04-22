@@ -21,8 +21,10 @@ DOWN_EXCEPTIONS = {
     requests.exceptions.ReadTimeout
 }
 MUMBLE_EXCEPTIONS = {
-    requests.exceptions.HTTPError
+    requests.exceptions.HTTPError,
+    requests.exceptions.JSONDecodeError
 }
+
 KNOWN_EXCEPTIONS = DOWN_EXCEPTIONS | MUMBLE_EXCEPTIONS
 
 

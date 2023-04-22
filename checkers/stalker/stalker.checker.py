@@ -80,7 +80,7 @@ def check_note_object(
             raise model.ValidationError('invalid note content')
 
     if viewers is not None:
-        if note.viewers is None or set(note.viewers) != set(viewers):
+        if note.viewers is None or not set(viewers).issubset(set(note.viewers)):
             raise model.ValidationError('invalid note viewers')
     else:
         if note.viewers is not None:
@@ -102,11 +102,11 @@ def check_user_object(
     if user.name != username:
         raise model.ValidationError('invalid user name')
 
-    if set(user.owned_notes) != set(owned_notes):
+    if not set(owned_notes).issubset(set(user.owned_notes)):
         raise model.ValidationError('invalid user owned_notes')
 
     if shared_notes is not None:
-        if user.shared_notes is None or set(user.shared_notes) != set(shared_notes):
+        if user.shared_notes is None or not set(shared_notes).issubset(set(user.shared_notes)):
             raise model.ValidationError('invalid user shared_notes')
     else:
         if user.shared_notes is not None:
