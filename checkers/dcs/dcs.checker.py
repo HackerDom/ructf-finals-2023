@@ -38,9 +38,9 @@ class FlagId:
     def parse(text: str) -> 'FlagId':
         j = json.loads(text)
         if 'token' not in j:
-            raise Exception(f'invalid json {text}')
+            raise api.DCSProtocolError(f'invalid json {text}')
         if 'evaluation_result' not in j:
-            raise Exception(f'invalid json {text}')
+            raise api.DCSProtocolError(f'invalid json {text}')
 
         return FlagId(j['token'], j['evaluation_result'])
 
@@ -67,7 +67,7 @@ def do_put(request: gornilo.PutRequest) -> gornilo.Verdict:
         test_suite = generate_test_suite('get')
         logging.info(f'test: {test_suite} description: {request.flag}')
         if test_suite.error != '':
-            raise Exception('test generator created error suite')
+            raise api.DCSValidationError('test generator created error suite')
 
         res = c.create(test_suite.code, request.flag)
 
@@ -95,7 +95,7 @@ def do_get(request: gornilo.GetRequest) -> gornilo.Verdict:
             return gornilo.Verdict.CORRUPT('lost flag')
 
         if res.error != '':
-            raise Exception(f'unexpected GET error: {res.error}')
+            raise api.DCSProtocolError(f'unexpected GET error: {res.error}')
 
         if request.flag != res.description:
             return gornilo.Verdict.CORRUPT('invalid flag')
@@ -133,7 +133,7 @@ def do_check(request: gornilo.CheckRequest) -> gornilo.Verdict:
             return gornilo.Verdict.CORRUPT('lost flag')
         
         if res.error != '':
-            raise Exception(f'unexpected GET error: {res.error}')
+            raise api.DCSProtocolError(f'unexpected GET error: {res.error}')
 
         if res.description != description:
             return gornilo.Verdict.CORRUPT('invalid flag')
