@@ -7,6 +7,7 @@ import { ServiceRouter } from './router';
 const router = new ServiceRouter();
 
 router.withErrorHandler();
+router.withAdditionalHeaders();
 router.withAuthToken();
 
 router.get('/:title', withAppContext(async (ctx, appCtx) => {
