@@ -18,16 +18,24 @@ std::uniform_int_distribution<std::mt19937::result_type> distByte(0, 0xFF);
 std::uniform_int_distribution<std::mt19937::result_type> distInt(0, 10000000);
 
 double generateRandomDouble() {
-    union {
-        double v;
-        uint8_t bytes[sizeof(double)];
-    } gen{};
+    int attempt = 0;
+    while (attempt < 3) {
+        union {
+            double v;
+            uint8_t bytes[sizeof(double)];
+        } gen{};
 
-    for (unsigned char &byte: gen.bytes) {
-        byte = distByte(rng);
+        for (unsigned char &byte: gen.bytes) {
+            byte = distByte(rng);
+        }
+
+        if (!std::isnan(gen.v)) {
+            return gen.v;
+        }
+        attempt++;
     }
 
-    return gen.v;
+    return 42.;
 }
 
 std::uniform_real_distribution<double> unif(-1e-3,1e3);
