@@ -94,7 +94,7 @@ teams: |
   {name => 'Yet another Keva Team', logo => '/logos/team_34.png',  network => '10.60.34.0/24', host => '10.60.34.3', token => 'CLOUD_34_c4c90bc55d3934ee17b510eb09130688', tags => ['onsite'] },
   {name => 'guest_JiEs',                                           network => '10.60.35.0/24', host => '10.60.35.3', token => 'CLOUD_35_c2d67aa9d7b30d22893fb1f6cbcaaced', tags => ['onsite'] },
 
-  {name => 'NPC', network => '10.60.30.0/24', host => '10.60.30.3', token => 'CLOUD_36_8ab5e634232694ea017a84470005a1fd', tags => ['NPC'] },
+  {name => 'NPC', network => '10.60.36.0/24', host => '10.60.36.3', token => 'CLOUD_36_8ab5e634232694ea017a84470005a1fd', tags => ['NPC'] },
 
 services: |
   {name => 'bookster', path => 'checkers/bookster/bookster.checker.py', timeout => 30, tcp_port => 8900},
