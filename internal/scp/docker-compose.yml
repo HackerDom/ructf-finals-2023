@@ -1,0 +1,33 @@
+version: "2.2"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8081:8081"
+    stop_grace_period: 3s
+    restart: always
+    depends_on:
+      - postgres
+    mem_limit: 1G
+    pids_limit: 128
+    cpu_count: 1
+    memswap_limit: 1G
+  postgres:
+    ports:
+      - "5432:5432"
+    image: postgres:14.1-alpine
+    restart: always
+    mem_limit: 1G
+    memswap_limit: 1G
+    pids_limit: 100
+    volumes:
+      - db_volume:/var/lib/postgresql/data/
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=ctf
+      - POSTGRES_PASSWORD=6531
+      - POSTGRES_USER=postgres
+
+volumes:
+  db_volume:
