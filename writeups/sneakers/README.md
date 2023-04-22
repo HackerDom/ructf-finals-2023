@@ -1,4 +1,5 @@
-# RuCTF2023 | Sneakers
+# RuCTF Finals 2023 | Sneakers
+
 ## Description
 At Sneaker Art Gallery, you can create truly unique and personalized "barkhatnye tyagi" and also browse through an extensive collection of sneaker images from various styles.
 
