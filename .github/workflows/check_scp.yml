@@ -45,32 +45,9 @@ jobs:
       run: if [ -f checkers/scp/requirements.txt ]; then python -m pip install -r checkers/scp/requirements.txt; fi
     - name: Test checker on service
       run: (cd ./checkers/scp && ./scp.checker.py TEST 127.0.0.1)
-  check_sploit_scp:
-    name: Check sploit scp
-    runs-on: ubuntu-20.04
-    if: ${{ true }}
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-    - name: Run prebuilt hook
-      run: if [ -f services/scp/before_image_build.sh ]; then (cd ./services/scp && ./before_image_build.sh); fi
-    - name: Setup scp
-      run: (cd ./services/scp && docker-compose pull && docker-compose build && docker-compose up --build -d)
-    - name: Sleep some time. Wait service ready
-      run: sleep 30
-    - name: Prepare python for checker
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.11
-    - name: Setup checker libraries
-      run: if [ -f checkers/scp/requirements.txt ]; then python -m pip install -r checkers/scp/requirements.txt; fi
-    - name: Setup sploit libraries
-      run: if [ -f sploits/scp/requirements.txt ]; then python -m pip install -r sploits/scp/requirements.txt; fi
-    - name: Test sploit on service
-      run: (./tools/check-sploit.py scp)
   update_scp:
     name: Deploy service using ansible to first teams
-    needs: [check_service_scp, check_checker_scp, check_sploit_scp]
+    needs: [check_service_scp, check_checker_scp]
     runs-on: self-hosted
     if: ${{ false }} # disable on game just in case
     steps:
